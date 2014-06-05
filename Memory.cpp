@@ -3,8 +3,15 @@
 #include <iomanip> 
 #include <string>
 
-char& Memory::operator[](unsigned int i) {
-    if (i < 0x4000) {
+bool Memory::is_DMG() {
+    return (*this)[0xFF50] != 0x01; 
+}
+
+unsigned char& Memory::operator[](unsigned int i) {
+    if (i < 256 && is_DMG()) {
+        //Bootstrapping ROM 
+        bootstrap[i];
+    } else if (i < 0x4000) {
         //ROM Bank 0
         return cartridge[i];
     } else if (i < 0x8000) {
@@ -40,12 +47,12 @@ char& Memory::operator[](unsigned int i) {
     } else if (i == 0xFFFF) {
         // Interrupt Enable Register
         return interrupt_enable_register;
-    } else {
-        //Some kind of error? 
-        return NONE;
-    }
+    } 
+    //Some kind of error? 
+    return NONE;
 }
 
+/*
 int main(){
     Memory m;
     m.cartridge.load_rom("/users/ejfs1g10/Downloads/Pokemon Red/Pokemon Red.gb");
@@ -55,3 +62,4 @@ int main(){
 
     return 0;
 }
+*/

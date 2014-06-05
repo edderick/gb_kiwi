@@ -11,6 +11,7 @@ int CPU::fetch_and_execute() {
 int main() {
 
     CPU cpu; 
+    cpu.memory.cartridge.load_rom("/users/ejfs1g10/Downloads/Pokemon Red/Pokemon Red.gb");
 
     return 0; 
 }

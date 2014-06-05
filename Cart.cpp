@@ -9,7 +9,7 @@ void Cartridge::load_rom(string filename) {
     while (f) {
         char c;
         f.get(c);
-        rom.push_back(c);
+        if (f) rom.push_back(c);
     }
 }
 

@@ -1,6 +1,8 @@
 #ifndef CPU_H
 #define CPU_H
 
+#include "Memory.h"
+
 class CPU {
     //General Purpose Registers
     char A, F, B, C, D, E, H, L;
@@ -12,6 +14,8 @@ class CPU {
         bool Z, H, N, C; 
     } flag;
 
+public: 
+    Memory memory;
     int fetch_and_execute();
 };
 
