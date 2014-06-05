@@ -37,7 +37,7 @@ unsigned char& Memory::operator[](unsigned int i) {
         return NONE;
     } else if (i < 0xFF4C) {
         //I/O Ports
-        return NONE;
+        return IO_Ports[i - 0xFF00];
     } else if (i < 0xFF80) {
         //Empty but unusable for I/O
         return NONE;

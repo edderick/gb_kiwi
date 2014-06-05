@@ -24,6 +24,11 @@ void CPU::decrement_HL() {
 } 
 
 void CPU::print_state() {
+    //XXX:
+    if (CLK < 196628) return;
+
+
+
     cout << "PC: " << hex << setw(4) << setfill('0') << PC;
     cout << "   CLK: " << dec << CLK;
     cout << "   SP: " << hex << setw(4) << setfill('0') << SP;
@@ -55,12 +60,27 @@ int CPU::fetch_and_execute() {
     unsigned char OP_CODE = memory[PC];
     
     switch (OP_CODE) {
+        case 0x0C: 
+            //Increment C
+            cycles = 4;
+            len = 1; 
+            C++; 
+            break; 
+
+        case 0x0E:
+            //8-bit immediate load into C
+            cycles = 8;
+            len = 2;
+            C = memory[PC + 1];
+            break; 
+
         case 0x20:
             //Jump if not zero
             cycles = 8; 
             len = 2;
             if (!flag.Z) PC += (signed char) memory[PC + 1];
             break;
+
         case 0x21: 
             //16-bit immediate load into stack pointer
             cycles = 12; 
@@ -84,6 +104,13 @@ int CPU::fetch_and_execute() {
             decrement_HL(); 
             break;
 
+        case 0x3E:
+            //Immediate load into A
+            cycles = 8;
+            len = 2;
+            A = memory[PC + 1];
+            break;
+
         case 0xAF:
             //XOR A with A store in A
             cycles = 4;
@@ -98,57 +125,66 @@ int CPU::fetch_and_execute() {
             break;
 
         case 0xCB: 
-            //Extension OP_CODES
-            char x = (memory[PC + 1] & 0xC0) >> 6;
-            char y = (memory[PC + 1] & 0x38) >> 3;
-            char z = (memory[PC + 1] & 0x07);
+            {
+                //Extension OP_CODES
+                char x = (memory[PC + 1] & 0xC0) >> 6;
+                char y = (memory[PC + 1] & 0x38) >> 3;
+                char z = (memory[PC + 1] & 0x07);
 
-            switch(x) {
-                case 00: 
-                    //TODO: Rotate
-                    break;
-                case 01:
-                    // BIT -- Test Bit 
-                    cycles = 8;
-                    len = 2; 
-                    flag.N = false;
-                    flag.H = true;
-                switch(z) {
-                    case 0: // B
-                        flag.Z = ((B & (1 << y)) == 0);
+                switch(x) {
+                    case 00: 
+                        //TODO: Rotate
                         break;
-                    case 1: // C
-                        flag.Z = ((C & (1 << y)) == 0);
+                    case 01:
+                        // BIT -- Test Bit 
+                        cycles = 8;
+                        len = 2; 
+                        flag.N = false;
+                        flag.H = true;
+                        switch(z) {
+                            case 0: // B
+                                flag.Z = ((B & (1 << y)) == 0);
+                                break;
+                            case 1: // C
+                                flag.Z = ((C & (1 << y)) == 0);
+                                break;
+                            case 2: // D
+                                flag.Z = ((D & (1 << y)) == 0);
+                                break;
+                            case 3: // E
+                                flag.Z = ((E & (1 << y)) == 0);
+                                break;
+                            case 4: // H
+                                flag.Z = ((H & (1 << y)) == 0);
+                                break;
+                            case 5: // L
+                                flag.Z = ((L & (1 << y)) == 0);
+                                break;
+                            case 6: // HL
+                                //TODO: Fill this in
+                                cycles = 16; //XXX: HL takes more cycles..
+                                break;
+                            case 7: // A
+                                flag.Z = ((A & (1 << y)) == 0);
+                                break;
+                        }
                         break;
-                    case 2: // D
-                        flag.Z = ((D & (1 << y)) == 0);
+                    case 02:
+                        // TODO: RES -- Reset Bit
                         break;
-                    case 3: // E
-                        flag.Z = ((E & (1 << y)) == 0);
+                    case 03:
+                        // TODO: SET -- Set Bit
                         break;
-                    case 4: // H
-                        flag.Z = ((H & (1 << y)) == 0);
-                        break;
-                    case 5: // L
-                        flag.Z = ((L & (1 << y)) == 0);
-                        break;
-                    case 6: // HL
-                        //TODO: Fill this in
-                        cycles = 16; //XXX: HL takes more cycles..
-                        break;
-                    case 7: // A
-                        flag.Z = ((A & (1 << y)) == 0);
-                        break;
-                }
-                    break;
-                case 02:
-                    // TODO: RES -- Reset Bit
-                    break;
-                case 03:
-                    // TODO: SET -- Set Bit
-                    break;
-            } 
-
+                } 
+            }
+            break;
+            
+        case 0xE2: 
+            // Load A into mem[0xFF00 + C]
+            cycles = 8; 
+            len = 1;
+            memory[0xFF00 + C] = A;
+            break;
     }
 
     PC += len;
@@ -164,7 +200,7 @@ int main() {
 
     cpu.print_state();
 
-    for (int i = 0; i < 3 * (0x9FFF - 0x8000) + 6; i++) {
+    for (int i = 0; i < 6 + 3 * (0x9FFF - 0x8000) + 7; i++) {
         cpu.fetch_and_execute();
         cpu.print_state();
     }
