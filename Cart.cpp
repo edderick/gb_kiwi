@@ -4,7 +4,7 @@
 #include <iomanip>  
 
 void Cartridge::load_rom(string filename) {
-    ifstream f(filename, ios::binary);
+    ifstream f(filename.c_str(), ios::binary);
     
     while (f) {
         char c;
