@@ -42,12 +42,16 @@ char& Memory::operator[](unsigned int i) {
         return interrupt_enable_register;
     } else {
         //Some kind of error? 
-        return NULL;
+        return NONE;
     }
 }
 
 int main(){
     Memory m;
-    m[0] = 5; 
+    m.cartridge.load_rom("/users/ejfs1g10/Downloads/Pokemon Red/Pokemon Red.gb");
+    
+    //unsigned char c = m[0];
+    //cout << setfill('0') << setw(2) << hex << (unsigned int) c; 
+
     return 0;
 }
