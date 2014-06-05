@@ -4,13 +4,13 @@
 #include <string>
 
 bool Memory::is_DMG() {
-    return (*this)[0xFF50] != 0x01; 
+    return (*this)[0xFF50] == 0x00; 
 }
 
 unsigned char& Memory::operator[](unsigned int i) {
     if (i < 256 && is_DMG()) {
         //Bootstrapping ROM 
-        bootstrap[i];
+        return bootstrap[i];
     } else if (i < 0x4000) {
         //ROM Bank 0
         return cartridge[i];
@@ -47,9 +47,10 @@ unsigned char& Memory::operator[](unsigned int i) {
     } else if (i == 0xFFFF) {
         // Interrupt Enable Register
         return interrupt_enable_register;
-    } 
-    //Some kind of error? 
-    return NONE;
+    } else { 
+        //Some  kind of error? 
+        return NONE;
+    }
 }
 
 /*
