@@ -19,6 +19,14 @@ class CPU {
 
     void decrement_HL();
 
+    void push_val(unsigned char val);
+    unsigned char pop_val();
+
+    void push_addr(unsigned short addr);
+    unsigned short pop_addr();
+
+    void RL(unsigned char &reg);
+
 public: 
     Memory memory;
     int fetch_and_execute();

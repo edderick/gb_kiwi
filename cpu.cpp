@@ -23,16 +23,42 @@ void CPU::decrement_HL() {
     flag.H = (L == 0xFF); //XXX: UNTESTED -- set if no borrow from bit 4 
 } 
 
+void CPU::push_val(unsigned char val) {
+    SP--;
+    memory[SP] = val;
+}
+
+unsigned char CPU::pop_val() {
+    SP++;
+    return memory[SP - 1];
+}
+
+void CPU::push_addr(unsigned short addr) {
+    push_val((addr & 0xFF00) >> 8);
+    push_val((addr & 0xFF));
+
+}
+
+unsigned short CPU::pop_addr() {
+    unsigned char A = pop_val();
+    unsigned char B = pop_val();
+    
+    return concat_bytes(B, A);
+}
+
+void CPU::RL(unsigned char &reg) {
+    bool carry_out = ((reg & 0x80) == 1);
+    unsigned char carry_in = flag.C ? 0x1 : 0x0;
+    reg = (reg << 1) &  (0xFE | carry_in);
+    flag.C = carry_out;
+    flag.Z = (reg == 0);
+}
+
+
 void CPU::print_state() {
     //XXX:
     if (CLK < 196628) return;
 
-
-
-    cout << "PC: " << hex << setw(4) << setfill('0') << PC;
-    cout << "   CLK: " << dec << CLK;
-    cout << "   SP: " << hex << setw(4) << setfill('0') << SP;
-    cout << "\n";
     cout << "A: "  << hex << setw(2) << setfill('0') << (unsigned int) A;
     cout << "  F: " << hex << setw(2) << setfill('0') << (unsigned int) F;
     cout << "  B: " << hex << setw(2) << setfill('0') << (unsigned int) B;
@@ -47,6 +73,11 @@ void CPU::print_state() {
     cout << "  N: " << hex << setw(1) << setfill('0') << (unsigned int) flag.N;
     cout << "  C: " << hex << setw(1) << setfill('0') << (unsigned int) flag.C;
     cout << "\n" << endl;
+    
+    cout << "PC: " << hex << setw(4) << setfill('0') << PC;
+    cout << "   CLK: " << dec << CLK;
+    cout << "   SP: " << hex << setw(4) << setfill('0') << SP;
+    cout << "\n";
 }
 
 int CPU::fetch_and_execute() {
@@ -57,14 +88,22 @@ int CPU::fetch_and_execute() {
     int cycles = 0;
     int len = 0; 
 
+
     unsigned char OP_CODE = memory[PC];
-    
+   
     switch (OP_CODE) {
         case 0x0C: 
             //Increment C
             cycles = 4;
             len = 1; 
             C++; 
+            break; 
+
+        case 0x06:
+            //8-bit immediate load into B
+            cycles = 8;
+            len = 2;
+            B = memory[PC + 1];
             break; 
 
         case 0x0E:
@@ -74,6 +113,34 @@ int CPU::fetch_and_execute() {
             C = memory[PC + 1];
             break; 
 
+        case 0x16:
+            //8-bit immediate load into D
+            cycles = 8;
+            len = 2;
+            D = memory[PC + 1];
+            break; 
+
+        case 0x1E:
+            //8-bit immediate load into E
+            cycles = 8;
+            len = 2;
+            E = memory[PC + 1];
+            break; 
+
+        case 0x26:
+            //8-bit immediate load into H
+            cycles = 8;
+            len = 2;
+            H = memory[PC + 1];
+            break; 
+
+        case 0x2E:
+            //8-bit immediate load into L
+            cycles = 8;
+            len = 2;
+            L = memory[PC + 1];
+            break; 
+
         case 0x20:
             //Jump if not zero
             cycles = 8; 
@@ -81,8 +148,32 @@ int CPU::fetch_and_execute() {
             if (!flag.Z) PC += (signed char) memory[PC + 1];
             break;
 
+        case 0x01: 
+            //16-bit immediate load into BC
+            cycles = 12; 
+            len = 3;
+            B = memory[PC + 2]; 
+            C = memory[PC + 1];
+            break;
+
+        case 0x11: 
+            //16-bit immediate load into DE
+            cycles = 12; 
+            len = 3;
+            D = memory[PC + 2]; 
+            E = memory[PC + 1];
+            break;
+    
+        case 0x1A:
+            //Put value n into A
+            cycles = 8;
+            len = 1;
+
+            A = memory[concat_bytes(E, D)];
+            break;
+
         case 0x21: 
-            //16-bit immediate load into stack pointer
+            //16-bit immediate load into HL
             cycles = 12; 
             len = 3;
             H = memory[PC + 2]; 
@@ -111,6 +202,62 @@ int CPU::fetch_and_execute() {
             A = memory[PC + 1];
             break;
 
+        case 0x47:
+            //Load A into B
+            cycles = 4;
+            len = 1;
+            B = A;
+            break;
+
+        case 0x4F: 
+            // Load A into C
+            cycles = 4;
+            len = 1;
+            C = A;
+            break;
+
+        case 0x57: 
+            // Load A into D
+            cycles = 4;
+            len = 1;
+            D = A;
+            break;
+
+        case 0x5F: 
+            // Load A into E
+            cycles = 4;
+            len = 1;
+            E = A;
+            break;
+
+        case 0x67: 
+            // Load A into H
+            cycles = 4;
+            len = 1;
+            H = A;
+            break;
+
+        case 0x6F: 
+            // Load A into L
+            cycles = 4;
+            len = 1;
+            L = A;
+            break;
+
+        case 0x77:
+            // Load A into mem[HL]
+            cycles = 8; 
+            len = 1;
+            memory[concat_bytes(L, H)] = A;
+            break;
+
+        case 0x7F:
+           // Load A into A
+           cycles = 4;
+           len = 1; 
+           A = A;
+           break; 
+
         case 0xAF:
             //XOR A with A store in A
             cycles = 4;
@@ -134,6 +281,19 @@ int CPU::fetch_and_execute() {
                 switch(x) {
                     case 00: 
                         //TODO: Rotate
+                        cycles = 8;
+                        len = 2;
+                        flag.N = false;
+                        flag.H = false;
+                        switch(memory[PC + 1]) {
+                            case 0x17: RL(A); break;
+                            case 0x10: RL(B); break;
+                            case 0x11: RL(C); break;
+                            case 0x12: RL(D); break;
+                            case 0x13: RL(E); break;
+                            case 0x14: RL(H); break;
+                            case 0x15: RL(L); break;
+                        }
                         break;
                     case 01:
                         // BIT -- Test Bit 
@@ -178,12 +338,62 @@ int CPU::fetch_and_execute() {
                 } 
             }
             break;
-            
+         
+        case 0xCD:
+            // Call addr
+            cycles = 12;
+            len = 0;
+            {
+                unsigned short addr = PC + 3;
+                push_addr(addr);
+                PC = concat_bytes(memory[PC + 1], memory[PC + 2]);
+            }
+            break;
+
+        case 0xE0: 
+            // Load A into mem[0xFF00 + n]
+            cycles = 12;
+            len = 2; 
+            memory[0xFF00 + memory[PC + 1]] = A;
+            break;
+
         case 0xE2: 
             // Load A into mem[0xFF00 + C]
             cycles = 8; 
             len = 1;
             memory[0xFF00 + C] = A;
+            break;
+        
+        case 0xF5: 
+            //Push 16-bits AF
+            cycles = 16;
+            len = 1;
+            push_val(A);
+            push_val(F);
+            break;
+
+        case 0xC5: 
+            //Push BC
+            cycles = 16;
+            len = 1;
+            push_val(B);
+            push_val(C);
+            break;
+
+        case 0xD5: 
+            //Push 16-bits DE
+            cycles = 16;
+            len = 1;
+            push_val(D);
+            push_val(E);
+            break;
+
+        case 0xE5: 
+            //Push E5
+            cycles = 16;
+            len = 1;
+            push_val(H);
+            push_val(L);
             break;
     }
 
@@ -194,13 +404,13 @@ int CPU::fetch_and_execute() {
 }
 
 int main() {
-
     CPU cpu; 
-    cpu.memory.cartridge.load_rom("/users/ejfs1g10/Downloads/Pokemon Red/Pokemon Red.gb");
+    cpu.memory.cartridge.load_rom("Pokemon Red.gb");
+
 
     cpu.print_state();
 
-    for (int i = 0; i < 6 + 3 * (0x9FFF - 0x8000) + 7; i++) {
+    for (int i = 0; i < 6 + 3 * (0x9FFF - 0x8000) + 21; i++) {
         cpu.fetch_and_execute();
         cpu.print_state();
     }

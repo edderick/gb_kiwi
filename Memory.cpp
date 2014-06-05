@@ -8,7 +8,7 @@ bool Memory::is_DMG() {
 }
 
 unsigned char& Memory::operator[](unsigned int i) {
-    if (i < 256 && is_DMG()) {
+    if (i < 0x0100 && is_DMG()) {
         //Bootstrapping ROM 
         return bootstrap[i];
     } else if (i < 0x4000) {
