@@ -17,7 +17,8 @@ class CPU {
         bool Z, H, N, C; 
     } flag;
 
-    void decrement_HL();
+    void increment_pair(unsigned char &LSB, unsigned char &MSB);
+    void decrement_pair(unsigned char &LSB, unsigned char &MSB);
 
     void push_val(unsigned char val);
     unsigned char pop_val();

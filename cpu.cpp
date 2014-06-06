@@ -12,15 +12,19 @@ unsigned short concat_bytes(unsigned char LSB, unsigned char MSB) {
 }
 
 //XXX: NEEDS TESTING...
-void CPU::decrement_HL() {
-    unsigned short HL = concat_bytes(L, H);
-    HL--; 
-    H = (0xFF00 & HL) >> 8;
-    L = 0x00FF & HL;
+void CPU::increment_pair(unsigned char &LSB, unsigned char &MSB) {
+    unsigned short p = concat_bytes(LSB, MSB);
+    p++; 
+    MSB = (0xFF00 & p) >> 8;
+    LSB = 0x00FF & p;
+} 
 
-    flag.Z = (HL == 0); 
-    flag.N = true;
-    flag.H = (L == 0xFF); //XXX: UNTESTED -- set if no borrow from bit 4 
+//XXX: NEEDS TESTING...
+void CPU::decrement_pair(unsigned char &LSB, unsigned char &MSB) {
+    unsigned short p = concat_bytes(L, H);
+    p--; 
+    MSB = (0xFF00 & p) >> 8;
+    LSB = 0x00FF & p;
 } 
 
 void CPU::push_val(unsigned char val) {
@@ -43,7 +47,7 @@ unsigned short CPU::pop_addr() {
     unsigned char A = pop_val();
     unsigned char B = pop_val();
     
-    return concat_bytes(B, A);
+    return concat_bytes(A, B);
 }
 
 void CPU::RL(unsigned char &reg) {
@@ -53,7 +57,6 @@ void CPU::RL(unsigned char &reg) {
     flag.C = carry_out;
     flag.Z = (reg == 0);
 }
-
 
 void CPU::print_state() {
     //XXX:
@@ -72,12 +75,11 @@ void CPU::print_state() {
     cout << "  H: " << hex << setw(1) << setfill('0') << (unsigned int) flag.H;
     cout << "  N: " << hex << setw(1) << setfill('0') << (unsigned int) flag.N;
     cout << "  C: " << hex << setw(1) << setfill('0') << (unsigned int) flag.C;
-    cout << "\n" << endl;
-    
+    cout << "\n\n";
     cout << "PC: " << hex << setw(4) << setfill('0') << PC;
     cout << "   CLK: " << dec << CLK;
     cout << "   SP: " << hex << setw(4) << setfill('0') << SP;
-    cout << "\n";
+    cout << endl;
 }
 
 int CPU::fetch_and_execute() {
@@ -88,16 +90,224 @@ int CPU::fetch_and_execute() {
     int cycles = 0;
     int len = 0; 
 
-
     unsigned char OP_CODE = memory[PC];
    
     switch (OP_CODE) {
+        case 0x3C: 
+            //Increment A
+            cycles = 4;
+            len = 1; 
+            A++; 
+            flag.Z = (A == 0);
+            flag.N = false;
+            //XXX :Need to set flag.H for half carry 
+            break; 
+        
+        case 0x04: 
+            //Increment B
+            cycles = 4;
+            len = 1; 
+            B++; 
+            flag.Z = (B == 0);
+            flag.N = false;
+            //XXX :Need to set flag.H for half carry 
+            break; 
+        
         case 0x0C: 
             //Increment C
             cycles = 4;
             len = 1; 
             C++; 
+            flag.Z = (C == 0);
+            flag.N = false;
+            //XXX :Need to set flag.H for half carry 
             break; 
+        
+        case 0x14: 
+            //Increment D
+            cycles = 4;
+            len = 1; 
+            D++; 
+            flag.Z = (D == 0);
+            flag.N = false;
+            //XXX :Need to set flag.H for half carry 
+            break; 
+        
+        case 0x1C: 
+            //Increment E
+            cycles = 4;
+            len = 1; 
+            E++; 
+            flag.Z = (E == 0);
+            flag.N = false;
+            //XXX :Need to set flag.H for half carry 
+            break; 
+        
+        case 0x24: 
+            //Increment H
+            cycles = 4;
+            len = 1; 
+            H++; 
+            flag.Z = (H == 0);
+            flag.N = false;
+            //XXX :Need to set flag.H for half carry 
+            break; 
+        
+        case 0x2C: 
+            //Increment L
+            cycles = 4;
+            len = 1; 
+            L++; 
+            flag.Z = (L == 0);
+            flag.N = false;
+            //XXX :Need to set flag.H for half carry 
+            break; 
+
+        case 0x34: 
+            //Increment HL
+            cycles = 12;
+            len = 1; 
+            increment_pair(L, H); 
+            flag.Z = (H == 0) && (L == 0); 
+            flag.N = false;
+            //XXX: flag.H set if no borrow from bit 4 
+            break; 
+
+        case 0x03:
+            //Increment BC
+            cycles = 8;
+            len = 1;
+            increment_pair(C, B); 
+            break;
+
+        case 0x13:
+            //Increment DE
+            cycles = 8;
+            len = 1;
+            increment_pair(E, D); 
+            break;
+
+        case 0x23:
+            //Increment HL
+            cycles = 8;
+            len = 1;
+            increment_pair(L, H); 
+            break;
+
+        case 0x33:
+            //Increment SP
+            cycles = 8;
+            len = 1;
+            SP++; 
+            break;
+
+        case 0x3D: 
+            //Decrement A
+            cycles = 4;
+            len = 1; 
+            A--; 
+            flag.Z = (A == 0);
+            flag.N = true;
+            //XXX :Need to set flag.H for half carry 
+            break; 
+
+        case 0x05: 
+            //Decrement B
+            cycles = 4;
+            len = 1; 
+            B--; 
+            flag.Z = (B == 0);
+            flag.N = true;
+            //XXX :Need to set flag.H for half carry 
+            break; 
+
+        case 0x0D: 
+            //Decrement C
+            cycles = 4;
+            len = 1; 
+            C--; 
+            flag.Z = (C == 0);
+            flag.N = true;
+            //XXX :Need to set flag.H for half carry 
+            break; 
+
+        case 0x15: 
+            //Decrement D
+            cycles = 4;
+            len = 1; 
+            D--; 
+            flag.Z = (D == 0);
+            flag.N = true;
+            //XXX :Need to set flag.H for half carry 
+            break; 
+
+        case 0x1D: 
+            //Decrement E
+            cycles = 4;
+            len = 1; 
+            E--; 
+            flag.Z = (E == 0);
+            flag.N = true;
+            //XXX :Need to set flag.H for half carry 
+            break; 
+
+        case 0x25: 
+            //Decrement H
+            cycles = 4;
+            len = 1; 
+            H--; 
+            flag.Z = (H == 0);
+            flag.N = true;
+            //XXX :Need to set flag.H for half carry 
+            break; 
+
+        case 0x2D: 
+            //Decrement L
+            cycles = 4;
+            len = 1; 
+            L--; 
+            flag.Z = (L == 0);
+            flag.N = true;
+            //XXX :Need to set flag.H for half carry 
+            break; 
+
+        case 0x35: 
+            //Decrement HL
+            cycles = 12;
+            len = 1; 
+            decrement_pair(L, H); 
+            flag.Z = (H == 0) && (L == 0); 
+            flag.N = true;
+            //XXX: flag.H set if no borrow from bit 4 
+            break; 
+
+        case 0x0B:
+            //Decrement BC
+            cycles = 8;
+            len = 1;
+            decrement_pair(C, B); 
+            break;
+
+        case 0x1B:
+            //Decrement DE
+            cycles = 8;
+            len = 1;
+            decrement_pair(E, D); 
+            break;
+
+        case 0x2B:
+            //Decrement HL
+            cycles = 8;
+            len = 1;
+            decrement_pair(L, H); 
+            break;
+
+        case 0x3B:
+            //Decrement SP
+            cycles = 8;
+            len = 1;
+            SP--; 
+            break;
 
         case 0x06:
             //8-bit immediate load into B
@@ -141,11 +351,25 @@ int CPU::fetch_and_execute() {
             L = memory[PC + 1];
             break; 
 
+        case 0x18:
+            //Jump if not zero
+            cycles = 8; 
+            len = 2;
+            PC += (signed char) memory[PC + 1];
+            break;
+
         case 0x20:
             //Jump if not zero
             cycles = 8; 
             len = 2;
             if (!flag.Z) PC += (signed char) memory[PC + 1];
+            break;
+
+        case 0x28:
+            //Jump if zero
+            cycles = 8; 
+            len = 2;
+            if (flag.Z) PC += (signed char) memory[PC + 1];
             break;
 
         case 0x01: 
@@ -187,12 +411,20 @@ int CPU::fetch_and_execute() {
             SP = concat_bytes(memory[PC + 1], memory[PC + 2]);
             break;
 
+        case 0x22: 
+            //Put A into mem[HL], Increment HL
+            cycles = 8;
+            len = 1;
+            memory[concat_bytes(L, H)] = A;
+            increment_pair(L, H); 
+            break;
+
         case 0x32: 
             //Put A into mem[HL], Decrement HL
             cycles = 8;
             len = 1;
             memory[concat_bytes(L, H)] = A;
-            decrement_HL(); 
+            decrement_pair(L, H); 
             break;
 
         case 0x3E:
@@ -255,7 +487,7 @@ int CPU::fetch_and_execute() {
            // Load A into A
            cycles = 4;
            len = 1; 
-           A = A;
+           // XXX: A = A;
            break; 
 
         case 0xAF:
@@ -269,6 +501,19 @@ int CPU::fetch_and_execute() {
             flag.N = false;
             flag.H = false;
             flag.C = false; 
+            break;
+
+        case 0x17:
+            cycles = 4;
+            len = 1; 
+            RL(A);
+            break;
+
+        case 0x7B: 
+            // LD A, E
+            cycles = 4; 
+            len = 1; 
+            A = E; 
             break;
 
         case 0xCB: 
@@ -350,11 +595,24 @@ int CPU::fetch_and_execute() {
             }
             break;
 
+        case 0xC9:
+            cycles = 8;
+            len = 0; 
+            PC = pop_addr();
+            break;
+
         case 0xE0: 
             // Load A into mem[0xFF00 + n]
             cycles = 12;
             len = 2; 
             memory[0xFF00 + memory[PC + 1]] = A;
+            break;
+
+        case 0xF0: 
+            // Load A into mem[0xFF00 + n]
+            cycles = 12;
+            len = 2; 
+            A = memory[0xFF00 + memory[PC + 1]];
             break;
 
         case 0xE2: 
@@ -365,7 +623,7 @@ int CPU::fetch_and_execute() {
             break;
         
         case 0xF5: 
-            //Push 16-bits AF
+            //Push AF
             cycles = 16;
             len = 1;
             push_val(A);
@@ -381,7 +639,7 @@ int CPU::fetch_and_execute() {
             break;
 
         case 0xD5: 
-            //Push 16-bits DE
+            //Push DE
             cycles = 16;
             len = 1;
             push_val(D);
@@ -395,6 +653,56 @@ int CPU::fetch_and_execute() {
             push_val(H);
             push_val(L);
             break;
+
+        case 0xF1: 
+            //Pop AF
+            cycles = 12;
+            len = 1;
+            F = pop_val();
+            A = pop_val();
+            break;
+
+        case 0xC1: 
+            //Push BC
+            cycles = 12;
+            len = 1;
+            C = pop_val();
+            B = pop_val();
+            break;
+
+        case 0xD1: 
+            //Push DE
+            cycles = 12;
+            len = 1;
+            E = pop_val();
+            D = pop_val();
+            break;
+
+        case 0xE1: 
+            //Push HL
+            cycles = 12;
+            len = 1;
+            L = pop_val();
+            H = pop_val();
+            break;
+
+        case 0xEA: 
+            // Put value A into mem[n]
+            cycles = 16;
+            len = 3;
+            memory[concat_bytes(memory[PC + 1], memory[PC + 2])] = A;
+            break;
+
+        case 0xFE: 
+            // Compare n to A
+            cycles = 8; 
+            len = 2;
+            flag.Z = (A == memory[PC + 1]);
+            flag.N = true;
+            //XXX: flag.H
+            flag.C = (A < memory[PC + 1]);
+            break;
+
     }
 
     PC += len;
@@ -407,13 +715,13 @@ int main() {
     CPU cpu; 
     cpu.memory.cartridge.load_rom("Pokemon Red.gb");
 
-
     cpu.print_state();
 
-    for (int i = 0; i < 6 + 3 * (0x9FFF - 0x8000) + 21; i++) {
+    for (int i = 0; i < 6 + 3 * (0x9FFF - 0x8000) + 26 + 30 + 50 + 3948 + 46 + 6 + 58 + 77; i++) {
         cpu.fetch_and_execute();
         cpu.print_state();
     }
 
+    cout << endl; //XXX: Voodoo...
     return 0; 
 }
