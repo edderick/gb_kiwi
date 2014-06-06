@@ -3,6 +3,7 @@
 
 #include "Cart.h"
 #include "Bootstrap.h"
+#include "Graphics.h"
 
 class Memory {
     unsigned char interrupt_enable_register; 
@@ -12,10 +13,14 @@ class Memory {
     //TODO: Pull these out into actual classes
     unsigned char IO_Ports[0xFF4C - 0xFF00];
     unsigned char VRAM[0xA000 - 0x8000];
+
+    unsigned char& handle_IO(unsigned int i);
+
     bool is_DMG();
 public: 
     Cartridge cartridge; 
     Bootstrap bootstrap;
+    Graphics graphics; 
     unsigned char& operator[](unsigned int); 
 };
 

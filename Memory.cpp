@@ -21,7 +21,7 @@ unsigned char& Memory::operator[](unsigned int i) {
 
     } else if ((i >= 0x8000) && (i < 0xA000)) {
         //Video RAM 
-        return VRAM[i - 0x8000];
+        return graphics[i];
 
     } else if ((i >= 0xA000) && (i < 0xC000)) {
         //Switchable RAM Bank 
@@ -40,15 +40,15 @@ unsigned char& Memory::operator[](unsigned int i) {
         return NONE;
 
     } else if ((i >= 0xFEA0) && (i < 0xFF00)) {
-        //Empty but unusable I/O
+        //*** UNUSED ***
         return NONE;
 
     } else if ((i >= 0xFF00) && (i < 0xFF4C)) {
         //I/O Ports
-        return IO_Ports[i - 0xFF00];
+        return handle_IO(i);
 
     } else if ((i >= 0xFF4C) && (i < 0xFF80)) {
-        //Empty but unusable for I/O
+        //*** UNUSED ***
         return NONE;
 
     } else if ((i >= 0xFF80) && (i < 0xFFFF)) {
@@ -63,6 +63,38 @@ unsigned char& Memory::operator[](unsigned int i) {
         //Some  kind of error? 
         return NONE;
     }
+}
+
+unsigned char& Memory::handle_IO(unsigned int i) {
+    switch (i) {
+        case 0xFF40: // LCDC
+            return graphics.LCDC; 
+        case 0xFF41: // LCDC Status
+            return graphics.LCDC_status; 
+        case 0xFF42: // Scroll Y
+            return graphics.scroll_y;
+        case 0xFF43: // Scroll X
+            return graphics.scroll_x; 
+        case 0xFF44: // Line Y
+            return graphics.line_y;
+        case 0xFF45: // Line Y Compare 
+            return graphics.line_y_cmp;
+        case 0xFF46: // DMA Start address
+            return graphics.DMA_addr;
+        case 0xFF47: // BG & Window Pallete Data
+            return graphics.bgp;
+        case 0xFF48: // Object Pallette 0 Data
+            return graphics.obp0;
+        case 0xFF49: // Object Pallette 1 Data
+            return graphics.obp1;
+        case 0xFF4A: // Window Y
+            return graphics.window_y;
+        case 0xFF4B: // Window X
+            return graphics.window_x;
+    }
+
+    //Error?
+    return IO_Ports[i - 0xFF00];
 }
 
 /*
