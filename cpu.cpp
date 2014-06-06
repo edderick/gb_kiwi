@@ -60,7 +60,7 @@ void CPU::RL(unsigned char &reg) {
 
 void CPU::print_state() {
     //XXX:
-    if (CLK < 196628) return;
+    if (CLK < 380724) return;
 
     cout << "A: "  << hex << setw(2) << setfill('0') << (unsigned int) A;
     cout << "  F: " << hex << setw(2) << setfill('0') << (unsigned int) F;
@@ -483,8 +483,22 @@ int CPU::fetch_and_execute() {
             memory[concat_bytes(L, H)] = A;
             break;
 
+        case 0x7D:
+            //Load L into A
+            cycles = 4;
+            len = 1; 
+            A = L;
+            break;
+
+        case 0x78:
+            //Load B into A
+            cycles = 4;
+            len = 1; 
+            A = B;
+            break;
+
         case 0x7F:
-           // Load A into A
+           // LD A, A
            cycles = 4;
            len = 1; 
            // XXX: A = A;
@@ -514,6 +528,13 @@ int CPU::fetch_and_execute() {
             cycles = 4; 
             len = 1; 
             A = E; 
+            break;
+
+        case 0x7C: 
+            // LD A, H
+            cycles = 4; 
+            len = 1; 
+            A = H; 
             break;
 
         case 0xCB: 
@@ -693,6 +714,87 @@ int CPU::fetch_and_execute() {
             memory[concat_bytes(memory[PC + 1], memory[PC + 2])] = A;
             break;
 
+        case 0xBF:
+            //Compare A to A
+            cycles = 4;
+            len = 1; 
+            flag.Z = (A == A);
+            flag.N = true;
+            //TODO: flag.H
+            flag.C = (A < A);
+            break; 
+
+        case 0xB8:
+            //Compare B to A
+            cycles = 4;
+            len = 1; 
+            flag.Z = (A == B);
+            flag.N = true;
+            //TODO: flag.H
+            flag.C = (A < B);
+            break; 
+
+        case 0xB9:
+            //Compare C to A
+            cycles = 4;
+            len = 1; 
+            flag.Z = (A == C);
+            flag.N = true;
+            //TODO: flag.H
+            flag.C = (A < C);
+            break; 
+
+        case 0xBA:
+            //Compare D to A
+            cycles = 4;
+            len = 1; 
+            flag.Z = (A == D);
+            flag.N = true;
+            //TODO: flag.H
+            flag.C = (A < D);
+            break; 
+
+        case 0xBB:
+            //Compare E to A
+            cycles = 4;
+            len = 1; 
+            flag.Z = (A == E);
+            flag.N = true;
+            //TODO: flag.H
+            flag.C = (A < E);
+            break; 
+
+        case 0xBC:
+            //Compare H to A
+            cycles = 4;
+            len = 1; 
+            flag.Z = (A == H);
+            flag.N = true;
+            //TODO: flag.H
+            flag.C = (A < H);
+            break; 
+
+        case 0xBD:
+            //Compare L to A
+            cycles = 4;
+            len = 1; 
+            flag.Z = (A == L);
+            flag.N = true;
+            //TODO: flag.H
+            flag.C = (A < L);
+            break; 
+
+        case 0xBE: 
+            // Compare mem[HL] to A
+            cycles = 8; 
+            len = 1;
+            flag.Z = (A == memory[concat_bytes(L, H)]);
+            flag.N = true;
+            //XXX: flag.H
+            flag.C = (A < memory[concat_bytes(L, H)]);
+            break;
+
+
         case 0xFE: 
             // Compare n to A
             cycles = 8; 
@@ -703,6 +805,194 @@ int CPU::fetch_and_execute() {
             flag.C = (A < memory[PC + 1]);
             break;
 
+        case 0x97:
+            //Subtract A from A
+            cycles = 4;
+            len = 1; 
+            A -= A;
+            flag.Z = (A == 0);
+            flag.N = true;
+
+            //TODO: flag.H
+            flag.C = (A + A < A);
+            break; 
+
+        case 0x90:
+            //Subtract B from A
+            cycles = 4;
+            len = 1; 
+            A -= B;
+            flag.Z = (A == 0);
+            flag.N = true;
+            //TODO: flag.H
+            flag.C = (A + B < B);
+            break; 
+
+        case 0x91:
+            //Subtract C from A
+            cycles = 4;
+            len = 1; 
+            A -= C;
+            flag.Z = (A == 0);
+            flag.N = true;
+            //TODO: flag.H
+            flag.C = (A + C < C);
+            break; 
+
+        case 0x92:
+            //Subtract D from A
+            cycles = 4;
+            len = 1; 
+            A -= D;
+            flag.Z = (A == 0);
+            flag.N = true;
+            //TODO: flag.H
+            flag.C = (A + D < D);
+            break; 
+
+        case 0x93:
+            //Subtract E from A
+            cycles = 4;
+            len = 1; 
+            A -= E;
+            flag.Z = (A == 0);
+            flag.N = true;
+            //TODO: flag.H
+            flag.C = (A + E < E);
+            break; 
+
+        case 0x94:
+            //Subtract H from A
+            cycles = 4;
+
+            len = 1; 
+            A -= H;
+            flag.Z = (A == 0);
+            flag.N = true;
+            //TODO: flag.H
+            flag.C = (A + H < H);
+            break; 
+
+        case 0x95:
+            //Subtract L from A
+            cycles = 4;
+            len = 1; 
+            A -= L;
+            flag.Z = (A == 0);
+            flag.N = true;
+            //TODO: flag.H
+            flag.C = (A + L < L);
+            break; 
+
+        case 0xD6:
+            //Subtract n from A
+            cycles = 8;
+            len = 2; 
+            A -= memory[PC + 1];
+            flag.Z = (A == 0);
+            flag.N = true;
+            //TODO: flag.H
+            flag.C = (A + memory[PC + 1] < memory[PC + 1]);
+            break; 
+
+        case 0x87:
+            //Add A to A
+            cycles = 4;
+            len = 1; 
+            A += A;
+            flag.Z = (A == 0);
+            flag.N = true;
+            //TODO: flag.H
+            //TODO: flag.C 
+            break; 
+
+        case 0x80:
+            //Add B to A
+            cycles = 4;
+            len = 1; 
+            A += B;
+            flag.Z = (A == 0);
+            flag.N = true;
+            //TODO: flag.H
+            //TODO: flag.C 
+            break; 
+
+        case 0x81:
+            //Add C to A
+            cycles = 4;
+            len = 1; 
+            A += C;
+            flag.Z = (A == 0);
+            flag.N = true;
+            //TODO: flag.H
+            //TODO: flag.C 
+            break; 
+
+        case 0x82:
+            //Add D to A
+            cycles = 4;
+            len = 1; 
+            A += D;
+            flag.Z = (A == 0);
+            flag.N = true;
+            //TODO: flag.H
+            //TODO: flag.C 
+            break; 
+
+        case 0x83:
+            //Add E to A
+            cycles = 4;
+            len = 1; 
+            A += E;
+            flag.Z = (A == 0);
+            flag.N = true;
+            //TODO: flag.H
+            //TODO: flag.C 
+            break; 
+
+        case 0x84:
+            //Add H to A
+            cycles = 4;
+            len = 1; 
+            A += H;
+            flag.Z = (A == 0);
+            flag.N = true;
+            //TODO: flag.H
+            //TODO: flag.C 
+            break; 
+
+        case 0x85:
+            //Add L to A
+            cycles = 4;
+            len = 1; 
+            A += L;
+            flag.Z = (A == 0);
+            flag.N = true;
+            //TODO: flag.H
+            //TODO: flag.C 
+            break; 
+
+        case 0x86:
+            //Add HL to A
+            cycles = 4;
+            len = 1; 
+            A += memory[concat_bytes(L, H)];
+            flag.Z = (A == 0);
+            flag.N = true;
+            //TODO: flag.H
+            //TODO: flag.C 
+            break; 
+
+        case 0xC6:
+            //Add n to A
+            cycles = 8;
+            len = 2; 
+            A += memory[PC + 1];
+            flag.Z = (A == 0);
+            flag.N = true;
+            //TODO: flag.H
+            //TODO: flag.C
+            break; 
     }
 
     PC += len;
@@ -717,7 +1007,7 @@ int main() {
 
     cpu.print_state();
 
-    for (int i = 0; i < 6 + 3 * (0x9FFF - 0x8000) + 26 + 30 + 50 + 3948 + 46 + 6 + 58 + 77; i++) {
+    for (int i = 0; i < 6 + 3 * (0x9FFF - 0x8000) + 26 + 30 + 50 + 3948 + 46 + 6 + 58 + 79 + 120 + 13 + 18500 + 375 + 102; i++) {
         cpu.fetch_and_execute();
         cpu.print_state();
     }
