@@ -3,7 +3,7 @@
 
 class Graphics {
     int CLK;
-    unsigned char VRAM[0xA000 - 0x8000];
+    unsigned char VRAM[0xA000 - 0x8000]= {0};
     public: 
 
     Graphics();
@@ -28,6 +28,9 @@ class Graphics {
 
     void step(int clock_cycle_delta); 
     unsigned char& operator[](unsigned int); 
+    
+    void dump_state();
+    void dump_tiles();
 };
 
 

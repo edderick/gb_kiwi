@@ -1012,6 +1012,9 @@ int main() {
         cpu.print_state();
     }
 
+    cpu.memory.graphics.dump_state();
+    cpu.memory.graphics.dump_tiles();
+
     cout << endl; //XXX: Voodoo...
     return 0; 
 }
