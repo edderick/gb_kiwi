@@ -417,8 +417,6 @@ int CPU::fetch_and_execute() {
             cycles = 8;
             len = 1;
             memory[concat_bytes(L, H)] = A;
-            cout << hex << (int)concat_bytes(L, H) ;
-            cout << "--"<< hex << (int) A << endl;
             increment_pair(L, H); 
             break;
 

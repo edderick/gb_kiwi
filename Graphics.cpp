@@ -4,9 +4,8 @@
 #include <sstream>
 
 using namespace std;
-Graphics::Graphics() {
+Graphics::Graphics() : VRAM(), line_y(0x90) {
     //XXX: LINE Y SET TO 90 to trick ROM...
-    line_y = 0x90;
 }
 
 void Graphics::step(int clock_cycle_delta) {
@@ -76,7 +75,6 @@ void handle_tile(unsigned char tile[16], unsigned char buf[256][256], int tile_i
         unsigned char t2 = tile[i+1];
         
         for (int j = 0; j < 8; j++) {
-            //unsigned char v = (((t1 & (0x80 >> j)) << 1) | (t2 & (0x80 >> j)));
             unsigned char v = 0; 
 
             if ((t1 & (0x80 >> j)) != 0) {
@@ -86,21 +84,16 @@ void handle_tile(unsigned char tile[16], unsigned char buf[256][256], int tile_i
                 v += 1;
             }
 
-            cout << dec << (int) v;
             buf[x+(i/2)][y+j] = v;
         }
-        cout << endl;
     }
-    cout << endl;
-    cout << endl;
 }
 
-void Graphics::dump_map_one() {
+void Graphics::dump_map(unsigned int tile_offset, unsigned int map_offset) {
     unsigned char buf[256][256] = {0};
-    
+
     for (int i = 0; i < 32*32; i++) {
-        cout << (int) (*this)[0x9800 + i]<<endl;
-        handle_tile(&(*this)[0x8000 + (*this)[0x9800+i] * 16], buf, i);
+        handle_tile(&(*this)[tile_offset + (*this)[map_offset + i] * 16], buf, i);
     }
 
     for (int i = 0; i < 256; i++) {
@@ -115,5 +108,11 @@ void Graphics::dump_map_one() {
     }
 }
 
+void Graphics::dump_map_one() {
+    dump_map(0x8000, 0x9800);    
+}
 
+void Graphics::dump_map_two() {
+    dump_map(0x8FFF, 0x9C00);    
+}
 

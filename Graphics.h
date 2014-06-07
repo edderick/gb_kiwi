@@ -11,7 +11,7 @@ class Graphics {
        0x9800 - 0x9BFF  Tile Map 0 
        0x9C00 - 0x9FFF  Tile Map 1
     */
-    unsigned char VRAM[0xA000 - 0x8000]= {0};
+    unsigned char VRAM[0xA000 - 0x8000];
     public: 
 
     Graphics();
@@ -40,6 +40,7 @@ class Graphics {
     void dump_state();
     void dump_tiles();
     void dump_map_indices();
+    void dump_map(unsigned int, unsigned int);
     void dump_map_one();
     void dump_map_two();
 };
