@@ -719,10 +719,10 @@ int CPU::fetch_and_execute() {
             //Compare A to A
             cycles = 4;
             len = 1; 
-            flag.Z = (A == A);
+            flag.Z = true;
             flag.N = true;
             //TODO: flag.H
-            flag.C = (A < A);
+            flag.C = false;
             break; 
 
         case 0xB8:
