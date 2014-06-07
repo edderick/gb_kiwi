@@ -3,6 +3,14 @@
 
 class Graphics {
     int CLK;
+    /*
+       0x8000 - 0x87FF  Tile set 1 (0 to 127)
+       0x8800 - 0x8FFF  Shared Tiles Tile set 1 (128 to 255)
+                                     Tile set 2 (-128 to -1)
+       0x9000 - 0x97FF  Tile set 2 (0 to 127)
+       0x9800 - 0x9BFF  Tile Map 0 
+       0x9C00 - 0x9FFF  Tile Map 1
+    */
     unsigned char VRAM[0xA000 - 0x8000]= {0};
     public: 
 
@@ -31,6 +39,9 @@ class Graphics {
     
     void dump_state();
     void dump_tiles();
+    void dump_map_indices();
+    void dump_map_one();
+    void dump_map_two();
 };
 
 

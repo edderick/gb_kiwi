@@ -1011,13 +1011,15 @@ int main() {
     cpu.print_state();
 
     for (int i = 0; i < 6 + 3 * (0x9FFF - 0x8000) + 26 + 30 + 50 + 3948 + 46 + 6 + 58 + 79 + 120 + 13 + 18500 + 375 + 102; i++) {
-    cpu.memory.graphics.dump_tiles();
+        //cpu.memory.graphics.dump_tiles();
         cpu.fetch_and_execute();
         cpu.print_state();
     }
 
     cpu.memory.graphics.dump_state();
     cpu.memory.graphics.dump_tiles();
+    cpu.memory.graphics.dump_map_indices();
+    cpu.memory.graphics.dump_map_one();
 
     cout << endl; //XXX: Voodoo...
     return 0; 

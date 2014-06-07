@@ -45,3 +45,75 @@ void Graphics::dump_tiles() {
         }
     } 
 }
+
+void Graphics::dump_map_indices() {
+    for (int i = 0x9800; i < 0x9800 + 32*32*2; i++) {
+        stringstream ss; 
+        bool b = false;
+        if ((*this)[i] != 0) {
+            if (i < 0x9C00) { 
+                cout << "Map 1 Tile (" 
+                     << dec << (i - 0x9800) / 32 << ", "
+                     << dec << (i - 0x9800) % 32 << "): ";
+            } else { 
+                cout << "Map 2 Tile (" 
+                     << dec << (i - 0x9C00) / 32 << ", "
+                     << dec << (i - 0x9C00) % 32 << "): ";
+            }
+
+            ss << dec << (int) (*this)[i];
+            cout << ss.str() << endl;
+        }
+    } 
+}
+
+void handle_tile(unsigned char tile[16], unsigned char buf[256][256], int tile_index){
+    int x = (tile_index / 32) * 8;
+    int y = (tile_index % 32) * 8;
+        
+    for (int i = 0; i < 16; i+=2) {
+        unsigned char t1 = tile[i];
+        unsigned char t2 = tile[i+1];
+        
+        for (int j = 0; j < 8; j++) {
+            //unsigned char v = (((t1 & (0x80 >> j)) << 1) | (t2 & (0x80 >> j)));
+            unsigned char v = 0; 
+
+            if ((t1 & (0x80 >> j)) != 0) {
+                v += 2;
+            }  
+            if ((t2 & (0x80 >> j)) != 0) {
+                v += 1;
+            }
+
+            cout << dec << (int) v;
+            buf[x+(i/2)][y+j] = v;
+        }
+        cout << endl;
+    }
+    cout << endl;
+    cout << endl;
+}
+
+void Graphics::dump_map_one() {
+    unsigned char buf[256][256] = {0};
+    
+    for (int i = 0; i < 32*32; i++) {
+        cout << (int) (*this)[0x9800 + i]<<endl;
+        handle_tile(&(*this)[0x8000 + (*this)[0x9800+i] * 16], buf, i);
+    }
+
+    for (int i = 0; i < 256; i++) {
+        for (int j = 0; j < 256; j++) {
+            if (buf[i][j] == 0) {
+                cout << ".";
+            } else { 
+                cout << dec << (int) buf[i][j];
+            }
+        }
+        cout << "\n";
+    }
+}
+
+
+
