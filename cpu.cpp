@@ -51,9 +51,10 @@ unsigned short CPU::pop_addr() {
 }
 
 void CPU::RL(unsigned char &reg) {
-    bool carry_out = ((reg & 0x80) == 1);
+    bool carry_out = ((reg >> 7) == 1);
     unsigned char carry_in = flag.C ? 0x1 : 0x0;
-    reg = (reg << 1) &  (0xFE | carry_in);
+    reg = (reg << 1) | carry_in;
+
     flag.C = carry_out;
     flag.Z = (reg == 0);
 }
@@ -416,6 +417,8 @@ int CPU::fetch_and_execute() {
             cycles = 8;
             len = 1;
             memory[concat_bytes(L, H)] = A;
+            cout << hex << (int)concat_bytes(L, H) ;
+            cout << "--"<< hex << (int) A << endl;
             increment_pair(L, H); 
             break;
 
@@ -1008,6 +1011,7 @@ int main() {
     cpu.print_state();
 
     for (int i = 0; i < 6 + 3 * (0x9FFF - 0x8000) + 26 + 30 + 50 + 3948 + 46 + 6 + 58 + 79 + 120 + 13 + 18500 + 375 + 102; i++) {
+    cpu.memory.graphics.dump_tiles();
         cpu.fetch_and_execute();
         cpu.print_state();
     }

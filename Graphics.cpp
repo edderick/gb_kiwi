@@ -1,6 +1,7 @@
 #include "Graphics.h"
 #include <iostream>
 #include <iomanip>
+#include <sstream>
 
 using namespace std;
 Graphics::Graphics() {
@@ -29,10 +30,18 @@ void Graphics::dump_state() {
 
 void Graphics::dump_tiles() {
     for (int i = 0; i < 384; i++) {
-        cout << "HEX " << setw(3) << setfill('0') << dec << i << ": ";
+        stringstream ss; 
+        bool b = false;
         for (int j = 0; j < 16; j++) { 
-            cout << hex << setw(2) << setfill('0') <<(int) VRAM[i * 16 + j];
+            if (VRAM[i * 16 + j] != 0) b = true;
         }
-        cout << endl;
+        
+        if (b) {
+            cout << "HEX " << setw(3) << setfill('0') << dec << i << ": ";
+            for (int j = 0; j < 16; j++) { 
+                ss << hex << setw(2) << setfill('0') << (int) VRAM[i * 16 + j];
+            }
+            cout << ss.str() << endl;
+        }
     } 
 }
