@@ -2,6 +2,21 @@
 #define GRAPHICS_H
 
 class Graphics {
+
+    struct lcdc_info {
+        bool operation;
+        bool window_display; 
+        bool sprite_display;
+        bool bg_window_display; 
+
+        unsigned int window_tile_map_addr; 
+        unsigned int bg_tile_map_addr;
+        unsigned int tile_data_addr; 
+
+        unsigned char sprite_width; 
+        unsigned char sprite_height; 
+    };
+
     int CLK;
     /*
        0x8000 - 0x87FF  Tile set 1 (0 to 127)
@@ -13,6 +28,9 @@ class Graphics {
     */
     unsigned char VRAM[0xA000 - 0x8000];
     unsigned char* get_tile(unsigned int, unsigned int);
+    void generate_map(unsigned int, unsigned int, unsigned char[256][256]);
+
+    lcdc_info decode_LCDC(unsigned char); 
     public: 
 
     Graphics();
@@ -42,6 +60,7 @@ class Graphics {
     void dump_tiles();
     void dump_map_indices();
     void dump_map(unsigned int, unsigned int);
+    void dump_display();
 
     void dump_map_one_tileset_one();
     void dump_map_one_tileset_two();

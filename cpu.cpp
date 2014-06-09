@@ -1012,12 +1012,13 @@ int main() {
         //cpu.memory.graphics.dump_tiles();
         cpu.fetch_and_execute();
         cpu.print_state();
+        cpu.memory.graphics.dump_display();
+        cout << endl;
     }
 
-    cpu.memory.graphics.dump_state();
-    cpu.memory.graphics.dump_tiles();
-    cpu.memory.graphics.dump_map_indices();
-    cpu.memory.graphics.dump_map_one_tileset_one();
+    //cpu.memory.graphics.dump_state();
+    //cpu.memory.graphics.dump_tiles();
+    //cpu.memory.graphics.dump_map_indices();
 
     cout << endl; //XXX: Voodoo...
     return 0; 
