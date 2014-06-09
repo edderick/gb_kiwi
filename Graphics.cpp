@@ -89,11 +89,21 @@ void handle_tile(unsigned char tile[16], unsigned char buf[256][256], int tile_i
     }
 }
 
+unsigned char* Graphics::get_tile(unsigned int tile_offset, unsigned int index) {
+    if (tile_offset == 0x8000) {
+        return &(*this)[tile_offset + index * 16];
+    } else {
+        signed char i = (signed char) index; 
+        return &(*this)[tile_offset + i * 16];
+    }
+}
+    
 void Graphics::dump_map(unsigned int tile_offset, unsigned int map_offset) {
     unsigned char buf[256][256] = {0};
 
     for (int i = 0; i < 32*32; i++) {
-        handle_tile(&(*this)[tile_offset + (*this)[map_offset + i] * 16], buf, i);
+        unsigned int index = (*this)[map_offset + i];
+        handle_tile(get_tile(tile_offset, index), buf, i);
     }
 
     for (int i = 0; i < 256; i++) {
@@ -108,11 +118,18 @@ void Graphics::dump_map(unsigned int tile_offset, unsigned int map_offset) {
     }
 }
 
-void Graphics::dump_map_one() {
+void Graphics::dump_map_one_tileset_one() {
     dump_map(0x8000, 0x9800);    
 }
 
-void Graphics::dump_map_two() {
-    dump_map(0x8FFF, 0x9C00);    
+void Graphics::dump_map_one_tileset_two() {
+    dump_map(0x9000, 0x9800);    
+}
+
+void Graphics::dump_map_two_tileset_one() {
+    dump_map(0x8000, 0x9C00);    
+}
+void Graphics::dump_map_two_tileset_two() {
+    dump_map(0x9000, 0x9C00);    
 }
 

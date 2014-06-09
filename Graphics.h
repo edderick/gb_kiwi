@@ -12,6 +12,7 @@ class Graphics {
        0x9C00 - 0x9FFF  Tile Map 1
     */
     unsigned char VRAM[0xA000 - 0x8000];
+    unsigned char* get_tile(unsigned int, unsigned int);
     public: 
 
     Graphics();
@@ -36,13 +37,16 @@ class Graphics {
 
     void step(int clock_cycle_delta); 
     unsigned char& operator[](unsigned int); 
-    
+
     void dump_state();
     void dump_tiles();
     void dump_map_indices();
     void dump_map(unsigned int, unsigned int);
-    void dump_map_one();
-    void dump_map_two();
+
+    void dump_map_one_tileset_one();
+    void dump_map_one_tileset_two();
+    void dump_map_two_tileset_one();
+    void dump_map_two_tileset_two();
 };
 
 
