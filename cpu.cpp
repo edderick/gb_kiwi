@@ -1012,7 +1012,7 @@ int main() {
         //cpu.memory.graphics.dump_tiles();
         cpu.fetch_and_execute();
         cpu.print_state();
-        cpu.memory.graphics.dump_display();
+        if ((i % 100) == 0) cpu.memory.graphics.dump_display();
     }
 
     //cpu.memory.graphics.dump_state();

@@ -12,7 +12,7 @@ Graphics::Graphics() : VRAM(), scroll_x(0), line_y(0x90) {
                 return;
     }
 
-    sdl_window = SDL_CreateWindow("Hello World!", 0, 0, 160, 144, 
+    sdl_window = SDL_CreateWindow("GB Kiwi", 0, 0, 160, 144, 
                     SDL_WINDOW_SHOWN);
     if (sdl_window == nullptr) {
             cout << "SDL_CreateWindow Error: " << SDL_GetError() << endl;
@@ -198,17 +198,17 @@ void Graphics::dump_display(){
         for (int j = 0; j < 160; j++) {
             unsigned char pixel = buf[(i+scroll_y)%255][(j+scroll_x)%255];
             switch(pixel) {
-                case 0:
-                    sdl_buf[i][j] = 0x000000FF;
-                    break;
-                case 1:
-                    sdl_buf[i][j] = 0x555555FF;
-                    break;
-                case 2:
-                    sdl_buf[i][j] = 0xAAAAAAFF;
-                    break;
                 case 3:
                     sdl_buf[i][j] = 0x000000FF;
+                    break;
+                case 2:
+                    sdl_buf[i][j] = 0x555555FF;
+                    break;
+                case 1:
+                    sdl_buf[i][j] = 0xAAAAAAFF;
+                    break;
+                case 0:
+                    sdl_buf[i][j] = 0xFFFFFFFF;
                     break;
             }
             
