@@ -4,8 +4,33 @@
 #include <sstream>
 
 using namespace std;
-Graphics::Graphics() : VRAM(), line_y(0x90) {
+Graphics::Graphics() : VRAM(), scroll_x(0), line_y(0x90) {
     //XXX: LINE Y SET TO 90 to trick ROM...
+    
+    if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
+            cout << "SDL_Init Error: " << SDL_GetError() << endl;
+                return;
+    }
+
+    sdl_window = SDL_CreateWindow("Hello World!", 0, 0, 160, 144, 
+                    SDL_WINDOW_SHOWN);
+    if (sdl_window == nullptr) {
+            cout << "SDL_CreateWindow Error: " << SDL_GetError() << endl;
+                return;
+    }
+
+    sdl_renderer = SDL_CreateRenderer(sdl_window, -1, 
+                    SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    if (sdl_renderer == nullptr) {
+            cout << "SDL_CreateRenderer Error: " << SDL_GetError() << endl;
+                return;
+    }
+}
+
+Graphics::~Graphics() {
+    SDL_DestroyRenderer(sdl_renderer);
+    SDL_DestroyWindow(sdl_window);
+    SDL_Quit();
 }
 
 void Graphics::step(int clock_cycle_delta) {
@@ -48,7 +73,6 @@ void Graphics::dump_tiles() {
 void Graphics::dump_map_indices() {
     for (int i = 0x9800; i < 0x9800 + 32*32*2; i++) {
         stringstream ss; 
-        bool b = false;
         if ((*this)[i] != 0) {
             if (i < 0x9C00) { 
                 cout << "Map 1 Tile (" 
@@ -106,7 +130,7 @@ void Graphics::generate_map(unsigned int tile_offset, unsigned int map_offset, u
 }
 
 void Graphics::dump_map(unsigned int tile_offset, unsigned int map_offset) {
-    unsigned char buf[256][256] = {0};
+    unsigned char buf[256][256] = {{0}};
     generate_map(tile_offset, map_offset, buf);
 
     for (int i = 0; i < 256; i++) {
@@ -165,18 +189,63 @@ void Graphics::dump_display(){
 
     if (!l.operation) return;
 
-    unsigned char buf[256][256] = {0};
+    unsigned char buf[256][256] = {{0}};
     generate_map(l.tile_data_addr, l.bg_tile_map_addr, buf);
 
-    for (int i = scroll_y; i < scroll_y + 144; i++) {
-        for (int j = scroll_x; j < scroll_x + 160; j++) {
-          if (buf[i%255][j%255] == 0) {
-                cout << ".";
-            } else { 
-                cout << dec << (int) buf[i%255][j%255];
+    Uint32 sdl_buf[144][160];
+    
+    for (int i = 0; i <  144; i++) {
+        for (int j = 0; j < 160; j++) {
+            unsigned char pixel = buf[(i+scroll_y)%255][(j+scroll_x)%255];
+            switch(pixel) {
+                case 0:
+                    sdl_buf[i][j] = 0x000000FF;
+                    break;
+                case 1:
+                    sdl_buf[i][j] = 0x555555FF;
+                    break;
+                case 2:
+                    sdl_buf[i][j] = 0xAAAAAAFF;
+                    break;
+                case 3:
+                    sdl_buf[i][j] = 0x000000FF;
+                    break;
             }
+            
         }
-        cout << endl;
     }
+
+    SDL_Surface *pixels = SDL_CreateRGBSurfaceFrom(&sdl_buf, 160, 144, 32, 160 * 32 / 8,
+                    0xFF000000, 0x00FF0000, 0x0000FF00, 0x000000FF);
+    if (pixels == nullptr) {
+            std::cout << "SDL_CreateRGBSurfaceFrom Error: " 
+                        << SDL_GetError() << std::endl;
+    }
+
+    SDL_Texture *tex = SDL_CreateTextureFromSurface(sdl_renderer, pixels);
+    SDL_FreeSurface(pixels);
+    if (tex == nullptr) {
+            std::cout << "SDL_CreateTextureFromSurface Error: "
+                        << SDL_GetError() << std::endl;
+    }   
+
+    SDL_Rect src_rect;
+    src_rect.x = 0;
+    src_rect.y = 0;
+    src_rect.w = 160;
+    src_rect.h = 144;
+
+    SDL_Rect dst_rect;
+    dst_rect.x = 0;
+    dst_rect.y = 0;
+    dst_rect.w = 160;
+    dst_rect.h = 144;
+
+    SDL_RenderClear(sdl_renderer);
+    SDL_RenderCopy(sdl_renderer, tex, &src_rect, &dst_rect);
+    SDL_RenderPresent(sdl_renderer);
+
+    SDL_DestroyTexture(tex);
+
 }
 

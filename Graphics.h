@@ -1,6 +1,8 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
+#include <SDL2/SDL.h>
+
 class Graphics {
 
     struct lcdc_info {
@@ -31,9 +33,14 @@ class Graphics {
     void generate_map(unsigned int, unsigned int, unsigned char[256][256]);
 
     lcdc_info decode_LCDC(unsigned char); 
+
+    SDL_Window *sdl_window; 
+    SDL_Renderer *sdl_renderer;
+
     public: 
 
     Graphics();
+    ~Graphics();
 
     unsigned char LCDC;
     unsigned char LCDC_status;

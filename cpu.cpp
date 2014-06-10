@@ -1013,7 +1013,6 @@ int main() {
         cpu.fetch_and_execute();
         cpu.print_state();
         cpu.memory.graphics.dump_display();
-        cout << endl;
     }
 
     //cpu.memory.graphics.dump_state();
