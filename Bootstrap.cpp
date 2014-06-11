@@ -4,7 +4,7 @@
 #include <iomanip>  
 
 Bootstrap::Bootstrap() {
-    ifstream f("DMG_ROM.bin", ios::binary);
+    ifstream f("../res/DMG_ROM.bin", ios::binary);
     
     while (f) {
         char c;

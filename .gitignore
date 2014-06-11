@@ -2,3 +2,7 @@
 *.swo
 a.out
 *.gch
+bin/*
+build/*
+*.o
+

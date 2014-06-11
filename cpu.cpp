@@ -1004,7 +1004,7 @@ int CPU::fetch_and_execute() {
 
 int main() {
     CPU cpu; 
-    cpu.memory.cartridge.load_rom("Pokemon Red.gb");
+    cpu.memory.cartridge.load_rom("../res/Pokemon Red.gb");
 
     cpu.print_state();
 
