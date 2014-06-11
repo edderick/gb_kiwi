@@ -44,6 +44,46 @@ unsigned char EX_OP_cycles[0x100] = {
     /*Fx*/  8,  8,  8,  8,  8,  8, 16,  8,  8,  8,  8,  8,  8,  8, 16,  8,
 }; 
 
+unsigned char OP_len[0x100] = {  
+    /*     x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, xA, xB, xC, xD, xE, xF, */
+    /*0x*/  0,  3,  1,  0,  0,  0,  2,  0,  0,  0,  1,  0,  0,  0,  2,  0,
+    /*1x*/  0,  3,  1,  0,  0,  0,  2,  0,  0,  0,  1,  0,  0,  0,  2,  0,
+    /*2x*/  0,  3,  1,  0,  0,  0,  2,  0,  0,  0,  1,  0,  0,  0,  2,  0,
+    /*3x*/  0,  3,  1,  0,  0,  0,  2,  0,  0,  0,  1,  0,  0,  0,  2,  0,
+    /*4x*/  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
+    /*5x*/  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
+    /*6x*/  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
+    /*7x*/  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
+    /*8x*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    /*9x*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    /*Ax*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    /*Bx*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    /*Cx*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    /*Dx*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    /*Ex*/  2,  0,  1,  0,  0,  0,  0,  0,  0,  0,  3,  0,  0,  0,  0,  0,
+    /*Fx*/  2,  0,  1,  0,  0,  0,  0,  0,  2,  1,  3,  0,  0,  0,  0,  0,
+}; 
+
+unsigned char EX_OP_len[0x100] = {  
+    /*     x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, xA, xB, xC, xD, xE, xF, */
+    /*0x*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    /*1x*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    /*2x*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    /*3x*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    /*4x*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    /*5x*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    /*6x*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    /*7x*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    /*8x*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    /*9x*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    /*Ax*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    /*Bx*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    /*Cx*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    /*Dx*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    /*Ex*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    /*Fx*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+}; 
+
 unsigned short concat_bytes(unsigned char LSB, unsigned char MSB) {
     // Little endian machime
     unsigned short tmp_MSB = MSB << 8;
@@ -99,6 +139,25 @@ void CPU::RL(unsigned char &reg) {
     flag.Z = (reg == 0);
 }
 
+template<typename T>
+void CPU::LD(T &reg1, T reg2) {
+    reg1 = reg2; 
+}
+
+void CPU::LD_16(unsigned char &reg1a, unsigned char &reg1b, 
+                unsigned char reg2a, unsigned char reg2b) {
+    reg1a = reg2a; 
+    reg1b = reg2b; 
+}
+
+void CPU::LDHL(unsigned short reg, unsigned char n) {
+    unsigned short tmp = reg + n; 
+    H = (tmp & 0xFF00) >> 8;
+    L = tmp & 0xFF;
+    flag.Z = 0; flag.N = 0; 
+    //TODO: flag.H and flag.C;
+}
+
 void CPU::print_state() {
     //XXX:
     if (CLK < 380700) return;
@@ -133,6 +192,140 @@ int CPU::fetch_and_execute() {
     unsigned char OP_CODE = memory[PC];
    
     switch (OP_CODE) {
+        /*** 8-bit Loads ***/ 
+        /* 1. LD nn,n */
+        case 0x06: LD(B, memory[PC + 1]); break; 
+        case 0x0E: LD(C, memory[PC + 1]); break; 
+        case 0x16: LD(D, memory[PC + 1]); break; 
+        case 0x1E: LD(E, memory[PC + 1]); break; 
+        case 0x26: LD(H, memory[PC + 1]); break; 
+        case 0x2E: LD(L, memory[PC + 1]); break; 
+
+        /* 2. LD r1,r2 */
+        case 0x7F: LD(A, A); break; 
+        case 0x78: LD(A, B); break; 
+        case 0x79: LD(A, C); break; 
+        case 0x7A: LD(A, D); break; 
+        case 0x7B: LD(A, E); break; 
+        case 0x7C: LD(A, H); break; 
+        case 0x7D: LD(A, L); break; 
+        case 0x7E: LD(A, memory[concat_bytes(L, H)]); break; 
+
+        case 0x40: LD(B, B); break; 
+        case 0x41: LD(B, C); break; 
+        case 0x42: LD(B, D); break; 
+        case 0x43: LD(B, E); break; 
+        case 0x44: LD(B, H); break; 
+        case 0x45: LD(B, L); break; 
+        case 0x46: LD(B, memory[concat_bytes(L, H)]); break; 
+
+        case 0x48: LD(C, B); break; 
+        case 0x49: LD(C, C); break; 
+        case 0x4A: LD(C, D); break; 
+        case 0x4B: LD(C, E); break; 
+        case 0x4C: LD(C, H); break; 
+        case 0x4D: LD(C, L); break; 
+        case 0x4E: LD(C, memory[concat_bytes(L, H)]); break; 
+
+        case 0x50: LD(D, B); break; 
+        case 0x51: LD(D, C); break; 
+        case 0x52: LD(D, D); break; 
+        case 0x53: LD(D, E); break; 
+        case 0x54: LD(D, H); break; 
+        case 0x55: LD(D, L); break; 
+        case 0x56: LD(D, memory[concat_bytes(L, H)]); break; 
+
+        case 0x58: LD(E, B); break; 
+        case 0x59: LD(E, C); break; 
+        case 0x5A: LD(E, D); break; 
+        case 0x5B: LD(E, E); break; 
+        case 0x5C: LD(E, H); break; 
+        case 0x5D: LD(E, L); break; 
+        case 0x5E: LD(E, memory[concat_bytes(L, H)]); break; 
+
+        case 0x60: LD(H, B); break; 
+        case 0x61: LD(H, C); break; 
+        case 0x62: LD(H, D); break; 
+        case 0x63: LD(H, E); break; 
+        case 0x64: LD(H, H); break; 
+        case 0x65: LD(H, L); break; 
+        case 0x66: LD(H, memory[concat_bytes(L, H)]); break; 
+
+        case 0x68: LD(L, B); break; 
+        case 0x69: LD(L, C); break; 
+        case 0x6A: LD(L, D); break; 
+        case 0x6B: LD(L, E); break; 
+        case 0x6C: LD(L, H); break; 
+        case 0x6D: LD(L, L); break; 
+        case 0x6E: LD(L, memory[concat_bytes(L, H)]); break; 
+
+        case 0x70: LD(memory[concat_bytes(L, H)], B); break; 
+        case 0x71: LD(memory[concat_bytes(L, H)], C); break; 
+        case 0x72: LD(memory[concat_bytes(L, H)], D); break; 
+        case 0x73: LD(memory[concat_bytes(L, H)], E); break; 
+        case 0x74: LD(memory[concat_bytes(L, H)], H); break; 
+        case 0x75: LD(memory[concat_bytes(L, H)], L); break; 
+
+        case 0x36: LD(memory[concat_bytes(L, H)], memory[PC + 1]); break; 
+    
+        /* 3. LD A,n */
+        case 0x0A: LD(A, memory[concat_bytes(C, B)]); break;
+        case 0x1A: LD(A, memory[concat_bytes(E, D)]); break;
+        case 0xFA: LD(A, memory[concat_bytes(memory[PC + 1], memory[PC + 2])]); break;
+        case 0x3E: LD(A, memory[PC + 1]); break;
+
+        /* 4. LD n,A */
+        case 0x47: LD(B, A); break;
+        case 0x4F: LD(C, A); break;
+        case 0x57: LD(D, A); break;
+        case 0x5F: LD(E, A); break;
+        case 0x67: LD(H, A); break;
+        case 0x6F: LD(L, A); break;
+        case 0x02: LD(memory[concat_bytes(C, B)], A); break;
+        case 0x12: LD(memory[concat_bytes(E, D)], A); break;
+        case 0x77: LD(memory[concat_bytes(L, H)], A); break;
+        case 0xEA: LD(memory[concat_bytes(memory[PC + 1], memory[PC + 2])], A); break;
+
+        /* 5. LD A,(C) */
+        case 0xF2: LD(A, memory[0xFF00 + C]); break; 
+
+        /* 6. LD (C),A */
+        case 0xE2: LD(memory[0xFF00 + C], A); break;
+
+        /* 9. LDD A,(HL) */ 
+        case 0x3A: LD(A, memory[concat_bytes(L, H)]); decrement_pair(L, H); break;
+
+        /* 12. LDD (HL),A */ 
+        case 0x32: LD(memory[concat_bytes(L, H)], A); decrement_pair(L, H); break;
+
+        /* 15. LDI A,(HL) */
+        case 0x2A: LD(A, memory[concat_bytes(L, H)]); increment_pair(L, H); break;
+
+        /* 18. LDI (HL),A */ 
+        case 0x22: LD(memory[concat_bytes(L, H)], A); increment_pair(L, H); break;
+
+        /* 19. LDH (n),A */
+        case 0xE0: LD(memory[0xFF00 + memory[PC + 1]], A); break;
+
+        /* 20. LDH A,(n) */
+        case 0xF0: LD(A, memory[0xFF00 + memory[PC + 1]]); break;
+
+        
+        /*** 16-bit Loads ***/
+        /* 1. LD n,nn */
+        case 0x01: LD_16(B, C, memory[PC + 2], memory[PC + 1]); break;
+        case 0x11: LD_16(D, E, memory[PC + 2], memory[PC + 1]); break;
+        case 0x21: LD_16(H, L, memory[PC + 2], memory[PC + 1]); break;
+        case 0x31: LD(SP, concat_bytes(memory[PC + 1], memory[PC + 2])); break;
+
+        /* 2. LD SP,HL */
+        case 0xF9: LD(SP, concat_bytes(L, H));  break;
+
+        /* 3. LDHL SP,n */
+        case 0xF8: LDHL(SP, memory[PC + 1]); break;
+
+
+
         case 0x3C: 
             //Increment A
             len = 1; 
@@ -176,7 +369,7 @@ int CPU::fetch_and_execute() {
             flag.Z = (E == 0);
             flag.N = false;
             //XXX :Need to set flag.H for half carry 
-            break; 
+            
         
         case 0x24: 
             //Increment H
@@ -324,42 +517,6 @@ int CPU::fetch_and_execute() {
             SP--; 
             break;
 
-        case 0x06:
-            //8-bit immediate load into B
-            len = 2;
-            B = memory[PC + 1];
-            break; 
-
-        case 0x0E:
-            //8-bit immediate load into C
-            len = 2;
-            C = memory[PC + 1];
-            break; 
-
-        case 0x16:
-            //8-bit immediate load into D
-            len = 2;
-            D = memory[PC + 1];
-            break; 
-
-        case 0x1E:
-            //8-bit immediate load into E
-            len = 2;
-            E = memory[PC + 1];
-            break; 
-
-        case 0x26:
-            //8-bit immediate load into H
-            len = 2;
-            H = memory[PC + 1];
-            break; 
-
-        case 0x2E:
-            //8-bit immediate load into L
-            len = 2;
-            L = memory[PC + 1];
-            break; 
-
         case 0x18:
             //Jump if not zero
             len = 2;
@@ -378,120 +535,6 @@ int CPU::fetch_and_execute() {
             if (flag.Z) PC += (signed char) memory[PC + 1];
             break;
 
-        case 0x01: 
-            //16-bit immediate load into BC
-            len = 3;
-            B = memory[PC + 2]; 
-            C = memory[PC + 1];
-            break;
-
-        case 0x11: 
-            //16-bit immediate load into DE
-            len = 3;
-            D = memory[PC + 2]; 
-            E = memory[PC + 1];
-            break;
-    
-        case 0x1A:
-            //Put value n into A
-            len = 1;
-
-            A = memory[concat_bytes(E, D)];
-            break;
-
-        case 0x21: 
-            //16-bit immediate load into HL
-            len = 3;
-            H = memory[PC + 2]; 
-            L = memory[PC + 1];
-            break;
-
-        case 0x31: 
-            //16-bit immediate load into stack pointer
-            len = 3;
-            SP = concat_bytes(memory[PC + 1], memory[PC + 2]);
-            break;
-
-        case 0x22: 
-            //Put A into mem[HL], Increment HL
-            len = 1;
-            memory[concat_bytes(L, H)] = A;
-            increment_pair(L, H); 
-            break;
-
-        case 0x32: 
-            //Put A into mem[HL], Decrement HL
-            len = 1;
-            memory[concat_bytes(L, H)] = A;
-            decrement_pair(L, H); 
-            break;
-
-        case 0x3E:
-            //Immediate load into A
-            len = 2;
-            A = memory[PC + 1];
-            break;
-
-        case 0x47:
-            //Load A into B
-            len = 1;
-            B = A;
-            break;
-
-        case 0x4F: 
-            // Load A into C
-            len = 1;
-            C = A;
-            break;
-
-        case 0x57: 
-            // Load A into D
-            len = 1;
-            D = A;
-            break;
-
-        case 0x5F: 
-            // Load A into E
-            len = 1;
-            E = A;
-            break;
-
-        case 0x67: 
-            // Load A into H
-            len = 1;
-            H = A;
-            break;
-
-        case 0x6F: 
-            // Load A into L
-            len = 1;
-            L = A;
-            break;
-
-        case 0x77:
-            // Load A into mem[HL]
-            len = 1;
-            memory[concat_bytes(L, H)] = A;
-            break;
-
-        case 0x7D:
-            //Load L into A
-            len = 1; 
-            A = L;
-            break;
-
-        case 0x78:
-            //Load B into A
-            len = 1; 
-            A = B;
-            break;
-
-        case 0x7F:
-           // LD A, A
-           len = 1; 
-           // XXX: A = A;
-           break; 
-
         case 0xAF:
             //XOR A with A store in A
             len = 1;
@@ -507,18 +550,6 @@ int CPU::fetch_and_execute() {
         case 0x17:
             len = 1; 
             RL(A);
-            break;
-
-        case 0x7B: 
-            // LD A, E
-            len = 1; 
-            A = E; 
-            break;
-
-        case 0x7C: 
-            // LD A, H
-            len = 1; 
-            A = H; 
             break;
 
         case 0xCB: 
@@ -600,24 +631,6 @@ int CPU::fetch_and_execute() {
             len = 0; 
             PC = pop_addr();
             break;
-
-        case 0xE0: 
-            // Load A into mem[0xFF00 + n]
-            len = 2; 
-            memory[0xFF00 + memory[PC + 1]] = A;
-            break;
-
-        case 0xF0: 
-            // Load A into mem[0xFF00 + n]
-            len = 2; 
-            A = memory[0xFF00 + memory[PC + 1]];
-            break;
-
-        case 0xE2: 
-            // Load A into mem[0xFF00 + C]
-            len = 1;
-            memory[0xFF00 + C] = A;
-            break;
         
         case 0xF5: 
             //Push AF
@@ -673,12 +686,6 @@ int CPU::fetch_and_execute() {
             len = 1;
             L = pop_val();
             H = pop_val();
-            break;
-
-        case 0xEA: 
-            // Put value A into mem[n]
-            len = 3;
-            memory[concat_bytes(memory[PC + 1], memory[PC + 2])] = A;
             break;
 
         case 0xBF:
@@ -938,10 +945,13 @@ int CPU::fetch_and_execute() {
 
     if (OP_CODE != 0xCB) {
         CLK += OP_cycles[OP_CODE]; 
+        len += OP_len[OP_CODE];
     } else {
         unsigned char EX_OP_CODE = memory[PC + 1];
         CLK += EX_OP_cycles[EX_OP_CODE]; 
+        len += EX_OP_len[EX_OP_CODE];
     }
+
 
     PC += len;
     return 0;

@@ -27,6 +27,11 @@ class CPU {
     unsigned short pop_addr();
 
     void RL(unsigned char &reg);
+    template<typename T> 
+    void LD(T &reg1, T reg2);
+    void LD_16(unsigned char &reg1a, unsigned char &reg1b, 
+               unsigned char reg2a, unsigned char reg2b);
+    void LDHL(unsigned short reg, unsigned char n);
 
 public: 
     Memory memory;
