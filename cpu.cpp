@@ -46,42 +46,42 @@ unsigned char EX_OP_cycles[0x100] = {
 
 unsigned char OP_len[0x100] = {  
     /*     x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, xA, xB, xC, xD, xE, xF, */
-    /*0x*/  0,  3,  1,  0,  0,  0,  2,  0,  0,  0,  1,  0,  0,  0,  2,  0,
-    /*1x*/  0,  3,  1,  0,  0,  0,  2,  0,  0,  0,  1,  0,  0,  0,  2,  0,
-    /*2x*/  0,  3,  1,  0,  0,  0,  2,  0,  0,  0,  1,  0,  0,  0,  2,  0,
-    /*3x*/  0,  3,  1,  0,  0,  0,  2,  0,  0,  0,  1,  0,  0,  0,  2,  0,
+    /*0x*/  1,  3,  1,  1,  1,  1,  2,  1,  3,  1,  1,  1,  1,  1,  2,  1,
+    /*1x*/  0,  3,  1,  1,  1,  1,  2,  1,  2,  1,  1,  1,  1,  1,  2,  1,
+    /*2x*/  2,  3,  1,  1,  1,  1,  2,  0,  2,  1,  1,  1,  1,  1,  2,  1,
+    /*3x*/  2,  3,  1,  1,  1,  1,  2,  1,  2,  1,  1,  1,  1,  1,  2,  1,
     /*4x*/  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
     /*5x*/  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
     /*6x*/  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
     /*7x*/  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
-    /*8x*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    /*9x*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    /*Ax*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    /*Bx*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    /*Cx*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    /*Dx*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    /*Ex*/  2,  0,  1,  0,  0,  0,  0,  0,  0,  0,  3,  0,  0,  0,  0,  0,
-    /*Fx*/  2,  0,  1,  0,  0,  0,  0,  0,  2,  1,  3,  0,  0,  0,  0,  0,
+    /*8x*/  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
+    /*9x*/  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
+    /*Ax*/  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
+    /*Bx*/  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
+    /*Cx*/  0,  1,  3,  3,  3,  1,  2,  0,  0,  0,  3,  0,  3,  0,  2,  0,
+    /*Dx*/  0,  1,  3,  0,  3,  1,  2,  0,  0,  0,  3,  0,  3,  0,  0,  0,
+    /*Ex*/  2,  1,  1,  0,  0,  1,  2,  0,  2,  1,  3,  0,  0,  0,  2,  0,
+    /*Fx*/  2,  1,  1,  0,  0,  1,  2,  0,  2,  1,  3,  0,  0,  0,  2,  0,
 }; 
 
 unsigned char EX_OP_len[0x100] = {  
     /*     x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, xA, xB, xC, xD, xE, xF, */
-    /*0x*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    /*1x*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    /*2x*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    /*3x*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    /*4x*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    /*5x*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    /*6x*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    /*7x*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    /*8x*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    /*9x*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    /*Ax*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    /*Bx*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    /*Cx*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    /*Dx*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    /*Ex*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    /*Fx*/  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    /*0x*/  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,
+    /*1x*/  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,
+    /*2x*/  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,
+    /*3x*/  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,
+    /*4x*/  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,
+    /*5x*/  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,
+    /*6x*/  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,
+    /*7x*/  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,
+    /*8x*/  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,
+    /*9x*/  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,
+    /*Ax*/  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,
+    /*Bx*/  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,
+    /*Cx*/  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,
+    /*Dx*/  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,
+    /*Ex*/  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,
+    /*Fx*/  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,
 }; 
 
 unsigned short concat_bytes(unsigned char LSB, unsigned char MSB) {
@@ -136,6 +136,64 @@ void CPU::RL(unsigned char &reg) {
     reg = (reg << 1) | carry_in;
 
     flag.C = carry_out;
+    flag.N = false; flag.H = false;
+    flag.Z = (reg == 0);
+}
+
+void CPU::RLC(unsigned char &reg) {
+    bool carry_out = ((reg >> 7) == 1);
+    unsigned char carry_in = carry_out ? 0x1 : 0x0;
+    reg = (reg << 1) | carry_in;
+
+    flag.C = carry_out;
+    flag.N = false; flag.H = false;
+    flag.Z = (reg == 0);
+}
+
+void CPU::RR(unsigned char &reg) {
+    bool carry_out = ((reg & 0x1) == 1);
+    unsigned char carry_in = flag.C ? 0x1 : 0x0;
+    reg = (reg >> 1) | (carry_in << 7);
+
+    flag.C = carry_out;
+    flag.N = false; flag.H = false;
+    flag.Z = (reg == 0);
+}
+
+void CPU::RRC(unsigned char &reg) {
+    bool carry_out = ((reg & 0x1) == 1);
+    unsigned char carry_in = carry_out ? 0x1 : 0x0;
+    reg = (reg >> 1) | (carry_in << 7);
+
+    flag.C = carry_out;
+    flag.N = false; flag.H = false;
+    flag.Z = (reg == 0);
+}
+
+void CPU::SLA(unsigned char &reg){
+    bool carry_out = ((reg >> 7) == 1);
+    reg = (reg << 1);
+
+    flag.C = carry_out;
+    flag.N = false; flag.H = false;
+    flag.Z = (reg == 0);
+}
+
+void CPU::SRA(unsigned char &reg){
+    bool carry_out = ((reg & 1) == 1);
+    reg = ((reg >> 1) | (reg & (1 << 7)));
+
+    flag.C = carry_out;
+    flag.N = false; flag.H = false;
+    flag.Z = (reg == 0);
+}
+
+void CPU::SRL(unsigned char &reg){
+    bool carry_out = ((reg & 1) == 1);
+    reg = (reg >> 1);
+
+    flag.C = carry_out;
+    flag.N = false; flag.H = false;
     flag.Z = (reg == 0);
 }
 
@@ -156,6 +214,143 @@ void CPU::LDHL(unsigned short reg, unsigned char n) {
     L = tmp & 0xFF;
     flag.Z = 0; flag.N = 0; 
     //TODO: flag.H and flag.C;
+}
+
+template<>
+void CPU::ADD(unsigned char &reg1, unsigned char reg2) {
+    //TODO: Check this
+    flag.H = (((reg1 & (1 << 3)) & (reg2 & (1 << 3))) != 0);
+    flag.C = (((reg1 & (1 << 7)) & (reg2 & (1 << 7))) != 0);
+    reg1 += reg2;
+    flag.Z = (reg1 == 0); flag.N = false;
+}
+
+template<>
+void CPU::ADD(unsigned short &reg1, unsigned short reg2) {
+    //TODO: Check this
+    flag.H = (((reg1 & (1 << 11)) & (reg2 & (1 << 11))) != 0);
+    flag.C = (((reg1 & (1 << 15)) & (reg2 & (1 << 15))) != 0);
+    reg1 += reg2;
+    flag.N = false;
+}
+
+void CPU::ADD_16(unsigned char &reg1a, unsigned char &reg1b, 
+                 unsigned char reg2a, unsigned char reg2b) {
+    //TODO: Check this
+    flag.H = (((reg1b & (1 << (11-7))) & (reg2b & (1 << (11-7)))) != 0);
+    flag.C = (((reg1b & (1 << (15-7))) & (reg2b & (1 << (15-7)))) != 0);
+    flag.N = false;
+        
+    unsigned char tmp = concat_bytes(reg1a, reg1b) + concat_bytes(reg2a, reg2b); 
+    
+    reg1b = (0xFF00 & tmp) >> 8;
+    reg1a = 0x00FF & tmp;
+}
+
+void CPU::ADC(unsigned char &reg1, unsigned char reg2) {
+    //TODO: Check this
+    unsigned char carry = flag.C ? 1 : 0;
+    flag.H = (((reg1 & (1 << 3)) & (reg2 & (1 << 3))) != 0);
+    flag.C = (((reg1 & (1 << 7)) & (reg2 & (1 << 7))) != 0);
+    reg1 = reg1 + reg2  + carry;
+    flag.Z = (reg1 == 0); flag.N = true;
+}
+
+void CPU::SUB(unsigned char &reg1, unsigned char reg2) {
+    //TODO: Check this
+    flag.H = !(((reg1 & (1 << 3)) == 0) && ((reg2 & (1 << 3))) != 0);
+    flag.C = (reg1 < reg2);
+    reg1 -= reg2;
+    flag.Z = (reg1 == 0); flag.N = true;
+}
+
+void CPU::SBC(unsigned char &reg1, unsigned char reg2) {
+    //TODO: Check this
+    unsigned char carry = flag.C ? 1 : 0;
+    flag.H = !(((reg1 & (1 << 3)) == 0) && ((reg2 & (1 << 3))) != 0);
+    flag.C = (reg1 < reg2);
+    reg1 = reg1 - reg2  + carry;
+    flag.Z = (reg1 == 0); flag.N = true;
+}
+
+void CPU::CP(unsigned char reg1, unsigned char reg2) {
+    //TODO: Check this
+    flag.H = !(((reg1 & (1 << 3)) == 0) && ((reg2 & (1 << 3))) != 0);
+    flag.C = (reg1 < reg2);
+    flag.Z = (reg1 == reg2); flag.N = true;
+}
+
+void CPU::AND(unsigned char &reg1, unsigned char reg2) {
+    //TODO: Check this
+    reg1 = reg1 & reg2;
+    flag.Z = (reg1 == 0); 
+    flag.N = false; flag.H = true; flag.C = false;
+}
+
+void CPU::OR(unsigned char &reg1, unsigned char reg2) {
+    //TODO: Check this
+    reg1 = reg1 | reg2;
+    flag.Z = (reg1 == 0); 
+    flag.N = false; flag.H = false; flag.C = false;
+}
+
+void CPU::XOR(unsigned char &reg1, unsigned char reg2) {
+    //TODO: Check this
+    reg1 = reg1 ^ reg2;
+    flag.Z = (reg1 == 0); 
+    flag.N = false; flag.H = false; flag.C = false;
+}
+
+template<typename T>
+void CPU::INC(T &reg) {
+    reg++;
+    flag.Z = (reg == 0);
+    flag.N = false; 
+    flag.H = ((0xF & reg) == 0xF);
+}
+
+template<typename T>
+void CPU::DEC(T &reg) {
+    reg--;
+    flag.Z = (reg == 0);
+    flag.N = true; 
+    flag.H = ((0xF & reg) == 0x0);
+}
+
+void CPU::INC_16(unsigned char &LSB, unsigned char &MSB) {
+        increment_pair(LSB, MSB);
+}
+
+void CPU::DEC_16(unsigned char &LSB, unsigned char &MSB) {
+        increment_pair(LSB, MSB);
+}
+
+void CPU::SWAP(unsigned char &reg) {
+    reg = (((reg & 0xF) << 8) | ((reg & 0xF0) >> 8));
+    flag.Z = (reg == 0);
+    flag.N = false; flag.H = false; flag.C = false;
+}
+
+void CPU::BIT(unsigned char reg, unsigned char bit) {
+    flag.Z = ((reg & (1 << bit)) == 0);
+    flag.N = false;
+    flag.H = true;
+}
+
+void CPU::SET(unsigned char &reg, unsigned char bit) {
+    reg = reg | (1 << bit); 
+}
+
+void CPU::RESET(unsigned char &reg, unsigned char bit) {
+    reg = reg & (0xFF ^ (1 << bit)); 
+}
+
+void CPU::JUMP(unsigned short addr) {
+    PC = addr;
+}
+
+void CPU::JUMP_R(unsigned char offset) {
+    PC += (signed char) offset;
 }
 
 void CPU::print_state() {
@@ -183,12 +378,6 @@ void CPU::print_state() {
 }
 
 int CPU::fetch_and_execute() {
-    // Read in opcode at PC
-    // Execute OP 
-    // Update PC?
-
-    int len = 0; 
-
     unsigned char OP_CODE = memory[PC];
    
     switch (OP_CODE) {
@@ -319,238 +508,203 @@ int CPU::fetch_and_execute() {
         case 0x31: LD(SP, concat_bytes(memory[PC + 1], memory[PC + 2])); break;
 
         /* 2. LD SP,HL */
-        case 0xF9: LD(SP, concat_bytes(L, H));  break;
+        case 0xF9: LD(SP, concat_bytes(L, H)); break;
 
         /* 3. LDHL SP,n */
         case 0xF8: LDHL(SP, memory[PC + 1]); break;
 
+        /* 5. LD (nn),SP */
+        case 0x08: LD_16(memory[concat_bytes(memory[PC + 1], memory[PC + 2]) + 1], 
+                         memory[concat_bytes(memory[PC + 1], memory[PC + 2])], 
+                         ((SP& 0xFF00) >> 8), (SP & 0xFF)); break;  
 
-
-        case 0x3C: 
-            //Increment A
-            len = 1; 
-            A++; 
-            flag.Z = (A == 0);
-            flag.N = false;
-            //XXX :Need to set flag.H for half carry 
-            break; 
+        /* 6. PUSH nn */
+        case 0xF5: push_val(A); push_val(F); break;
+        case 0xC5: push_val(B); push_val(C); break; 
+        case 0xD5: push_val(D); push_val(E); break; 
+        case 0xE5: push_val(H); push_val(L); break; 
         
-        case 0x04: 
-            //Increment B
-            len = 1; 
-            B++; 
-            flag.Z = (B == 0);
-            flag.N = false;
-            //XXX :Need to set flag.H for half carry 
-            break; 
+        /* 7. POP nn */ 
+        case 0xF1: F = pop_val(); A = pop_val(); break; 
+        case 0xC1: C = pop_val(); B = pop_val(); break; 
+        case 0xD1: E = pop_val(); D = pop_val(); break; 
+        case 0xE1: L = pop_val(); H = pop_val(); break; 
+
         
-        case 0x0C: 
-            //Increment C
-            len = 1; 
-            C++; 
-            flag.Z = (C == 0);
-            flag.N = false;
-            //XXX :Need to set flag.H for half carry 
-            break; 
+        /*** 8-bit ALU ***/
+        /* 1. ADD A,n */
+        case 0x87: ADD(A, A); break; 
+        case 0x80: ADD(A, B); break; 
+        case 0x81: ADD(A, C); break; 
+        case 0x82: ADD(A, D); break; 
+        case 0x83: ADD(A, E); break; 
+        case 0x84: ADD(A, H); break; 
+        case 0x85: ADD(A, L); break; 
+        case 0x86: ADD(A, memory[concat_bytes(L, H)]); break; 
+        case 0xC6: ADD(A, memory[PC + 1]); break; 
+    
+        /* 2. ADC A,n */ 
+        case 0x8F: ADC(A, A); break; 
+        case 0x88: ADC(A, B); break; 
+        case 0x89: ADC(A, C); break; 
+        case 0x8A: ADC(A, D); break; 
+        case 0x8B: ADC(A, E); break; 
+        case 0x8C: ADC(A, H); break; 
+        case 0x8D: ADC(A, L); break; 
+        case 0x8E: ADC(A, memory[concat_bytes(L, H)]); break; 
+        case 0xCE: ADC(A, memory[PC + 1]); break; 
+
+        /* 3. SUB A,n */
+        case 0x97: SUB(A, A); break; 
+        case 0x90: SUB(A, B); break; 
+        case 0x91: SUB(A, C); break; 
+        case 0x92: SUB(A, D); break; 
+        case 0x93: SUB(A, E); break; 
+        case 0x94: SUB(A, H); break; 
+        case 0x95: SUB(A, L); break; 
+        case 0x96: SUB(A, memory[concat_bytes(L, H)]); break; 
+        case 0xD6: SUB(A, memory[PC + 1]); break; 
+    
+        /* 4. SBC A,n */ 
+        case 0x9F: SBC(A, A); break; 
+        case 0x98: SBC(A, B); break; 
+        case 0x99: SBC(A, C); break; 
+        case 0x9A: SBC(A, D); break; 
+        case 0x9B: SBC(A, E); break; 
+        case 0x9C: SBC(A, H); break; 
+        case 0x9D: SBC(A, L); break; 
+        case 0x9E: SBC(A, memory[concat_bytes(L, H)]); break; 
+        case 0xDE: SBC(A, memory[PC + 1]); break; 
+
+        /* 5. AND n */
+        case 0xA7: AND(A, A); break; 
+        case 0xA0: AND(A, B); break; 
+        case 0xA1: AND(A, C); break; 
+        case 0xA2: AND(A, D); break; 
+        case 0xA3: AND(A, E); break; 
+        case 0xA4: AND(A, H); break; 
+        case 0xA5: AND(A, L); break; 
+        case 0xA6: AND(A, memory[concat_bytes(L, H)]); break; 
+        case 0xE6: AND(A, memory[PC + 1]); break; 
+
+        /* 6. OR n */
+        case 0xB7: OR(A, A); break; 
+        case 0xB0: OR(A, B); break; 
+        case 0xB1: OR(A, C); break; 
+        case 0xB2: OR(A, D); break; 
+        case 0xB3: OR(A, E); break; 
+        case 0xB4: OR(A, H); break; 
+        case 0xB5: OR(A, L); break; 
+        case 0xB6: OR(A, memory[concat_bytes(L, H)]); break; 
+        case 0xF6: OR(A, memory[PC + 1]); break; 
+
+        /* 7. XOR n */
+        case 0xAF: XOR(A, A); break; 
+        case 0xA8: XOR(A, B); break; 
+        case 0xA9: XOR(A, C); break; 
+        case 0xAA: XOR(A, D); break; 
+        case 0xAB: XOR(A, E); break; 
+        case 0xAC: XOR(A, H); break; 
+        case 0xAD: XOR(A, L); break; 
+        case 0xAE: XOR(A, memory[concat_bytes(L, H)]); break; 
+        case 0xEE: XOR(A, memory[PC + 1]); break; 
+
+        /* 8. CP n */
+        case 0xBF: CP(A, A); break; 
+        case 0xB8: CP(A, B); break; 
+        case 0xB9: CP(A, C); break; 
+        case 0xBA: CP(A, D); break; 
+        case 0xBB: CP(A, E); break; 
+        case 0xBC: CP(A, H); break; 
+        case 0xBD: CP(A, L); break; 
+        case 0xBE: CP(A, memory[concat_bytes(L, H)]); break; 
+        case 0xFE: CP(A, memory[PC + 1]); break; 
+
+        /* 9. INC n */
+        case 0x3C: INC(A); break;
+        case 0x04: INC(B); break;
+        case 0x0C: INC(C); break;
+        case 0x14: INC(D); break;
+        case 0x1C: INC(E); break;
+        case 0x24: INC(H); break;
+        case 0x2C: INC(L); break;
+        case 0x34: INC(memory[concat_bytes(L, H)]); break;
+
+        /* 10. DEC n */
+        case 0x3D: DEC(A); break;
+        case 0x05: DEC(B); break;
+        case 0x0D: DEC(C); break;
+        case 0x15: DEC(D); break;
+        case 0x1D: DEC(E); break;
+        case 0x25: DEC(H); break;
+        case 0x2D: DEC(L); break;
+        case 0x35: DEC(memory[concat_bytes(L, H)]); break;
+
+        /*** 16-bit ALU ***/
+        /* 1. ADD HL,n */
+        case 0x09: ADD_16(L, H, C, B); break; 
+        case 0x19: ADD_16(L, H, C, B); break; 
+        case 0x29: ADD_16(L, H, C, B); break; 
+        case 0x39: ADD_16(L, H, C, B); break; 
+
+        /* 2. ADD SP,n */
+        case 0xE8: ADD(SP, (unsigned short) memory[PC + 1]); break;
+
+        /* 3. INC nn */ 
+        case 0x03: INC_16(C, B); break;
+        case 0x13: INC_16(E, D); break;
+        case 0x23: INC_16(L, H); break;
+        case 0x33: INC(SP); break;
+
+        /* 4. DEC nn */ 
+        case 0x0B: DEC_16(C, B); break;
+        case 0x1B: DEC_16(E, D); break;
+        case 0x2B: DEC_16(L, H); break;
+        case 0x3B: DEC(SP); break;
         
-        case 0x14: 
-            //Increment D
-            len = 1; 
-            D++; 
-            flag.Z = (D == 0);
-            flag.N = false;
-            //XXX :Need to set flag.H for half carry 
-            break; 
+        /*** Miscellaneous ***/
+        /* 2. DAA */ 
+        //TODO: DAA
+
+        /* 3. CPL */
+        case 0x2F: A = ~A; flag.N = true; flag.H = true; break;
+
+        /* 4. CCF */
+        case 0x3F: flag.N = false; flag.H = false; flag.C = !flag.C; break;
+
+        /* 5. SCF */ 
+        case 0x37: flag.N = false; flag.H = false; flag.C = true; break;
+
+        /* 6. NOP */
+        case 0x00: break;        
+
+        /* 7. HALT */ 
+        //TODO: case 0x76: 
         
-        case 0x1C: 
-            //Increment E
-            len = 1; 
-            E++; 
-            flag.Z = (E == 0);
-            flag.N = false;
-            //XXX :Need to set flag.H for half carry 
-            
+        /* 8. STOP */
+        //TODO: case 0x10:
+
+        /* 9. DI */
+        //TODO: case 0xF3:
+
+        /* 10. EI */
+        //TODO: case 0xFB:
+
+        /*** Rotates & Shifts ***/
+        /* 1. RLCA */
+        case 0x07: RLC(A); break; 
+                   
+        /* 2. RLA */
+        case 0x17: RL(A); break;
         
-        case 0x24: 
-            //Increment H
-            len = 1; 
-            H++; 
-            flag.Z = (H == 0);
-            flag.N = false;
-            //XXX :Need to set flag.H for half carry 
-            break; 
+        /* 3. RRCA */
+        case 0x0F: RRC(A); break; 
+                   
+        /* 4. RRA */
+        case 0x1F: RR(A); break;
         
-        case 0x2C: 
-            //Increment L
-            L++; 
-            flag.Z = (L == 0);
-            flag.N = false;
-            //XXX :Need to set flag.H for half carry 
-            break; 
 
-        case 0x34: 
-            //Increment HL
-            len = 1; 
-            increment_pair(L, H); 
-            flag.Z = (H == 0) && (L == 0); 
-            flag.N = false;
-            //XXX: flag.H set if no borrow from bit 4 
-            break; 
 
-        case 0x03:
-            //Increment BC
-            len = 1;
-            increment_pair(C, B); 
-            break;
-
-        case 0x13:
-            //Increment DE
-            len = 1;
-            increment_pair(E, D); 
-            break;
-
-        case 0x23:
-            //Increment HL
-            len = 1;
-            increment_pair(L, H); 
-            break;
-
-        case 0x33:
-            //Increment SP
-            len = 1;
-            SP++; 
-            break;
-
-        case 0x3D: 
-            //Decrement A
-            len = 1; 
-            A--; 
-            flag.Z = (A == 0);
-            flag.N = true;
-            //XXX :Need to set flag.H for half carry 
-            break; 
-
-        case 0x05: 
-            //Decrement B
-            len = 1; 
-            B--; 
-            flag.Z = (B == 0);
-            flag.N = true;
-            //XXX :Need to set flag.H for half carry 
-            break; 
-
-        case 0x0D: 
-            //Decrement C
-            len = 1; 
-            C--; 
-            flag.Z = (C == 0);
-            flag.N = true;
-            //XXX :Need to set flag.H for half carry 
-            break; 
-
-        case 0x15: 
-            //Decrement D
-            len = 1; 
-            D--; 
-            flag.Z = (D == 0);
-            flag.N = true;
-            //XXX :Need to set flag.H for half carry 
-            break; 
-
-        case 0x1D: 
-            //Decrement E
-            len = 1; 
-            E--; 
-            flag.Z = (E == 0);
-            flag.N = true;
-            //XXX :Need to set flag.H for half carry 
-            break; 
-
-        case 0x25: 
-            //Decrement H
-            len = 1; 
-            H--; 
-            flag.Z = (H == 0);
-            flag.N = true;
-            //XXX :Need to set flag.H for half carry 
-            break; 
-
-        case 0x2D: 
-            //Decrement L
-            len = 1; 
-            L--; 
-            flag.Z = (L == 0);
-            flag.N = true;
-            //XXX :Need to set flag.H for half carry 
-            break; 
-
-        case 0x35: 
-            //Decrement HL
-            len = 1; 
-            decrement_pair(L, H); 
-            flag.Z = (H == 0) && (L == 0); 
-            flag.N = true;
-            //XXX: flag.H set if no borrow from bit 4 
-            break; 
-
-        case 0x0B:
-            //Decrement BC
-            len = 1;
-            decrement_pair(C, B); 
-            break;
-
-        case 0x1B:
-            //Decrement DE
-            len = 1;
-            decrement_pair(E, D); 
-            break;
-
-        case 0x2B:
-            //Decrement HL
-            len = 1;
-            decrement_pair(L, H); 
-            break;
-
-        case 0x3B:
-            //Decrement SP
-            len = 1;
-            SP--; 
-            break;
-
-        case 0x18:
-            //Jump if not zero
-            len = 2;
-            PC += (signed char) memory[PC + 1];
-            break;
-
-        case 0x20:
-            //Jump if not zero
-            len = 2;
-            if (!flag.Z) PC += (signed char) memory[PC + 1];
-            break;
-
-        case 0x28:
-            //Jump if zero
-            len = 2;
-            if (flag.Z) PC += (signed char) memory[PC + 1];
-            break;
-
-        case 0xAF:
-            //XOR A with A store in A
-            len = 1;
-            A = A ^ A; 
-
-            //Set flags
-            flag.Z = (A == 0);
-            flag.N = false;
-            flag.H = false;
-            flag.C = false; 
-            break;
-
-        case 0x17:
-            len = 1; 
-            RL(A);
-            break;
 
         case 0xCB: 
             {
@@ -562,10 +716,18 @@ int CPU::fetch_and_execute() {
                 switch(x) {
                     case 00: 
                         //TODO: Rotate
-                        len = 2;
-                        flag.N = false;
-                        flag.H = false;
                         switch(memory[PC + 1]) {
+                            /* 5. RLC n */
+                            case 0x07: RLC(A); break;
+                            case 0x00: RLC(B); break;
+                            case 0x01: RLC(C); break;
+                            case 0x02: RLC(D); break;
+                            case 0x03: RLC(E); break;
+                            case 0x04: RLC(H); break;
+                            case 0x05: RLC(L); break;
+                            case 0x06: RLC(memory[concat_bytes(L,H)]); break;
+                            
+                            /* 6. RL n */
                             case 0x17: RL(A); break;
                             case 0x10: RL(B); break;
                             case 0x11: RL(C); break;
@@ -573,387 +735,191 @@ int CPU::fetch_and_execute() {
                             case 0x13: RL(E); break;
                             case 0x14: RL(H); break;
                             case 0x15: RL(L); break;
+                            case 0x16: RL(memory[concat_bytes(L,H)]); break;
+                            
+                            /* 7. RRC n */
+                            case 0x0F: RRC(A); break;
+                            case 0x08: RRC(B); break;
+                            case 0x09: RRC(C); break;
+                            case 0x0A: RRC(D); break;
+                            case 0x0B: RRC(E); break;
+                            case 0x0C: RRC(H); break;
+                            case 0x0D: RRC(L); break;
+                            case 0x0E: RRC(memory[concat_bytes(L,H)]); break;
+                            
+                            /* 8. RR n */
+                            case 0x1F: RR(A); break;
+                            case 0x18: RR(B); break;
+                            case 0x19: RR(C); break;
+                            case 0x1A: RR(D); break;
+                            case 0x1B: RR(E); break;
+                            case 0x1C: RR(H); break;
+                            case 0x1D: RR(L); break;
+                            case 0x1E: RR(memory[concat_bytes(L,H)]); break;
+
+                            /* 9. SLA n */
+                            case 0x27: SLA(A); break;
+                            case 0x20: SLA(B); break;
+                            case 0x21: SLA(C); break;
+                            case 0x22: SLA(D); break;
+                            case 0x23: SLA(E); break;
+                            case 0x24: SLA(H); break;
+                            case 0x25: SLA(L); break;
+                            case 0x26: SLA(memory[concat_bytes(L,H)]); break;
+
+                            /* 10. SRA n */
+                            case 0x2F: SRA(A); break;
+                            case 0x28: SRA(B); break;
+                            case 0x29: SRA(C); break;
+                            case 0x2A: SRA(D); break;
+                            case 0x2B: SRA(E); break;
+                            case 0x2C: SRA(H); break;
+                            case 0x2D: SRA(L); break;
+                            case 0x2E: SRA(memory[concat_bytes(L,H)]); break;
+
+                            /* 11. SRL n */
+                            case 0x3F: SRL(A); break;
+                            case 0x38: SRL(B); break;
+                            case 0x39: SRL(C); break;
+                            case 0x3A: SRL(D); break;
+                            case 0x3B: SRL(E); break;
+                            case 0x3C: SRL(H); break;
+                            case 0x3D: SRL(L); break;
+                            case 0x3E: SRL(memory[concat_bytes(L,H)]); break;
+
+                            /* 1. SWAP n */
+                            case 0x37: SWAP(A); break;
+                            case 0x30: SWAP(B); break;
+                            case 0x31: SWAP(C); break;
+                            case 0x32: SWAP(D); break;
+                            case 0x33: SWAP(E); break;
+                            case 0x34: SWAP(H); break;
+                            case 0x35: SWAP(L); break;
+                            case 0x36: SWAP(memory[concat_bytes(L, H)]); break;
                         }
                         break;
                     case 01:
                         // BIT -- Test Bit 
-                        len = 2; 
-                        flag.N = false;
-                        flag.H = true;
                         switch(z) {
-                            case 0: // B
-                                flag.Z = ((B & (1 << y)) == 0);
-                                break;
-                            case 1: // C
-                                flag.Z = ((C & (1 << y)) == 0);
-                                break;
-                            case 2: // D
-                                flag.Z = ((D & (1 << y)) == 0);
-                                break;
-                            case 3: // E
-                                flag.Z = ((E & (1 << y)) == 0);
-                                break;
-                            case 4: // H
-                                flag.Z = ((H & (1 << y)) == 0);
-                                break;
-                            case 5: // L
-                                flag.Z = ((L & (1 << y)) == 0);
-                                break;
-                            case 6: // HL
-                                //TODO: Fill this in
-                                break;
-                            case 7: // A
-                                flag.Z = ((A & (1 << y)) == 0);
-                                break;
+                            case 0: BIT(B, y); break;
+                            case 1: BIT(C, y); break;
+                            case 2: BIT(D, y); break;
+                            case 3: BIT(E, y); break;
+                            case 4: BIT(H, y); break;
+                            case 5: BIT(L, y); break;
+                            case 6: BIT(memory[concat_bytes(L, H)], y); break; 
+                            case 7: BIT(A, y); break;
                         }
                         break;
                     case 02:
-                        // TODO: RES -- Reset Bit
+                        // RES -- Reset Bit
+                        switch(z) {
+                            case 0: RESET(B, y); break;
+                            case 1: RESET(C, y); break;
+                            case 2: RESET(D, y); break;
+                            case 3: RESET(E, y); break;
+                            case 4: RESET(H, y); break;
+                            case 5: RESET(L, y); break;
+                            case 6: RESET(memory[concat_bytes(L, H)], y); break; 
+                            case 7: RESET(A, y); break;
+                        }
                         break;
                     case 03:
-                        // TODO: SET -- Set Bit
+                        // SET -- Set Bit
+                        switch(z) {
+                            case 0: SET(B, y); break;
+                            case 1: SET(C, y); break;
+                            case 2: SET(D, y); break;
+                            case 3: SET(E, y); break;
+                            case 4: SET(H, y); break;
+                            case 5: SET(L, y); break;
+                            case 6: SET(memory[concat_bytes(L, H)], y); break; 
+                            case 7: SET(A, y); break;
+                        }
                         break;
                 } 
             }
             break;
-         
-        case 0xCD:
-            // Call addr
-            len = 0;
-            {
-                unsigned short addr = PC + 3;
-                push_addr(addr);
-                PC = concat_bytes(memory[PC + 1], memory[PC + 2]);
-            }
-            break;
-
-        case 0xC9:
-            len = 0; 
-            PC = pop_addr();
-            break;
         
-        case 0xF5: 
-            //Push AF
-            len = 1;
-            push_val(A);
-            push_val(F);
-            break;
+        /*** Jumps ***/ 
+        /* 1. JP nn */
+        case 0xC3: JUMP(concat_bytes(memory[PC+1], memory[PC+2])); break;
 
-        case 0xC5: 
-            //Push BC
-            len = 1;
-            push_val(B);
-            push_val(C);
-            break;
+        /* 2. JP cc,nn */
+        case 0xC2: if (!flag.Z) JUMP(concat_bytes(memory[PC+1], memory[PC+2])); break;
+        case 0xCA: if (flag.Z) JUMP(concat_bytes(memory[PC+1], memory[PC+2])); break;
+        case 0xD2: if (!flag.C) JUMP(concat_bytes(memory[PC+1], memory[PC+2])); break;
+        case 0xDA: if (flag.C) JUMP(concat_bytes(memory[PC+1], memory[PC+2])); break;
 
-        case 0xD5: 
-            //Push DE
-            len = 1;
-            push_val(D);
-            push_val(E);
-            break;
+        /* 3. JP (HL) */ 
+        case 0xE9: JUMP(concat_bytes(L, H)); break;
 
-        case 0xE5: 
-            //Push E5
-            len = 1;
-            push_val(H);
-            push_val(L);
-            break;
+        /* 4. JR n */ 
+        case 0x18: JUMP_R(memory[PC + 1]); break;
 
-        case 0xF1: 
-            //Pop AF
-            len = 1;
-            F = pop_val();
-            A = pop_val();
-            break;
+        /* 5. JR cc,n */ 
+        case 0x20: if (!flag.Z) JUMP_R(memory[PC+1]); break;
+        case 0x28: if (flag.Z) JUMP_R(memory[PC+1]); break;
+        case 0x30: if (!flag.C) JUMP_R(memory[PC+1]); break;
+        case 0x38: if (flag.C) JUMP_R(memory[PC+1]); break;
 
-        case 0xC1: 
-            //Push BC
-            len = 1;
-            C = pop_val();
-            B = pop_val();
-            break;
+        /*** Calls ***/ 
+        /* 1. CALL nn */
+        case 0xCD: push_addr(PC + 3); JUMP(concat_bytes(memory[PC + 1], memory[PC + 2])); break;
 
-        case 0xD1: 
-            //Push DE
-            len = 1;
-            E = pop_val();
-            D = pop_val();
-            break;
+        /* 2. CALL cc,nn */ 
+        case 0xC4: if (!flag.Z) {
+                       push_addr(PC + 3); 
+                       JUMP(concat_bytes(memory[PC + 1], memory[PC + 2])); 
+                   } break;
+        case 0xCC: if (flag.Z) {
+                       push_addr(PC + 3); 
+                       JUMP(concat_bytes(memory[PC + 1], memory[PC + 2])); 
+                   } break;
+        case 0xD4: if (!flag.C) {
+                       push_addr(PC + 3); 
+                       JUMP(concat_bytes(memory[PC + 1], memory[PC + 2])); 
+                   } break;
+        case 0xDC: if (flag.C) {
+                       push_addr(PC + 3); 
+                       JUMP(concat_bytes(memory[PC + 1], memory[PC + 2])); 
+                   } break;
+        
+        /*** Restarts ***/ 
+        /* 1. RST n*/
+        case 0xC7: push_addr(PC + 1); JUMP(0x00); break;
+        case 0xCF: push_addr(PC + 1); JUMP(0x08); break;
+        case 0xD7: push_addr(PC + 1); JUMP(0x10); break;
+        case 0xDF: push_addr(PC + 1); JUMP(0x18); break;
+        case 0xE7: push_addr(PC + 1); JUMP(0x20); break;
+        case 0xEF: push_addr(PC + 1); JUMP(0x28); break;
+        case 0xF7: push_addr(PC + 1); JUMP(0x30); break;
+        case 0xFF: push_addr(PC + 1); JUMP(0x38); break;
 
-        case 0xE1: 
-            //Push HL
-            len = 1;
-            L = pop_val();
-            H = pop_val();
-            break;
+        /*** Returns ***/
+        /* 1. RET */ 
+        case 0xC9: PC = pop_addr(); break;
 
-        case 0xBF:
-            //Compare A to A
-            len = 1; 
-            flag.Z = true;
-            flag.N = true;
-            //TODO: flag.H
-            flag.C = false;
-            break; 
+        /* 2. RET cc */
+        case 0xC0: if (!flag.Z) PC = pop_addr(); break;
+        case 0xC8: if (flag.Z) PC = pop_addr(); break;
+        case 0xD0: if (!flag.C) PC = pop_addr(); break;
+        case 0xD8: if (flag.C) PC = pop_addr(); break;
 
-        case 0xB8:
-            //Compare B to A
-            len = 1; 
-            flag.Z = (A == B);
-            flag.N = true;
-            //TODO: flag.H
-            flag.C = (A < B);
-            break; 
-
-        case 0xB9:
-            //Compare C to A
-            len = 1; 
-            flag.Z = (A == C);
-            flag.N = true;
-            //TODO: flag.H
-            flag.C = (A < C);
-            break; 
-
-        case 0xBA:
-            //Compare D to A
-            len = 1; 
-            flag.Z = (A == D);
-            flag.N = true;
-            //TODO: flag.H
-            flag.C = (A < D);
-            break; 
-
-        case 0xBB:
-            //Compare E to A
-            len = 1; 
-            flag.Z = (A == E);
-            flag.N = true;
-            //TODO: flag.H
-            flag.C = (A < E);
-            break; 
-
-        case 0xBC:
-            //Compare H to A
-            len = 1; 
-            flag.Z = (A == H);
-            flag.N = true;
-            //TODO: flag.H
-            flag.C = (A < H);
-            break; 
-
-        case 0xBD:
-            //Compare L to A
-            len = 1; 
-            flag.Z = (A == L);
-            flag.N = true;
-            //TODO: flag.H
-            flag.C = (A < L);
-            break; 
-
-        case 0xBE: 
-            // Compare mem[HL] to A
-            len = 1;
-            flag.Z = (A == memory[concat_bytes(L, H)]);
-            flag.N = true;
-            //XXX: flag.H
-            flag.C = (A < memory[concat_bytes(L, H)]);
-            break;
-
-
-        case 0xFE: 
-            // Compare n to A
-            len = 2;
-            flag.Z = (A == memory[PC + 1]);
-            flag.N = true;
-            //XXX: flag.H
-            flag.C = (A < memory[PC + 1]);
-            break;
-
-        case 0x97:
-            //Subtract A from A
-            len = 1; 
-            A -= A;
-            flag.Z = (A == 0);
-            flag.N = true;
-
-            //TODO: flag.H
-            flag.C = (A + A < A);
-            break; 
-
-        case 0x90:
-            //Subtract B from A
-            len = 1; 
-            A -= B;
-            flag.Z = (A == 0);
-            flag.N = true;
-            //TODO: flag.H
-            flag.C = (A + B < B);
-            break; 
-
-        case 0x91:
-            //Subtract C from A
-            len = 1; 
-            A -= C;
-            flag.Z = (A == 0);
-            flag.N = true;
-            //TODO: flag.H
-            flag.C = (A + C < C);
-            break; 
-
-        case 0x92:
-            //Subtract D from A
-            len = 1; 
-            A -= D;
-            flag.Z = (A == 0);
-            flag.N = true;
-            //TODO: flag.H
-            flag.C = (A + D < D);
-            break; 
-
-        case 0x93:
-            //Subtract E from A
-            len = 1; 
-            A -= E;
-            flag.Z = (A == 0);
-            flag.N = true;
-            //TODO: flag.H
-            flag.C = (A + E < E);
-            break; 
-
-        case 0x94:
-            //Subtract H from A
-            len = 1; 
-            A -= H;
-            flag.Z = (A == 0);
-            flag.N = true;
-            //TODO: flag.H
-            flag.C = (A + H < H);
-            break; 
-
-        case 0x95:
-            //Subtract L from A
-            len = 1; 
-            A -= L;
-            flag.Z = (A == 0);
-            flag.N = true;
-            //TODO: flag.H
-            flag.C = (A + L < L);
-            break; 
-
-        case 0xD6:
-            //Subtract n from A
-            len = 2; 
-            A -= memory[PC + 1];
-            flag.Z = (A == 0);
-            flag.N = true;
-            //TODO: flag.H
-            flag.C = (A + memory[PC + 1] < memory[PC + 1]);
-            break; 
-
-        case 0x87:
-            //Add A to A
-            len = 1; 
-            A += A;
-            flag.Z = (A == 0);
-            flag.N = true;
-            //TODO: flag.H
-            //TODO: flag.C 
-            break; 
-
-        case 0x80:
-            //Add B to A
-            len = 1; 
-            A += B;
-            flag.Z = (A == 0);
-            flag.N = true;
-            //TODO: flag.H
-            //TODO: flag.C 
-            break; 
-
-        case 0x81:
-            //Add C to A
-            len = 1; 
-            A += C;
-            flag.Z = (A == 0);
-            flag.N = true;
-            //TODO: flag.H
-            //TODO: flag.C 
-            break; 
-
-        case 0x82:
-            //Add D to A
-            len = 1; 
-            A += D;
-            flag.Z = (A == 0);
-            flag.N = true;
-            //TODO: flag.H
-            //TODO: flag.C 
-            break; 
-
-        case 0x83:
-            //Add E to A
-            len = 1; 
-            A += E;
-            flag.Z = (A == 0);
-            flag.N = true;
-            //TODO: flag.H
-            //TODO: flag.C 
-            break; 
-
-        case 0x84:
-            //Add H to A
-            len = 1; 
-            A += H;
-            flag.Z = (A == 0);
-            flag.N = true;
-            //TODO: flag.H
-            //TODO: flag.C 
-            break; 
-
-        case 0x85:
-            //Add L to A
-            len = 1; 
-            A += L;
-            flag.Z = (A == 0);
-            flag.N = true;
-            //TODO: flag.H
-            //TODO: flag.C 
-            break; 
-
-        case 0x86:
-            //Add HL to A
-            len = 1; 
-            A += memory[concat_bytes(L, H)];
-            flag.Z = (A == 0);
-            flag.N = true;
-            //TODO: flag.H
-            //TODO: flag.C 
-            break; 
-
-        case 0xC6:
-            //Add n to A
-            len = 2; 
-            A += memory[PC + 1];
-            flag.Z = (A == 0);
-            flag.N = true;
-            //TODO: flag.H
-            //TODO: flag.C
-            break; 
+        /* 3. RETI */ 
+        //TODO: case 0xD9: 
     }
 
 
     if (OP_CODE != 0xCB) {
         CLK += OP_cycles[OP_CODE]; 
-        len += OP_len[OP_CODE];
+        PC += OP_len[OP_CODE];
     } else {
         unsigned char EX_OP_CODE = memory[PC + 1];
         CLK += EX_OP_cycles[EX_OP_CODE]; 
-        len += EX_OP_len[EX_OP_CODE];
+        PC += EX_OP_len[EX_OP_CODE];
     }
 
-
-    PC += len;
     return 0;
 }
 

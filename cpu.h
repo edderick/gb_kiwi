@@ -27,11 +27,50 @@ class CPU {
     unsigned short pop_addr();
 
     void RL(unsigned char &reg);
+    void RLC(unsigned char &reg);
+    void RR(unsigned char &reg);
+    void RRC(unsigned char &reg);
+
+    void SLA(unsigned char &reg);
+    void SRA(unsigned char &reg);
+    void SRL(unsigned char &reg);
+
     template<typename T> 
     void LD(T &reg1, T reg2);
     void LD_16(unsigned char &reg1a, unsigned char &reg1b, 
                unsigned char reg2a, unsigned char reg2b);
     void LDHL(unsigned short reg, unsigned char n);
+
+    template<typename T>
+    void ADD(T &reg1, T reg2);
+    void ADC(unsigned char &reg1, unsigned char reg2);
+    void SUB(unsigned char &reg1, unsigned char reg2);
+    void SBC(unsigned char &reg1, unsigned char reg2);
+
+    void CP(unsigned char reg1, unsigned char reg2);
+
+    void AND(unsigned char &reg1, unsigned char reg2);
+    void OR(unsigned char &reg1, unsigned char reg2);
+    void XOR(unsigned char &reg1, unsigned char reg2);
+    
+    template<typename T> 
+    void INC(T &reg);
+    template<typename T> 
+    void DEC(T &reg);
+
+    void ADD_16(unsigned char &reg1a, unsigned char &reg1b, 
+               unsigned char reg2a, unsigned char reg2b);
+    void INC_16(unsigned char &lsb, unsigned char &msb);
+    void DEC_16(unsigned char &lsb, unsigned char &msb);
+
+    void SWAP(unsigned char &reg); 
+
+    void BIT(unsigned char reg, unsigned char bit);
+    void SET(unsigned char &reg, unsigned char bit);
+    void RESET(unsigned char &reg, unsigned char bit);
+    
+    void JUMP(unsigned short addr); 
+    void JUMP_R(unsigned char offset); 
 
 public: 
     Memory memory;
