@@ -6,7 +6,12 @@
 using namespace std;
 Graphics::Graphics() : VRAM(), scroll_x(0), line_y(0x90) {
     //XXX: LINE Y SET TO 90 to trick ROM...
-    
+   
+    master_palette[0] = 0xFFFFFFFF;
+    master_palette[1] = 0xAAAAAAFF;
+    master_palette[2] = 0x555555FF; 
+    master_palette[3] = 0x000000FF;
+
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
             cout << "SDL_Init Error: " << SDL_GetError() << endl;
                 return;
@@ -186,11 +191,32 @@ Graphics::lcdc_info Graphics::decode_LCDC(unsigned char lcdc) {
     return l;
 }
 
+void Graphics::use_palettes() {
+    //BGP = FF47
+    bg_palette[0] = master_palette[bgp & 0x3];
+    bg_palette[1] = master_palette[(bgp & (0x3 << 2)) >> 2];
+    bg_palette[2] = master_palette[(bgp & (0x3 << 4)) >> 4];
+    bg_palette[3] = master_palette[(bgp & (0x3 << 6)) >> 6];
+
+    //OBP0 = FF48
+    ob0_palette[0] = master_palette[obp0 & 0x3];
+    ob0_palette[1] = master_palette[(obp0 & (0x3 << 2)) >> 2];
+    ob0_palette[2] = master_palette[(obp0 & (0x3 << 4)) >> 4];
+    ob0_palette[3] = master_palette[(obp0 & (0x3 << 6)) >> 6];
+
+    //OBP1 = FF49
+    ob1_palette[0] = master_palette[obp1 & 0x3];
+    ob1_palette[1] = master_palette[(obp1 & (0x3 << 2)) >> 2];
+    ob1_palette[2] = master_palette[(obp1 & (0x3 << 4)) >> 4];
+    ob1_palette[3] = master_palette[(obp1 & (0x3 << 6)) >> 6];
+}
 
 void Graphics::dump_display(){
     Graphics::lcdc_info l = decode_LCDC(LCDC);
 
     if (!l.operation) return;
+
+    use_palettes();
 
     unsigned char buf[256][256] = {{0}};
     generate_map(l.tile_data_addr, l.bg_tile_map_addr, buf);
@@ -200,21 +226,7 @@ void Graphics::dump_display(){
     for (int i = 0; i <  144; i++) {
         for (int j = 0; j < 160; j++) {
             unsigned char pixel = buf[(i+scroll_y)%255][(j+scroll_x)%255];
-            switch(pixel) {
-                case 3:
-                    sdl_buf[i][j] = 0x000000FF;
-                    break;
-                case 2:
-                    sdl_buf[i][j] = 0x555555FF;
-                    break;
-                case 1:
-                    sdl_buf[i][j] = 0xAAAAAAFF;
-                    break;
-                case 0:
-                    sdl_buf[i][j] = 0xFFFFFFFF;
-                    break;
-            }
-            
+            sdl_buf[i][j] = bg_palette[pixel];
         }
     }
 

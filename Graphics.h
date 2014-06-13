@@ -31,6 +31,8 @@ class Graphics {
     unsigned char VRAM[0xA000 - 0x8000];
     unsigned char* get_tile(unsigned int, unsigned int);
     void generate_map(unsigned int, unsigned int, unsigned char[256][256]);
+    
+    void use_palettes();
 
     lcdc_info decode_LCDC(unsigned char); 
 
@@ -56,6 +58,11 @@ class Graphics {
     unsigned char bgp;
     unsigned char obp0;
     unsigned char obp1;
+
+    Uint32 master_palette[4]; 
+    Uint32 bg_palette[4];
+    Uint32 ob0_palette[4];
+    Uint32 ob1_palette[4];
 
     unsigned char window_y;
     unsigned char window_x;
