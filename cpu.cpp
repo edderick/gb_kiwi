@@ -234,17 +234,19 @@ void CPU::ADD(unsigned short &reg1, unsigned short reg2) {
     flag.N = false;
 }
 
-void CPU::ADD_16(unsigned char &reg1a, unsigned char &reg1b, 
-                 unsigned char reg2a, unsigned char reg2b) {
+void CPU::ADD_16(unsigned char &reg1_lsb, unsigned char &reg1_msb, 
+                 unsigned char reg2_lsb, unsigned char reg2_msb) {
     //TODO: Check this
-    flag.H = (((reg1b & (1 << (11-7))) & (reg2b & (1 << (11-7)))) != 0);
-    flag.C = (((reg1b & (1 << (15-7))) & (reg2b & (1 << (15-7)))) != 0);
+    flag.H = (((reg1_msb & (1 << (11-7))) & (reg2_msb & (1 << (11-7)))) != 0);
+    flag.C = (((reg1_msb & (1 << (15-7))) & (reg2_msb & (1 << (15-7)))) != 0);
     flag.N = false;
         
-    unsigned char tmp = concat_bytes(reg1a, reg1b) + concat_bytes(reg2a, reg2b); 
-    
-    reg1b = (0xFF00 & tmp) >> 8;
-    reg1a = 0x00FF & tmp;
+    unsigned short tmp = concat_bytes(reg1_lsb, reg1_msb) + concat_bytes(reg2_lsb, reg2_msb); 
+
+    cout << hex << (int) tmp << endl;
+
+    reg1_msb = (0xFF00 & tmp) >> 8;
+    reg1_lsb = 0x00FF & tmp;
 }
 
 void CPU::ADC(unsigned char &reg1, unsigned char reg2) {
@@ -355,7 +357,7 @@ void CPU::JUMP_R(unsigned char offset) {
 
 void CPU::print_state() {
     //XXX: 2590436
-    if (CLK < 835024) return;
+    if (CLK < 906520) return;
     //if (memory[PC] == 0) return;
 
     //memory.graphics.dump_state();
@@ -652,9 +654,9 @@ int CPU::fetch_and_execute() {
         /*** 16-bit ALU ***/
         /* 1. ADD HL,n */
         case 0x09: ADD_16(L, H, C, B); break; 
-        case 0x19: ADD_16(L, H, C, B); break; 
-        case 0x29: ADD_16(L, H, C, B); break; 
-        case 0x39: ADD_16(L, H, C, B); break; 
+        case 0x19: ADD_16(L, H, E, D); break; 
+        case 0x29: ADD_16(L, H, L, H); break; 
+        case 0x39: ADD_16(L, H, ((SP& 0xFF00) >> 8), (SP & 0xFF)); break; 
 
         /* 2. ADD SP,n */
         case 0xE8: ADD(SP, (unsigned short) memory[PC + 1]); break;
