@@ -58,10 +58,10 @@ unsigned char OP_len[0x100] = {
     /*9x*/  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
     /*Ax*/  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
     /*Bx*/  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
-    /*Cx*/  0,  1,  3,  3,  3,  1,  2,  0,  0,  0,  3,  0,  3,  0,  2,  0,
+    /*Cx*/  0,  1,  3,  0,  3,  1,  2,  0,  0,  0,  3,  0,  3,  0,  2,  0,
     /*Dx*/  0,  1,  3,  0,  3,  1,  2,  0,  0,  0,  3,  0,  3,  0,  0,  0,
     /*Ex*/  2,  1,  1,  0,  0,  1,  2,  0,  2,  1,  3,  0,  0,  0,  2,  0,
-    /*Fx*/  2,  1,  1,  0,  0,  1,  2,  0,  2,  1,  3,  0,  0,  0,  2,  0,
+    /*Fx*/  2,  1,  1,  1,  0,  1,  2,  0,  2,  1,  3,  1,  0,  0,  2,  0,
 }; 
 
 unsigned char EX_OP_len[0x100] = {  
@@ -354,8 +354,13 @@ void CPU::JUMP_R(unsigned char offset) {
 }
 
 void CPU::print_state() {
-    //XXX:
-    if (CLK < 380700) return;
+    //XXX: 2590436
+    if (CLK < 835024) return;
+    //if (memory[PC] == 0) return;
+
+    //memory.graphics.dump_state();
+    //memory.graphics.dump_map_indices();
+    //memory.graphics.dump_tiles();
 
     cout << "A: "  << hex << setw(2) << setfill('0') << (unsigned int) A;
     cout << "  F: " << hex << setw(2) << setfill('0') << (unsigned int) F;
@@ -374,6 +379,10 @@ void CPU::print_state() {
     cout << "PC: " << hex << setw(4) << setfill('0') << PC;
     cout << "   CLK: " << dec << CLK;
     cout << "   SP: " << hex << setw(4) << setfill('0') << SP;
+    cout << "\n";
+    cout << "OP_CODE: " << hex << setw(2) << setfill('0') << (int) memory[PC];
+    cout << "   ARG1: " << hex << setw(2) << setfill('0') << (int) memory[PC+1];
+    cout << "   ARG2: " << hex << setw(2) << setfill('0') << (int) memory[PC+2];
     cout << endl;
 }
 
@@ -494,7 +503,7 @@ int CPU::fetch_and_execute() {
         case 0x22: LD(memory[concat_bytes(L, H)], A); increment_pair(L, H); break;
 
         /* 19. LDH (n),A */
-        case 0xE0: LD(memory[0xFF00 + memory[PC + 1]], A); break;
+        case 0xE0:  LD(memory[0xFF00 + memory[PC + 1]], A); break;
 
         /* 20. LDH A,(n) */
         case 0xF0: LD(A, memory[0xFF00 + memory[PC + 1]]); break;
@@ -685,10 +694,12 @@ int CPU::fetch_and_execute() {
         //TODO: case 0x10:
 
         /* 9. DI */
-        //TODO: case 0xF3:
+        //TODO: Implement this 
+        case 0xF3: cout << "WARNING: Attempting to disable interrupts!" << endl; break;
 
         /* 10. EI */
-        //TODO: case 0xFB:
+        //TODO: Implement this
+        case 0xFB: cout << "WARNING: Attempting to enable interrupts!" << endl; break;
 
         /*** Rotates & Shifts ***/
         /* 1. RLCA */
@@ -846,10 +857,10 @@ int CPU::fetch_and_execute() {
         case 0xC3: JUMP(concat_bytes(memory[PC+1], memory[PC+2])); break;
 
         /* 2. JP cc,nn */
-        case 0xC2: if (!flag.Z) JUMP(concat_bytes(memory[PC+1], memory[PC+2])); break;
-        case 0xCA: if (flag.Z) JUMP(concat_bytes(memory[PC+1], memory[PC+2])); break;
-        case 0xD2: if (!flag.C) JUMP(concat_bytes(memory[PC+1], memory[PC+2])); break;
-        case 0xDA: if (flag.C) JUMP(concat_bytes(memory[PC+1], memory[PC+2])); break;
+        case 0xC2: if (!flag.Z) {JUMP(concat_bytes(memory[PC+1], memory[PC+2])); PC -= 3;} break;
+        case 0xCA: if (flag.Z) {JUMP(concat_bytes(memory[PC+1], memory[PC+2])); PC -= 3;} break;
+        case 0xD2: if (!flag.C) {JUMP(concat_bytes(memory[PC+1], memory[PC+2])); PC -= 3;} break;
+        case 0xDA: if (flag.C) {JUMP(concat_bytes(memory[PC+1], memory[PC+2])); PC -= 3;} break;
 
         /* 3. JP (HL) */ 
         case 0xE9: JUMP(concat_bytes(L, H)); break;
@@ -871,18 +882,22 @@ int CPU::fetch_and_execute() {
         case 0xC4: if (!flag.Z) {
                        push_addr(PC + 3); 
                        JUMP(concat_bytes(memory[PC + 1], memory[PC + 2])); 
+                       PC -= 3;
                    } break;
         case 0xCC: if (flag.Z) {
                        push_addr(PC + 3); 
                        JUMP(concat_bytes(memory[PC + 1], memory[PC + 2])); 
+                       PC -= 3;
                    } break;
         case 0xD4: if (!flag.C) {
                        push_addr(PC + 3); 
                        JUMP(concat_bytes(memory[PC + 1], memory[PC + 2])); 
+                       PC -= 3;
                    } break;
         case 0xDC: if (flag.C) {
                        push_addr(PC + 3); 
                        JUMP(concat_bytes(memory[PC + 1], memory[PC + 2])); 
+                       PC -= 3;
                    } break;
         
         /*** Restarts ***/ 
@@ -901,10 +916,10 @@ int CPU::fetch_and_execute() {
         case 0xC9: PC = pop_addr(); break;
 
         /* 2. RET cc */
-        case 0xC0: if (!flag.Z) PC = pop_addr(); break;
-        case 0xC8: if (flag.Z) PC = pop_addr(); break;
-        case 0xD0: if (!flag.C) PC = pop_addr(); break;
-        case 0xD8: if (flag.C) PC = pop_addr(); break;
+        case 0xC0: if (!flag.Z) PC = pop_addr(); else PC++; break;
+        case 0xC8: if (flag.Z) PC = pop_addr(); else PC++; break;
+        case 0xD0: if (!flag.C) PC = pop_addr(); else PC++; break;
+        case 0xD8: if (flag.C) PC = pop_addr(); else PC++; break;
 
         /* 3. RETI */ 
         //TODO: case 0xD9: 
@@ -925,18 +940,19 @@ int CPU::fetch_and_execute() {
 
 int main() {
     CPU cpu; 
-    cpu.memory.cartridge.load_rom("../res/Pokemon Red.gb");
+    cpu.memory.cartridge.load_rom("../res/opus5.gb");
 
     cpu.print_state();
 
-    for (int i = 0; i < 6 + 3 * (0x9FFF - 0x8000) + 26 + 30 + 50 + 3948 + 46 + 6 + 58 + 79 + 120 + 13 + 18500 + 375 + 102; i++) {
-//    int i = 0;
-//    while (true) {
-//        i++;
+//    for (int i = 0; i < 6 + 3 * (0x9FFF - 0x8000) + 26 + 30 + 50 + 3948 + 46 + 6 + 58 + 79 + 120 + 13 + 18500 + 375 + 102; i++) {
+    int i = 0;
+    while (true) {
+        i++;
         //cpu.memory.graphics.dump_tiles();
         cpu.fetch_and_execute();
         cpu.print_state();
-        if ((i % 100) == 0) cpu.memory.graphics.dump_display();
+        cpu.memory.graphics.step(1);
+        if ((i % 300) == 0) cpu.memory.graphics.dump_display();
     }
 
     //TODO: Check which count is right: 380732, or this

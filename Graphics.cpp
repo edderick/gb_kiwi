@@ -35,6 +35,9 @@ Graphics::~Graphics() {
 
 void Graphics::step(int clock_cycle_delta) {
     //Do cool graphics stuff
+    //XXX: HACK
+    if (line_y < 153) line_y++;
+    else line_y = 144;
 }
 
 unsigned char& Graphics::operator[](unsigned int i){
@@ -59,7 +62,7 @@ void Graphics::dump_tiles() {
         for (int j = 0; j < 16; j++) { 
             if (VRAM[i * 16 + j] != 0) b = true;
         }
-        
+
         if (b) {
             cout << "HEX " << setw(3) << setfill('0') << dec << i << ": ";
             for (int j = 0; j < 16; j++) { 
