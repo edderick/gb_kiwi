@@ -242,9 +242,7 @@ void CPU::ADD_16(unsigned char &reg1_lsb, unsigned char &reg1_msb,
     flag.N = false;
         
     unsigned short tmp = concat_bytes(reg1_lsb, reg1_msb) + concat_bytes(reg2_lsb, reg2_msb); 
-
-    cout << hex << (int) tmp << endl;
-
+        
     reg1_msb = (0xFF00 & tmp) >> 8;
     reg1_lsb = 0x00FF & tmp;
 }
@@ -357,7 +355,7 @@ void CPU::JUMP_R(unsigned char offset) {
 
 void CPU::print_state() {
     //XXX: 2590436
-    if (CLK < 906520) return;
+    if (CLK < 835024) return;
     //if (memory[PC] == 0) return;
 
     //memory.graphics.dump_state();
@@ -656,7 +654,7 @@ int CPU::fetch_and_execute() {
         case 0x09: ADD_16(L, H, C, B); break; 
         case 0x19: ADD_16(L, H, E, D); break; 
         case 0x29: ADD_16(L, H, L, H); break; 
-        case 0x39: ADD_16(L, H, ((SP& 0xFF00) >> 8), (SP & 0xFF)); break; 
+        case 0x39: ADD_16(L, H, (SP & 0xFF), ((SP & 0xFF00) >> 8)); break; 
 
         /* 2. ADD SP,n */
         case 0xE8: ADD(SP, (unsigned short) memory[PC + 1]); break;
@@ -942,7 +940,7 @@ int CPU::fetch_and_execute() {
 
 int main() {
     CPU cpu; 
-    cpu.memory.cartridge.load_rom("../res/opus5.gb");
+    cpu.memory.cartridge.load_rom("../res/ttt.gb");
 
     cpu.print_state();
 
