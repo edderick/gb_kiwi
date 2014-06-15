@@ -29,6 +29,7 @@ class Graphics {
        0x9C00 - 0x9FFF  Tile Map 1
     */
     unsigned char VRAM[0xA000 - 0x8000];
+    unsigned char OAM[0xFEA0 - 0xFE00];
     unsigned char* get_tile(unsigned int, unsigned int);
     void generate_map(unsigned int, unsigned int, unsigned char[256][256]);
     

@@ -84,6 +84,9 @@ unsigned char EX_OP_len[0x100] = {
     /*Fx*/  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,
 }; 
 
+CPU::CPU() : PC(0) {
+}
+
 unsigned short concat_bytes(unsigned char LSB, unsigned char MSB) {
     // Little endian machime
     unsigned short tmp_MSB = MSB << 8;
@@ -101,7 +104,7 @@ void CPU::increment_pair(unsigned char &LSB, unsigned char &MSB) {
 
 //XXX: NEEDS TESTING...
 void CPU::decrement_pair(unsigned char &LSB, unsigned char &MSB) {
-    unsigned short p = concat_bytes(L, H);
+    unsigned short p = concat_bytes(LSB, MSB);
     p--; 
     MSB = (0xFF00 & p) >> 8;
     LSB = 0x00FF & p;
@@ -120,14 +123,13 @@ unsigned char CPU::pop_val() {
 void CPU::push_addr(unsigned short addr) {
     push_val((addr & 0xFF00) >> 8);
     push_val((addr & 0xFF));
-
 }
 
 unsigned short CPU::pop_addr() {
-    unsigned char A = pop_val();
-    unsigned char B = pop_val();
+    unsigned char val_A = pop_val();
+    unsigned char val_B = pop_val();
     
-    return concat_bytes(A, B);
+    return concat_bytes(val_A, val_B);
 }
 
 void CPU::RL(unsigned char &reg) {
@@ -241,7 +243,9 @@ void CPU::ADD_16(unsigned char &reg1_lsb, unsigned char &reg1_msb,
     flag.C = (((reg1_msb & (1 << (15-7))) & (reg2_msb & (1 << (15-7)))) != 0);
     flag.N = false;
         
-    unsigned short tmp = concat_bytes(reg1_lsb, reg1_msb) + concat_bytes(reg2_lsb, reg2_msb); 
+    unsigned short tmp = 0;
+    tmp += concat_bytes(reg1_lsb, reg1_msb);
+    tmp += concat_bytes(reg2_lsb, reg2_msb); 
         
     reg1_msb = (0xFF00 & tmp) >> 8;
     reg1_lsb = 0x00FF & tmp;
@@ -318,15 +322,15 @@ void CPU::DEC(T &reg) {
 }
 
 void CPU::INC_16(unsigned char &LSB, unsigned char &MSB) {
-        increment_pair(LSB, MSB);
+    increment_pair(LSB, MSB);
 }
 
 void CPU::DEC_16(unsigned char &LSB, unsigned char &MSB) {
-        increment_pair(LSB, MSB);
+    decrement_pair(LSB, MSB);
 }
 
 void CPU::SWAP(unsigned char &reg) {
-    reg = (((reg & 0xF) << 8) | ((reg & 0xF0) >> 8));
+    reg = (((reg & 0xF) << 4) | ((reg & 0xF0) >> 4));
     flag.Z = (reg == 0);
     flag.N = false; flag.H = false; flag.C = false;
 }
@@ -354,13 +358,8 @@ void CPU::JUMP_R(unsigned char offset) {
 }
 
 void CPU::print_state() {
-    //XXX: 2590436
-    if (CLK < 835024) return;
-    //if (memory[PC] == 0) return;
-
-    //memory.graphics.dump_state();
-    //memory.graphics.dump_map_indices();
-    //memory.graphics.dump_tiles();
+    //XXX:
+    if (CLK < 1251891) return;
 
     cout << "A: "  << hex << setw(2) << setfill('0') << (unsigned int) A;
     cout << "  F: " << hex << setw(2) << setfill('0') << (unsigned int) F;
@@ -383,6 +382,7 @@ void CPU::print_state() {
     cout << "OP_CODE: " << hex << setw(2) << setfill('0') << (int) memory[PC];
     cout << "   ARG1: " << hex << setw(2) << setfill('0') << (int) memory[PC+1];
     cout << "   ARG2: " << hex << setw(2) << setfill('0') << (int) memory[PC+2];
+    cout << "   DMG: " << hex << setw(2) << setfill('0') << (int) memory[0xFF50];
     cout << endl;
 }
 
@@ -713,9 +713,6 @@ int CPU::fetch_and_execute() {
                    
         /* 4. RRA */
         case 0x1F: RR(A); break;
-        
-
-
 
         case 0xCB: 
             {
@@ -940,7 +937,7 @@ int CPU::fetch_and_execute() {
 
 int main() {
     CPU cpu; 
-    cpu.memory.cartridge.load_rom("../res/ttt.gb");
+    cpu.memory.cartridge.load_rom("../res/Tetris.gb");
 
     cpu.print_state();
 
@@ -955,7 +952,6 @@ int main() {
         if ((i % 300) == 0) cpu.memory.graphics.dump_display();
     }
 
-    //TODO: Check which count is right: 380732, or this
     //cpu.memory.graphics.dump_state();
     //cpu.memory.graphics.dump_tiles();
     //cpu.memory.graphics.dump_map_indices();

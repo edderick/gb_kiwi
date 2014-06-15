@@ -4,7 +4,7 @@
 #include <sstream>
 
 using namespace std;
-Graphics::Graphics() : VRAM(), scroll_x(0), line_y(0x90) {
+Graphics::Graphics() : VRAM(), OAM(), scroll_x(0), line_y(0x90) {
     //XXX: LINE Y SET TO 90 to trick ROM...
    
     master_palette[0] = 0xFFFFFFFF;
@@ -46,6 +46,7 @@ void Graphics::step(int clock_cycle_delta) {
 }
 
 unsigned char& Graphics::operator[](unsigned int i){
+    if (i >= 0xFE00) return OAM[i - 0xFE00];
     return VRAM[i - 0x8000];
 }
 

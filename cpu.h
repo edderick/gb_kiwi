@@ -73,6 +73,7 @@ class CPU {
     void JUMP_R(unsigned char offset); 
 
 public: 
+    CPU();
     Memory memory;
     int fetch_and_execute();
     void print_state();

@@ -3,6 +3,10 @@
 #include <iomanip> 
 #include <string>
 
+Memory::Memory() : IO_Ports() {
+
+}
+
 bool Memory::is_DMG() {
     return (*this)[0xFF50] == 0x00; 
 }
@@ -25,7 +29,7 @@ unsigned char& Memory::operator[](unsigned int i) {
 
     } else if ((i >= 0xA000) && (i < 0xC000)) {
         //Switchable RAM Bank 
-        return NONE; 
+        return cartridge[i]; 
 
     } else if ((i >= 0xC000) && (i < 0xE000)) {
         //Internal RAM
@@ -37,19 +41,19 @@ unsigned char& Memory::operator[](unsigned int i) {
 
     } else if ((i >= 0xFE00) && (i < 0xFEA0)) {
         //Sprite Attrib Memory (OAM)
-        return NONE;
+        return graphics[i];
 
     } else if ((i >= 0xFEA0) && (i < 0xFF00)) {
         //*** UNUSED ***
-        return NONE;
+        return unused[i - 0xFEA0];
 
     } else if ((i >= 0xFF00) && (i < 0xFF4C)) {
         //I/O Ports
         return handle_IO(i);
 
     } else if ((i >= 0xFF4C) && (i < 0xFF80)) {
-        //*** UNUSED ***
-        return NONE;
+        //*** UNUSED?? ***
+        return handle_IO(i);
 
     } else if ((i >= 0xFF80) && (i < 0xFFFF)) {
         //Internal RAM 
