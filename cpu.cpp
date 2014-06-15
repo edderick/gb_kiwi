@@ -53,14 +53,14 @@ unsigned char OP_len[0x100] = {
     /*4x*/  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
     /*5x*/  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
     /*6x*/  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
-    /*7x*/  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
+    /*7x*/  1,  1,  1,  1,  1,  1,  0,  1,  1,  1,  1,  1,  1,  1,  1,  1,
     /*8x*/  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
     /*9x*/  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
     /*Ax*/  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
     /*Bx*/  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
     /*Cx*/  0,  1,  3,  0,  3,  1,  2,  0,  0,  0,  3,  0,  3,  0,  2,  0,
     /*Dx*/  0,  1,  3,  0,  3,  1,  2,  0,  0,  0,  3,  0,  3,  0,  0,  0,
-    /*Ex*/  2,  1,  1,  0,  0,  1,  2,  0,  2,  1,  3,  0,  0,  0,  2,  0,
+    /*Ex*/  2,  1,  1,  0,  0,  1,  2,  0,  2,  0,  3,  0,  0,  0,  2,  0,
     /*Fx*/  2,  1,  1,  1,  0,  1,  2,  0,  2,  1,  3,  1,  0,  0,  2,  0,
 }; 
 
@@ -359,7 +359,7 @@ void CPU::JUMP_R(unsigned char offset) {
 
 void CPU::print_state() {
     //XXX:
-    if (CLK < 1251891) return;
+    if (CLK < 867779) return;
 
     cout << "A: "  << hex << setw(2) << setfill('0') << (unsigned int) A;
     cout << "  F: " << hex << setw(2) << setfill('0') << (unsigned int) F;
@@ -860,7 +860,7 @@ int CPU::fetch_and_execute() {
         case 0xDA: if (flag.C) {JUMP(concat_bytes(memory[PC+1], memory[PC+2])); PC -= 3;} break;
 
         /* 3. JP (HL) */ 
-        case 0xE9: JUMP(concat_bytes(memory[concat_bytes(L, H)], memory[concat_bytes(L, H)] + 1)); break;
+        case 0xE9: JUMP(concat_bytes(memory[concat_bytes(L, H)], memory[concat_bytes(L, H) + 1])); break;
 
         /* 4. JR n */ 
         case 0x18: JUMP_R(memory[PC + 1]); break;
@@ -919,7 +919,9 @@ int CPU::fetch_and_execute() {
         case 0xD8: if (flag.C) PC = pop_addr(); else PC++; break;
 
         /* 3. RETI */ 
-        //TODO: case 0xD9: 
+        //TODO: case 0xD9
+        case 0xD9: PC = pop_addr(); cout << "WARNING: Attempting to enable interrupts!" << endl; break;
+        
     }
 
 
