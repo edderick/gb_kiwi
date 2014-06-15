@@ -860,7 +860,7 @@ int CPU::fetch_and_execute() {
         case 0xDA: if (flag.C) {JUMP(concat_bytes(memory[PC+1], memory[PC+2])); PC -= 3;} break;
 
         /* 3. JP (HL) */ 
-        case 0xE9: JUMP(concat_bytes(L, H)); break;
+        case 0xE9: JUMP(concat_bytes(memory[concat_bytes(L, H)], memory[concat_bytes(L, H)] + 1)); break;
 
         /* 4. JR n */ 
         case 0x18: JUMP_R(memory[PC + 1]); break;
