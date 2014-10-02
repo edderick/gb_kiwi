@@ -5,4 +5,4 @@ a.out
 bin/*
 build/*
 *.o
-
+*.bin
