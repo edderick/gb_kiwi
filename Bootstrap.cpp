@@ -11,6 +11,7 @@ Bootstrap::Bootstrap() {
         f.get(c);
         if (f) rom.push_back(c);
     }
+
 }
 
 unsigned char& Bootstrap::operator[](unsigned int i) {

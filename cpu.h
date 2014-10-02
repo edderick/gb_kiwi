@@ -3,7 +3,7 @@
 
 #include "Memory.h"
 
-class CPU {
+struct CPU {
     //General Purpose Registers
     unsigned char A, F, B, C, D, E, H, L;
 
@@ -72,7 +72,6 @@ class CPU {
     void JUMP(unsigned short addr); 
     void JUMP_R(unsigned char offset); 
 
-public: 
     CPU();
     Memory memory;
     int fetch_and_execute();

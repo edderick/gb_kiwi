@@ -20,6 +20,7 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR})
 
 add_executable(GB_Kiwi 
+    gb.m.cpp
     cpu.cpp 
     Memory.cpp 
     Bootstrap.cpp 
