@@ -20,3 +20,14 @@ Dependencies
 ------------
 
 This project depends on SDL2. 
+
+Testing
+-------
+
+To run the unit tests google test must be installed, and available in the build
+paths.
+
+To run the tests 
+
+cd test 
+make test 
