@@ -3,20 +3,7 @@
 
 #include "Memory.h"
 
-struct CPU {
-    //General Purpose Registers
-    unsigned char A, F, B, C, D, E, H, L;
-
-    //Stack Pointer & Program Counter -- Should be 16bits
-    unsigned short SP, PC; 
-
-    // Clock counts cycles
-    int CLK; 
-   
-    struct Flag {
-        bool Z, H, N, C; 
-    } flag;
-
+class CPU {
     void increment_pair(unsigned char &LSB, unsigned char &MSB);
     void decrement_pair(unsigned char &LSB, unsigned char &MSB);
 
@@ -71,10 +58,36 @@ struct CPU {
     
     void JUMP(unsigned short addr); 
     void JUMP_R(unsigned char offset); 
+public: 
+    //General Purpose Registers
+    unsigned char A, F, B, C, D, E, H, L;
+
+    //Stack Pointer & Program Counter -- Should be 16bits
+    unsigned short SP, PC; 
+
+    // Clock counts cycles
+    int CLK; 
+   
+    struct Flag {
+        bool Z, H, N, C; 
+    } flag;
+
+    Memory memory;
+
+
 
     CPU();
-    Memory memory;
-    int fetch_and_execute();
+
+    unsigned char fetch() {
+        return memory[PC];
+    }
+
+    int execute(unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG2);
+    
+    int fetch_and_execute(){ 
+        return execute(fetch(), memory[PC + 1], memory[PC + 2]);
+    }
+
     void print_state();
 };
 

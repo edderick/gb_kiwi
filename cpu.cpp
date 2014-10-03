@@ -386,18 +386,17 @@ void CPU::print_state() {
     cout << endl;
 }
 
-int CPU::fetch_and_execute() {
-    unsigned char OP_CODE = memory[PC];
+int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG2) {
    
     switch (OP_CODE) {
         /*** 8-bit Loads ***/ 
         /* 1. LD nn,n */
-        case 0x06: LD(B, memory[PC + 1]); break; 
-        case 0x0E: LD(C, memory[PC + 1]); break; 
-        case 0x16: LD(D, memory[PC + 1]); break; 
-        case 0x1E: LD(E, memory[PC + 1]); break; 
-        case 0x26: LD(H, memory[PC + 1]); break; 
-        case 0x2E: LD(L, memory[PC + 1]); break; 
+        case 0x06: LD(B, ARG1); break; 
+        case 0x0E: LD(C, ARG1); break; 
+        case 0x16: LD(D, ARG1); break; 
+        case 0x1E: LD(E, ARG1); break; 
+        case 0x26: LD(H, ARG1); break; 
+        case 0x2E: LD(L, ARG1); break; 
 
         /* 2. LD r1,r2 */
         case 0x7F: LD(A, A); break; 
@@ -464,13 +463,13 @@ int CPU::fetch_and_execute() {
         case 0x74: LD(memory[concat_bytes(L, H)], H); break; 
         case 0x75: LD(memory[concat_bytes(L, H)], L); break; 
 
-        case 0x36: LD(memory[concat_bytes(L, H)], memory[PC + 1]); break; 
+        case 0x36: LD(memory[concat_bytes(L, H)], ARG1); break; 
     
         /* 3. LD A,n */
         case 0x0A: LD(A, memory[concat_bytes(C, B)]); break;
         case 0x1A: LD(A, memory[concat_bytes(E, D)]); break;
-        case 0xFA: LD(A, memory[concat_bytes(memory[PC + 1], memory[PC + 2])]); break;
-        case 0x3E: LD(A, memory[PC + 1]); break;
+        case 0xFA: LD(A, memory[concat_bytes(ARG1, ARG2)]); break;
+        case 0x3E: LD(A, ARG1); break;
 
         /* 4. LD n,A */
         case 0x47: LD(B, A); break;
@@ -482,7 +481,7 @@ int CPU::fetch_and_execute() {
         case 0x02: LD(memory[concat_bytes(C, B)], A); break;
         case 0x12: LD(memory[concat_bytes(E, D)], A); break;
         case 0x77: LD(memory[concat_bytes(L, H)], A); break;
-        case 0xEA: LD(memory[concat_bytes(memory[PC + 1], memory[PC + 2])], A); break;
+        case 0xEA: LD(memory[concat_bytes(ARG1, ARG2)], A); break;
 
         /* 5. LD A,(C) */
         case 0xF2: LD(A, memory[0xFF00 + C]); break; 
@@ -503,28 +502,28 @@ int CPU::fetch_and_execute() {
         case 0x22: LD(memory[concat_bytes(L, H)], A); increment_pair(L, H); break;
 
         /* 19. LDH (n),A */
-        case 0xE0:  LD(memory[0xFF00 + memory[PC + 1]], A); break;
+        case 0xE0:  LD(memory[0xFF00 + ARG1], A); break;
 
         /* 20. LDH A,(n) */
-        case 0xF0: LD(A, memory[0xFF00 + memory[PC + 1]]); break;
+        case 0xF0: LD(A, memory[0xFF00 + ARG1]); break;
 
         
         /*** 16-bit Loads ***/
         /* 1. LD n,nn */
-        case 0x01: LD_16(B, C, memory[PC + 2], memory[PC + 1]); break;
-        case 0x11: LD_16(D, E, memory[PC + 2], memory[PC + 1]); break;
-        case 0x21: LD_16(H, L, memory[PC + 2], memory[PC + 1]); break;
-        case 0x31: LD(SP, concat_bytes(memory[PC + 1], memory[PC + 2])); break;
+        case 0x01: LD_16(B, C, ARG2, ARG1); break;
+        case 0x11: LD_16(D, E, ARG2, ARG1); break;
+        case 0x21: LD_16(H, L, ARG2, ARG1); break;
+        case 0x31: LD(SP, concat_bytes(ARG1, ARG2)); break;
 
         /* 2. LD SP,HL */
         case 0xF9: LD(SP, concat_bytes(L, H)); break;
 
         /* 3. LDHL SP,n */
-        case 0xF8: LDHL(SP, memory[PC + 1]); break;
+        case 0xF8: LDHL(SP, ARG1); break;
 
         /* 5. LD (nn),SP */
-        case 0x08: LD_16(memory[concat_bytes(memory[PC + 1], memory[PC + 2]) + 1], 
-                         memory[concat_bytes(memory[PC + 1], memory[PC + 2])], 
+        case 0x08: LD_16(memory[concat_bytes(ARG1, ARG2) + 1], 
+                         memory[concat_bytes(ARG1, ARG2)], 
                          ((SP& 0xFF00) >> 8), (SP & 0xFF)); break;  
 
         /* 6. PUSH nn */
@@ -550,7 +549,7 @@ int CPU::fetch_and_execute() {
         case 0x84: ADD(A, H); break; 
         case 0x85: ADD(A, L); break; 
         case 0x86: ADD(A, memory[concat_bytes(L, H)]); break; 
-        case 0xC6: ADD(A, memory[PC + 1]); break; 
+        case 0xC6: ADD(A, ARG1); break; 
     
         /* 2. ADC A,n */ 
         case 0x8F: ADC(A, A); break; 
@@ -561,7 +560,7 @@ int CPU::fetch_and_execute() {
         case 0x8C: ADC(A, H); break; 
         case 0x8D: ADC(A, L); break; 
         case 0x8E: ADC(A, memory[concat_bytes(L, H)]); break; 
-        case 0xCE: ADC(A, memory[PC + 1]); break; 
+        case 0xCE: ADC(A, ARG1); break; 
 
         /* 3. SUB A,n */
         case 0x97: SUB(A, A); break; 
@@ -572,7 +571,7 @@ int CPU::fetch_and_execute() {
         case 0x94: SUB(A, H); break; 
         case 0x95: SUB(A, L); break; 
         case 0x96: SUB(A, memory[concat_bytes(L, H)]); break; 
-        case 0xD6: SUB(A, memory[PC + 1]); break; 
+        case 0xD6: SUB(A, ARG1); break; 
     
         /* 4. SBC A,n */ 
         case 0x9F: SBC(A, A); break; 
@@ -583,7 +582,7 @@ int CPU::fetch_and_execute() {
         case 0x9C: SBC(A, H); break; 
         case 0x9D: SBC(A, L); break; 
         case 0x9E: SBC(A, memory[concat_bytes(L, H)]); break; 
-        case 0xDE: SBC(A, memory[PC + 1]); break; 
+        case 0xDE: SBC(A, ARG1); break; 
 
         /* 5. AND n */
         case 0xA7: AND(A, A); break; 
@@ -594,7 +593,7 @@ int CPU::fetch_and_execute() {
         case 0xA4: AND(A, H); break; 
         case 0xA5: AND(A, L); break; 
         case 0xA6: AND(A, memory[concat_bytes(L, H)]); break; 
-        case 0xE6: AND(A, memory[PC + 1]); break; 
+        case 0xE6: AND(A, ARG1); break; 
 
         /* 6. OR n */
         case 0xB7: OR(A, A); break; 
@@ -605,7 +604,7 @@ int CPU::fetch_and_execute() {
         case 0xB4: OR(A, H); break; 
         case 0xB5: OR(A, L); break; 
         case 0xB6: OR(A, memory[concat_bytes(L, H)]); break; 
-        case 0xF6: OR(A, memory[PC + 1]); break; 
+        case 0xF6: OR(A, ARG1); break; 
 
         /* 7. XOR n */
         case 0xAF: XOR(A, A); break; 
@@ -616,7 +615,7 @@ int CPU::fetch_and_execute() {
         case 0xAC: XOR(A, H); break; 
         case 0xAD: XOR(A, L); break; 
         case 0xAE: XOR(A, memory[concat_bytes(L, H)]); break; 
-        case 0xEE: XOR(A, memory[PC + 1]); break; 
+        case 0xEE: XOR(A, ARG1); break; 
 
         /* 8. CP n */
         case 0xBF: CP(A, A); break; 
@@ -627,7 +626,7 @@ int CPU::fetch_and_execute() {
         case 0xBC: CP(A, H); break; 
         case 0xBD: CP(A, L); break; 
         case 0xBE: CP(A, memory[concat_bytes(L, H)]); break; 
-        case 0xFE: CP(A, memory[PC + 1]); break; 
+        case 0xFE: CP(A, ARG1); break; 
 
         /* 9. INC n */
         case 0x3C: INC(A); break;
@@ -657,7 +656,7 @@ int CPU::fetch_and_execute() {
         case 0x39: ADD_16(L, H, (SP & 0xFF), ((SP & 0xFF00) >> 8)); break; 
 
         /* 2. ADD SP,n */
-        case 0xE8: ADD(SP, (unsigned short) memory[PC + 1]); break;
+        case 0xE8: ADD(SP, (unsigned short) ARG1); break;
 
         /* 3. INC nn */ 
         case 0x03: INC_16(C, B); break;
@@ -717,14 +716,14 @@ int CPU::fetch_and_execute() {
         case 0xCB: 
             {
                 //Extension OP_CODES
-                char x = (memory[PC + 1] & 0xC0) >> 6;
-                char y = (memory[PC + 1] & 0x38) >> 3;
-                char z = (memory[PC + 1] & 0x07);
+                char x = (ARG1 & 0xC0) >> 6;
+                char y = (ARG1 & 0x38) >> 3;
+                char z = (ARG1 & 0x07);
 
                 switch(x) {
                     case 00: 
                         //TODO: Rotate
-                        switch(memory[PC + 1]) {
+                        switch(ARG1) {
                             /* 5. RLC n */
                             case 0x07: RLC(A); break;
                             case 0x00: RLC(B); break;
@@ -863,7 +862,7 @@ int CPU::fetch_and_execute() {
         case 0xE9: JUMP(concat_bytes(memory[concat_bytes(L, H)], memory[concat_bytes(L, H) + 1])); break;
 
         /* 4. JR n */ 
-        case 0x18: JUMP_R(memory[PC + 1]); break;
+        case 0x18: JUMP_R(ARG1); break;
 
         /* 5. JR cc,n */ 
         case 0x20: if (!flag.Z) JUMP_R(memory[PC+1]); break;
@@ -873,27 +872,27 @@ int CPU::fetch_and_execute() {
 
         /*** Calls ***/ 
         /* 1. CALL nn */
-        case 0xCD: push_addr(PC + 3); JUMP(concat_bytes(memory[PC + 1], memory[PC + 2])); break;
+        case 0xCD: push_addr(PC + 3); JUMP(concat_bytes(ARG1, ARG2)); break;
 
         /* 2. CALL cc,nn */ 
         case 0xC4: if (!flag.Z) {
                        push_addr(PC + 3); 
-                       JUMP(concat_bytes(memory[PC + 1], memory[PC + 2])); 
+                       JUMP(concat_bytes(ARG1, ARG2)); 
                        PC -= 3;
                    } break;
         case 0xCC: if (flag.Z) {
                        push_addr(PC + 3); 
-                       JUMP(concat_bytes(memory[PC + 1], memory[PC + 2])); 
+                       JUMP(concat_bytes(ARG1, ARG2)); 
                        PC -= 3;
                    } break;
         case 0xD4: if (!flag.C) {
                        push_addr(PC + 3); 
-                       JUMP(concat_bytes(memory[PC + 1], memory[PC + 2])); 
+                       JUMP(concat_bytes(ARG1, ARG2)); 
                        PC -= 3;
                    } break;
         case 0xDC: if (flag.C) {
                        push_addr(PC + 3); 
-                       JUMP(concat_bytes(memory[PC + 1], memory[PC + 2])); 
+                       JUMP(concat_bytes(ARG1, ARG2)); 
                        PC -= 3;
                    } break;
         
@@ -929,7 +928,7 @@ int CPU::fetch_and_execute() {
         CLK += OP_cycles[OP_CODE]; 
         PC += OP_len[OP_CODE];
     } else {
-        unsigned char EX_OP_CODE = memory[PC + 1];
+        unsigned char EX_OP_CODE = ARG1;
         CLK += EX_OP_cycles[EX_OP_CODE]; 
         PC += EX_OP_len[EX_OP_CODE];
     }
