@@ -620,3 +620,173 @@ TEST(CPU, 8BitLoads_LD_AIntoFFC) {
     cpu.execute(0xE2, arg1, arg2);
     EXPECT_EQ('a', cpu.memory[0xFFFB]);
 }
+
+// Page 71
+TEST(CPU, 8BitLoads_LDD_AIntoHL) {
+    CPU cpu; 
+
+    unsigned char arg1 = '0'; 
+    unsigned char arg2 = '0'; 
+
+    // LD A,(HL--) Normal case 
+    cpu.memory[0xFFFF] = 'H';
+    cpu.H = 0xFF;
+    cpu.L = 0xFF;
+    cpu.execute(0x3A, arg1, arg2);
+    EXPECT_EQ('H', cpu.A);
+    EXPECT_EQ(0xFF, cpu.H); // Decrementing has worked
+    EXPECT_EQ(0xFE, cpu.L); // Decrementing has worked
+
+    // LD A,(HL--) Byte boundary
+    cpu.memory[0xFF00] = 'H';
+    cpu.H = 0xFF;
+    cpu.L = 0x00;
+    cpu.execute(0x3A, arg1, arg2);
+    EXPECT_EQ('H', cpu.A);
+    EXPECT_EQ(0xFE, cpu.H); // Decrementing has worked
+    EXPECT_EQ(0xFF, cpu.L); // Decrementing has worked
+
+    // LD A,(HL--) Low case
+    cpu.memory[0x0000] = 'H';
+    cpu.H = 0x00;
+    cpu.L = 0x00;
+    cpu.execute(0x3A, arg1, arg2);
+    EXPECT_EQ('H', cpu.A);
+    EXPECT_EQ(0xFF, cpu.H); // Decrementing has worked
+    EXPECT_EQ(0xFF, cpu.L); // Decrementing has worked
+}
+
+// Page 72
+TEST(CPU, 8BitLoads_LDD_HLIntoA) {
+    CPU cpu; 
+
+    unsigned char arg1 = '0'; 
+    unsigned char arg2 = '0'; 
+
+    // LD A,(HL--) Normal case 
+    cpu.A = 'A';
+    cpu.H = 0xFF;
+    cpu.L = 0xFF;
+    cpu.execute(0x32, arg1, arg2);
+    EXPECT_EQ('A', cpu.memory[0xFFFF]);
+    EXPECT_EQ(0xFF, cpu.H); // Decrementing has worked
+    EXPECT_EQ(0xFE, cpu.L); // Decrementing has worked
+
+    // LD A,(HL--) Byte boundary
+    cpu.A = 'A';
+    cpu.H = 0xFF;
+    cpu.L = 0x00;
+    cpu.execute(0x32, arg1, arg2);
+    EXPECT_EQ('A', cpu.memory[0xFF00]);
+    EXPECT_EQ(0xFE, cpu.H); // Decrementing has worked
+    EXPECT_EQ(0xFF, cpu.L); // Decrementing has worked
+
+    // LD A,(HL--) Low case
+    cpu.A = 'A';
+    cpu.H = 0x00;
+    cpu.L = 0x00;
+    cpu.execute(0x32, arg1, arg2);
+    EXPECT_EQ('A', cpu.memory[0x0000]);
+    EXPECT_EQ(0xFF, cpu.H); // Decrementing has worked
+    EXPECT_EQ(0xFF, cpu.L); // Decrementing has worked
+}
+
+
+// Page 73
+TEST(CPU, 8BitLoads_LDI_AIntoHL) {
+    CPU cpu; 
+
+    unsigned char arg1 = '0'; 
+    unsigned char arg2 = '0'; 
+
+    // LD A,(HL++) Normal case 
+    cpu.memory[0xFFF0] = 'H';
+    cpu.H = 0xFF;
+    cpu.L = 0xF0;
+    cpu.execute(0x2A, arg1, arg2);
+    EXPECT_EQ('H', cpu.A);
+    EXPECT_EQ(0xFF, cpu.H); // Decrementing has worked
+    EXPECT_EQ(0xF1, cpu.L); // Decrementing has worked
+
+    // LD A,(HL++) Byte boundary
+    cpu.memory[0xF0FF] = 'H';
+    cpu.H = 0xF0;
+    cpu.L = 0xFF;
+    cpu.execute(0x2A, arg1, arg2);
+    EXPECT_EQ('H', cpu.A);
+    EXPECT_EQ(0xF1, cpu.H); // Decrementing has worked
+    EXPECT_EQ(0x00, cpu.L); // Decrementing has worked
+
+    // LD A,(HL++) High case
+    cpu.memory[0xFFFF] = 'H';
+    cpu.H = 0xFF;
+    cpu.L = 0xFF;
+    cpu.execute(0x2A, arg1, arg2);
+    EXPECT_EQ('H', cpu.A);
+    EXPECT_EQ(0x00, cpu.H); // Decrementing has worked
+    EXPECT_EQ(0x00, cpu.L); // Decrementing has worked
+}
+
+// Page 74
+TEST(CPU, 8BitLoads_LDI_HLIntoA) {
+    CPU cpu; 
+
+    unsigned char arg1 = '0'; 
+    unsigned char arg2 = '0'; 
+
+    // LD A,(HL++) Normal case 
+    cpu.A = 'A';
+    cpu.H = 0x00;
+    cpu.L = 0x00;
+    cpu.execute(0x22, arg1, arg2);
+    EXPECT_EQ('A', cpu.memory[0x0000]);
+    EXPECT_EQ(0x00, cpu.H); // Decrementing has worked
+    EXPECT_EQ(0x01, cpu.L); // Decrementing has worked
+
+    // LD A,(HL++) Byte boundary
+    cpu.A = 'A';
+    cpu.H = 0xFE;
+    cpu.L = 0xFF;
+    cpu.execute(0x22, arg1, arg2);
+    EXPECT_EQ('A', cpu.memory[0xFEFF]);
+    EXPECT_EQ(0xFF, cpu.H); // Decrementing has worked
+    EXPECT_EQ(0x00, cpu.L); // Decrementing has worked
+
+    // LD A,(HL++) High case
+    cpu.A = 'A';
+    cpu.H = 0xFF;
+    cpu.L = 0xFF;
+    cpu.execute(0x22, arg1, arg2);
+    EXPECT_EQ('A', cpu.memory[0x0000]);
+    EXPECT_EQ(0x00, cpu.H); // Decrementing has worked
+    EXPECT_EQ(0x00, cpu.L); // Decrementing has worked
+}
+
+// Page 75
+TEST(CPU, 8BitLoads_LD_FFnnIntoA) {
+    CPU cpu; 
+
+    unsigned char arg1 = '0'; 
+    unsigned char arg2 = '0'; 
+
+    // LD A,(0xFF00+C)
+    cpu.memory[0xFFFA] = 'c';
+    cpu.A = 'a';
+    arg1 = 0xFA;
+    cpu.execute(0xF0, arg1, arg2);
+    EXPECT_EQ('c', cpu.A);
+}
+
+// Page 75
+TEST(CPU, 8BitLoads_LD_AIntoFFnn) {
+    CPU cpu; 
+
+    unsigned char arg1 = '0'; 
+    unsigned char arg2 = '0'; 
+
+    // LD (0xFF00+C),A
+    cpu.A = 'a';
+    arg1 = 0xFB;
+    cpu.execute(0xE0, arg1, arg2);
+    EXPECT_EQ('a', cpu.memory[0xFFFB]);
+}
