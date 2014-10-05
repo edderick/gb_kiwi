@@ -203,7 +203,7 @@ TEST(CPU, 8BitLoads_LD_regIntoC) {
     EXPECT_EQ('M', cpu.C);
 }
 
-// Page 66
+// Page 67
 TEST(CPU, 8BitLoads_LD_regIntoD) {
     CPU cpu; 
 
@@ -248,7 +248,7 @@ TEST(CPU, 8BitLoads_LD_regIntoD) {
     EXPECT_EQ('M', cpu.D);
 }
 
-// Page 66
+// Page 67
 TEST(CPU, 8BitLoads_LD_regIntoE) {
     CPU cpu; 
 
@@ -293,7 +293,7 @@ TEST(CPU, 8BitLoads_LD_regIntoE) {
     EXPECT_EQ('M', cpu.E);
 }
 
-// Page 66
+// Page 67
 TEST(CPU, 8BitLoads_LD_regIntoH) {
     CPU cpu; 
 
@@ -338,7 +338,7 @@ TEST(CPU, 8BitLoads_LD_regIntoH) {
     EXPECT_EQ('M', cpu.H);
 }
   
-// Page 66
+// Page 67
 TEST(CPU, 8BitLoads_LD_regIntoL) {
     CPU cpu; 
 
@@ -383,6 +383,7 @@ TEST(CPU, 8BitLoads_LD_regIntoL) {
     EXPECT_EQ('M', cpu.L);
 }
 
+// Page 67
 TEST(CPU, 8BitLoads_LD_regInto_HL) {
     CPU cpu; 
 
@@ -438,5 +439,184 @@ TEST(CPU, 8BitLoads_LD_regInto_HL) {
     EXPECT_EQ('n', cpu.memory[0xFFFF]);
 }
 
-//TODO : rest of page 66
+//Page 68
+TEST(CPU, 8BitLoads_LD_IntoA) {
+    CPU cpu; 
 
+    unsigned char arg1 = '0'; 
+    unsigned char arg2 = '0'; 
+
+    //  LD A,A
+    cpu.A = 'a';
+    cpu.execute(0x7F, arg1, arg2);
+    EXPECT_EQ('a', cpu.A);
+
+    //  LD A,B
+    cpu.B = 'b';
+    cpu.execute(0x78, arg1, arg2);
+    EXPECT_EQ('b', cpu.A);
+
+    //  LD A,C
+    cpu.C = 'c';
+    cpu.execute(0x79, arg1, arg2);
+    EXPECT_EQ('c', cpu.A);
+
+    //  LD A,D
+    cpu.D = 'd';
+    cpu.execute(0x7A, arg1, arg2);
+    EXPECT_EQ('d', cpu.A);
+    
+    //  LD A,E
+    cpu.E = 'e';
+    cpu.execute(0x7B, arg1, arg2);
+    EXPECT_EQ('e', cpu.A);
+
+    //  LD A,H
+    cpu.H = 'h';
+    cpu.execute(0x7C, arg1, arg2);
+    EXPECT_EQ('h', cpu.A);
+
+    //  LD A,L
+    cpu.L = 'l';
+    cpu.execute(0x7D, arg1, arg2);
+    EXPECT_EQ('l', cpu.A);
+
+    // LD A,(BC)
+    cpu.memory[0xFF01] = 'B';
+    cpu.B = 0xFF;
+    cpu.C = 0x01;
+    cpu.execute(0x0A, arg1, arg2);
+    EXPECT_EQ('B', cpu.A);
+
+    // LD A,(DE)
+    cpu.memory[0xFF02] = 'D';
+    cpu.D = 0xFF;
+    cpu.E = 0x02;
+    cpu.execute(0x1A, arg1, arg2);
+    EXPECT_EQ('D', cpu.A);
+
+    // LD A,(HL)
+    cpu.memory[0xFF03] = 'H';
+    cpu.H = 0xFF;
+    cpu.L = 0x03;
+    cpu.execute(0x7E, arg1, arg2);
+    EXPECT_EQ('H', cpu.A);
+
+    // LD A,(nn)
+    cpu.memory[0xFF04] = 'N';
+    arg1 = 0x04; 
+    arg2 = 0xFF; 
+    cpu.execute(0xFA, arg1, arg2);
+    EXPECT_EQ('N', cpu.A);
+
+   // LD A,n
+    arg1 = 'n'; 
+    cpu.execute(0x3E, arg1, arg2);
+    EXPECT_EQ('n', cpu.A);
+}
+
+// Page 69
+TEST(CPU, 8BitLoads_LD_AIntoReg) {
+    CPU cpu; 
+
+    unsigned char arg1 = '0'; 
+    unsigned char arg2 = '0'; 
+
+    //  LD A,A
+    cpu.A = 'a';
+    cpu.execute(0x7F, arg1, arg2);
+    EXPECT_EQ('a', cpu.A);
+    
+    //  LD B,A
+    cpu.A = 'a';
+    cpu.B = 'b';
+    cpu.execute(0x47, arg1, arg2);
+    EXPECT_EQ('a', cpu.B);
+
+    //  LD C,A
+    cpu.A = 'a';
+    cpu.C = 'c';
+    cpu.execute(0x4F, arg1, arg2);
+    EXPECT_EQ('a', cpu.C);
+
+    //  LD D,A
+    cpu.A = 'a';
+    cpu.D = 'd';
+    cpu.execute(0x57, arg1, arg2);
+    EXPECT_EQ('a', cpu.D);
+
+    //  LD E,A
+    cpu.A = 'a';
+    cpu.E = 'e';
+    cpu.execute(0x5F, arg1, arg2);
+    EXPECT_EQ('a', cpu.E);
+
+    //  LD H,A
+    cpu.A = 'a';
+    cpu.H = 'h';
+    cpu.execute(0x67, arg1, arg2);
+    EXPECT_EQ('a', cpu.H);
+
+    //  LD L,A
+    cpu.A = 'a';
+    cpu.L = 'l';
+    cpu.execute(0x6F, arg1, arg2);
+    EXPECT_EQ('a', cpu.L);
+
+    // LD (BC),A
+    cpu.A = 'a';
+    cpu.B = 0xFF;
+    cpu.C = 0x11;
+    cpu.execute(0x02, arg1, arg2);
+    EXPECT_EQ('a', cpu.memory[0xFF11]);
+
+    // LD (DE),A
+    cpu.A = 'a';
+    cpu.D = 0xFF;
+    cpu.E = 0x12;
+    cpu.execute(0x12, arg1, arg2);
+    EXPECT_EQ('a', cpu.memory[0xFF12]);
+
+    // LD (HL),A
+    cpu.A = 'a';
+    cpu.H = 0xFF;
+    cpu.L = 0x13;
+    cpu.execute(0x77, arg1, arg2);
+    EXPECT_EQ('a', cpu.memory[0xFF13]);
+
+    // LD (nn),A
+    cpu.A = 'a';
+    arg1 = 0x14;
+    arg2 = 0xFF;
+    cpu.execute(0xEA, arg1, arg2);
+    EXPECT_EQ('a', cpu.memory[0xFF14]);
+}
+
+// Page 70
+TEST(CPU, 8BitLoads_LD_FFCIntoA) {
+    CPU cpu; 
+
+    unsigned char arg1 = '0'; 
+    unsigned char arg2 = '0'; 
+
+    // LD A,(0xFF00+C)
+    cpu.memory[0xFFFA] = 'c';
+    cpu.A = 'a';
+    cpu.C = 0xFA;
+    cpu.execute(0xF2, arg1, arg2);
+    EXPECT_EQ('c', cpu.A);
+}
+
+// Page 70
+TEST(CPU, 8BitLoads_LD_AIntoFFC) {
+    CPU cpu; 
+
+    unsigned char arg1 = '0'; 
+    unsigned char arg2 = '0'; 
+
+    // LD (0xFF00+C),A
+    cpu.A = 'a';
+    cpu.C = 0xFB;
+    cpu.execute(0xE2, arg1, arg2);
+    EXPECT_EQ('a', cpu.memory[0xFFFB]);
+}
