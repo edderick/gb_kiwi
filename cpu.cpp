@@ -84,9 +84,6 @@ unsigned char EX_OP_len[0x100] = {
     /*Fx*/  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,
 }; 
 
-CPU::CPU() : PC(0) {
-}
-
 unsigned short concat_bytes(unsigned char LSB, unsigned char MSB) {
     // Little endian machime
     unsigned short tmp_MSB = MSB << 8;

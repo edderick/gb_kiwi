@@ -46,7 +46,7 @@ class CPU {
     void DEC(T &reg);
 
     void ADD_16(unsigned char &reg1a, unsigned char &reg1b, 
-               unsigned char reg2a, unsigned char reg2b);
+                unsigned char reg2a, unsigned char reg2b);
     void INC_16(unsigned char &lsb, unsigned char &msb);
     void DEC_16(unsigned char &lsb, unsigned char &msb);
 
@@ -59,6 +59,8 @@ class CPU {
     void JUMP(unsigned short addr); 
     void JUMP_R(unsigned char offset); 
 public: 
+    CPU(); 
+
     //General Purpose Registers
     unsigned char A, F, B, C, D, E, H, L;
 
@@ -74,22 +76,34 @@ public:
 
     Memory memory;
 
+    int fetch_and_execute();
 
+    unsigned char fetch();
 
-    CPU();
-
-    unsigned char fetch() {
-        return memory[PC];
-    }
-
-    int execute(unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG2);
-    
-    int fetch_and_execute(){ 
-        return execute(fetch(), memory[PC + 1], memory[PC + 2]);
-    }
+    int execute(unsigned char OP_CODE, 
+                unsigned char& ARG1, 
+                unsigned char& ARG2);
 
     void print_state();
 };
 
+
+// ============================================================================
+//                         Inline function definitions 
+// ============================================================================
+
+inline
+CPU::CPU() : PC(0) {
+}
+
+inline 
+unsigned char CPU::fetch() {
+    return memory[PC];
+}
+
+inline
+int CPU::fetch_and_execute() { 
+    return execute(fetch(), memory[PC + 1], memory[PC + 2]);
+}
 
 #endif /* CPU_H */
