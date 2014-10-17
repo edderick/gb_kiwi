@@ -898,3 +898,84 @@ TEST(CPU, 16BitLoads_LD_nnSP) {
     EXPECT_EQ(0x34, cpu.memory[0xFC00]);
     EXPECT_EQ(0x12, cpu.memory[0xFC01]);
 }
+
+//Page 78 
+TEST(CPU, PUSH_nn) {
+    CPU cpu; 
+
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.SP = 0xFF88;
+    cpu.A = 0x11;
+    cpu.F = 0x22; 
+    cpu.execute(0xF5, arg1, arg2); 
+    EXPECT_EQ(0x11, cpu.memory[0xFF87]); 
+    EXPECT_EQ(0x22, cpu.memory[0xFF86]);
+    EXPECT_EQ(0xFF86, cpu.SP);
+
+    cpu.SP = 0xFF92;
+    cpu.B = 0x33;
+    cpu.C = 0x44; 
+    cpu.execute(0xC5, arg1, arg2); 
+    EXPECT_EQ(0x33, cpu.memory[0xFF91]); 
+    EXPECT_EQ(0x44, cpu.memory[0xFF90]);
+    EXPECT_EQ(0xFF90, cpu.SP);
+
+    cpu.SP = 0xFF96;
+    cpu.D = 0x55;
+    cpu.E = 0x66; 
+    cpu.execute(0xD5, arg1, arg2); 
+    EXPECT_EQ(0x55, cpu.memory[0xFF95]); 
+    EXPECT_EQ(0x66, cpu.memory[0xFF94]);
+    EXPECT_EQ(0xFF94, cpu.SP);
+
+    cpu.SP = 0xFF98;
+    cpu.H = 0x77;
+    cpu.L = 0x88; 
+    cpu.execute(0xE5, arg1, arg2); 
+    EXPECT_EQ(0x77, cpu.memory[0xFF97]); 
+    EXPECT_EQ(0x88, cpu.memory[0xFF96]);
+    EXPECT_EQ(0xFF96, cpu.SP);
+}
+
+//Page 78 
+TEST(CPU, POP_nn) {
+    CPU cpu; 
+
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.SP = 0xFF86;
+    cpu.memory[0xFF86] = 0x11;
+    cpu.memory[0xFF87] = 0x22;
+    cpu.execute(0xF1, arg1, arg2); 
+    EXPECT_EQ(0x11, cpu.F); 
+    EXPECT_EQ(0x22, cpu.A);
+    EXPECT_EQ(0xFF88, cpu.SP);
+
+    cpu.SP = 0xFF84;
+    cpu.memory[0xFF84] = 0x33;
+    cpu.memory[0xFF85] = 0x44;
+    cpu.execute(0xC1, arg1, arg2); 
+    EXPECT_EQ(0x33, cpu.C); 
+    EXPECT_EQ(0x44, cpu.B);
+    EXPECT_EQ(0xFF86, cpu.SP);
+
+    cpu.SP = 0xFF82;
+    cpu.memory[0xFF82] = 0x55;
+    cpu.memory[0xFF83] = 0x66;
+    cpu.execute(0xD1, arg1, arg2); 
+    EXPECT_EQ(0x55, cpu.E); 
+    EXPECT_EQ(0x66, cpu.D);
+    EXPECT_EQ(0xFF84, cpu.SP);
+
+    cpu.SP = 0xFF80;
+    cpu.memory[0xFF80] = 0x77;
+    cpu.memory[0xFF81] = 0x88;
+    cpu.execute(0xE1, arg1, arg2); 
+    EXPECT_EQ(0x77, cpu.L); 
+    EXPECT_EQ(0x88, cpu.H);
+    EXPECT_EQ(0xFF82, cpu.SP);
+}
+
