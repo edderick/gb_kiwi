@@ -830,5 +830,59 @@ TEST(CPU, 16BitLoads_LD_nnInton) {
     EXPECT_EQ(0x2211, cpu.SP);
 }
 
+//Page 76
+TEST(CPU, 16BitLoads_LD_HLintoSP) {
+    CPU cpu; 
+    
+    unsigned char arg1 = '0';
+    unsigned char arg2 = '0';
+
+    cpu.H = 0x66;
+    cpu.L = 0x55;
+    cpu.SP = 0x00; 
+    cpu.execute(0xF9, arg1, arg2);
+    EXPECT_EQ(0x6655, cpu.SP);
+}
+
+//Page 77
+TEST(CPU, 16BitLoads_LDHL_SPn) {
+    CPU cpu; 
+
+    unsigned char arg1;
+    unsigned char arg2;
+
+    arg1 = 0x01; 
+    arg2 = 0x00;
+    cpu.SP = 0x1111; 
+    cpu.execute(0xF8, arg1, arg2); 
+    EXPECT_EQ(0x11, cpu.H);
+    EXPECT_EQ(0x12, cpu.L);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
 
 
+    arg1 = 0x04; 
+    arg2 = 0x00;
+    cpu.SP = 0x11FF; 
+    cpu.execute(0xF8, arg1, arg2); 
+    EXPECT_EQ(0x12, cpu.H);
+    EXPECT_EQ(0x03, cpu.L);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+
+    arg1 = 0xFF; 
+    arg2 = 0x00;
+    cpu.SP = 0xFFFF; 
+    cpu.execute(0xF8, arg1, arg2); 
+    EXPECT_EQ(0x00, cpu.H);
+    EXPECT_EQ(0xFE, cpu.L);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(true, cpu.flag.C);
+}
