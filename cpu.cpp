@@ -212,7 +212,8 @@ void CPU::LDHL(unsigned short reg, unsigned char n) {
     H = (tmp & 0xFF00) >> 8;
     L = tmp & 0xFF;
     flag.Z = 0; flag.N = 0; 
-    //TODO: flag.H and flag.C;
+    flag.H = (((reg + n) & 0xFF) < (reg & 0xFF));
+    flag.C = ((unsigned short)(reg + n)) < reg;
 }
 
 template<>
