@@ -8,10 +8,7 @@ TEST(CPU, cpuCanBeCreated) {
 
 // Page 65
 TEST(CPU, 8BitLoads_LoadNIntoReg) {
-
     //TODO: Refactor into two tests
-
-
     CPU cpu; 
 
     // 0x86 LD B,n
@@ -790,3 +787,48 @@ TEST(CPU, 8BitLoads_LD_AIntoFFnn) {
     cpu.execute(0xE0, arg1, arg2);
     EXPECT_EQ('a', cpu.memory[0xFFFB]);
 }
+
+// Page 76 
+TEST(CPU, 16BitLoads_LD_nnInton) {
+    CPU cpu; 
+
+    unsigned char arg1 = '1';
+    unsigned char arg2 = '2';
+
+    //LD BC,nn 
+    arg1 = '1';
+    arg2 = '2';
+    cpu.B = 'B';
+    cpu.C = 'C';
+    cpu.execute(0x01, arg1, arg2);
+    EXPECT_EQ('2', cpu.B);
+    EXPECT_EQ('1', cpu.C);
+
+    //LD DE,nn 
+    arg1 = '1';
+    arg2 = '2';
+    cpu.D = 'D';
+    cpu.E = 'E';
+    cpu.execute(0x11, arg1, arg2);
+    EXPECT_EQ('2', cpu.D);
+    EXPECT_EQ('1', cpu.E);
+
+    //LD HL,nn 
+    arg1 = '1';
+    arg2 = '2';
+    cpu.H = 'H';
+    cpu.L = 'L';
+    cpu.execute(0x21, arg1, arg2);
+    EXPECT_EQ('2', cpu.H);
+    EXPECT_EQ('1', cpu.L);
+
+    //LD SP,nn 
+    arg1 = 0x11;
+    arg2 = 0x22;
+    cpu.SP = 0xFF;
+    cpu.execute(0x31, arg1, arg2);
+    EXPECT_EQ(0x2211, cpu.SP);
+}
+
+
+
