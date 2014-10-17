@@ -522,7 +522,7 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
         /* 5. LD (nn),SP */
         case 0x08: LD_16(memory[concat_bytes(ARG1, ARG2) + 1], 
                          memory[concat_bytes(ARG1, ARG2)], 
-                         ((SP& 0xFF00) >> 8), (SP & 0xFF)); break;  
+                         ((SP & 0xFF00) >> 8), (SP & 0xFF)); break;  
 
         /* 6. PUSH nn */
         case 0xF5: push_val(A); push_val(F); break;

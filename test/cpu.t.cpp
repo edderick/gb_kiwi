@@ -886,3 +886,15 @@ TEST(CPU, 16BitLoads_LDHL_SPn) {
     EXPECT_EQ(true, cpu.flag.H);
     EXPECT_EQ(true, cpu.flag.C);
 }
+
+//Page 78
+TEST(CPU, 16BitLoads_LD_nnSP) {
+    CPU cpu;
+
+    unsigned char arg1 = 0x00;
+    unsigned char arg2 = 0xfc;
+    cpu.SP = 0x1234; 
+    cpu.execute(0x08, arg1, arg2); 
+    EXPECT_EQ(0x34, cpu.memory[0xFC00]);
+    EXPECT_EQ(0x12, cpu.memory[0xFC01]);
+}
