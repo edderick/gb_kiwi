@@ -95,26 +95,6 @@ class Graphics : public IGraphics {
     ~Graphics();
 
   public:
-    // PUBLIC DATA
-    unsigned char d_LCDC;
-    unsigned char d_LCDC_status;
-
-    unsigned char d_scroll_y;
-    unsigned char d_scroll_x;
-
-    unsigned char d_line_y;
-    unsigned char d_line_y_cmp;
-
-    unsigned char d_DMA_addr;
-
-    unsigned char d_bgp;
-    unsigned char d_obp0;
-    unsigned char d_obp1;
-
-    unsigned char d_window_y;
-    unsigned char d_window_x;
-
-  public:
     // PUBLIC ACCESSORS
     void step(int clock_cycle_delta); 
 

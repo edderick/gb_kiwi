@@ -40,9 +40,9 @@ bool is_set(int reg, int i) {
 Graphics::Graphics()
 : d_VRAM()
 , d_OAM()
-, d_scroll_x(0)
-, d_line_y(0x90)
 {
+    IGraphics::d_scroll_x = 0;
+    IGraphics::d_line_y = 0x90;
     //XXX: LINE Y SET TO 90 to trick ROM...
    
     d_master_palette[0] = 0xFFFFFFFF;
