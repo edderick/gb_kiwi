@@ -1,33 +1,25 @@
 #include "Bootstrap.h"
 #include <fstream> 
 #include <iostream>
-#include <iomanip>  
+
+namespace gbemu {
 
 Bootstrap::Bootstrap() {
-    ifstream f("../res/DMG_ROM.bin", ios::binary);
+    std::ifstream f("../res/DMG_ROM.bin", std::ios::binary);
     
     while (f) {
         char c;
         f.get(c);
-        if (f) rom.push_back(c);
+        if (f) d_rom.push_back(c);
     }
-
 }
 
 unsigned char& Bootstrap::operator[](unsigned int i) {
-    return rom[i];
+    return d_rom[i];
 }
 
 unsigned int Bootstrap::size() {
-    return rom.size();
+    return d_rom.size();
 }
 
-/*
-int main() {
-    Bootstrap b;
-    for (unsigned int i = 0; i < b.size(); i++) {
-        cout << setw(2) << setfill('0') << hex << (int) b[i] << " ";
-    }
-    return 0;
-}
-*/
+} // Close Namespace gbemu

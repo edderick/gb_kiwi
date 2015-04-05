@@ -3,8 +3,39 @@
 
 #include <SDL2/SDL.h>
 
-class Graphics {
+namespace gbemu {
 
+class IGraphics {
+  public:
+    // PUBLIC DATA
+    unsigned char d_LCDC;
+    unsigned char d_LCDC_status;
+
+    unsigned char d_scroll_y;
+    unsigned char d_scroll_x;
+
+    unsigned char d_line_y;
+    unsigned char d_line_y_cmp;
+
+    unsigned char d_DMA_addr;
+
+    unsigned char d_bgp;
+    unsigned char d_obp0;
+    unsigned char d_obp1;
+
+    unsigned char d_window_y;
+    unsigned char d_window_x;
+
+  public:
+    // PUBLIC ACCESSORS
+    virtual void step(int clock_cycle_delta) = 0;
+    virtual unsigned char& operator[](unsigned int)  = 0;
+    virtual const unsigned char& operator[](unsigned int) const = 0;
+};
+
+class Graphics : public IGraphics {
+  private:
+    // PRIVATE TYPES
     struct lcdc_info {
         bool operation;
         bool window_display; 
@@ -19,7 +50,9 @@ class Graphics {
         unsigned char sprite_height; 
     };
 
-    int CLK;
+  private:
+    // PRIVATE DATA
+    int d_CLK;
     /*
        0x8000 - 0x87FF  Tile set 1 (0 to 127)
        0x8800 - 0x8FFF  Shared Tiles Tile set 1 (128 to 255)
@@ -28,60 +61,78 @@ class Graphics {
        0x9800 - 0x9BFF  Tile Map 0 
        0x9C00 - 0x9FFF  Tile Map 1
     */
-    unsigned char VRAM[0xA000 - 0x8000];
-    unsigned char OAM[0xFEA0 - 0xFE00];
-    unsigned char* get_tile(unsigned int, unsigned int);
-    void generate_map(unsigned int, unsigned int, unsigned char[256][256]);
+
+    unsigned char d_VRAM[0xA000 - 0x8000];
+    unsigned char d_OAM[0xFEA0 - 0xFE00];
+
+    Uint32 d_master_palette[4];
+    Uint32 d_bg_palette[4];
+    Uint32 d_ob0_palette[4];
+    Uint32 d_ob1_palette[4];
+
+    SDL_Window *d_sdl_window;
+    SDL_Renderer *d_sdl_renderer;
+
+  private:
+    // PRIVATE ACCESSORS
+    const unsigned char* get_tile(unsigned int, unsigned int) const;
+    void generate_map(unsigned int,
+                      unsigned int,
+                      unsigned char[256][256]) const;
     
     void use_palettes();
 
-    lcdc_info decode_LCDC(unsigned char); 
+    lcdc_info decode_LCDC(unsigned char) const;
 
-    SDL_Window *sdl_window; 
-    SDL_Renderer *sdl_renderer;
+  private:
+    // NOT IMPLEMENTED
+    Graphics(const Graphics &);           // = delete
+    Graphics operator=(const Graphics &); // = delete
 
-    public: 
-
+  public:
+    // CREATORS
     Graphics();
     ~Graphics();
 
-    unsigned char LCDC;
-    unsigned char LCDC_status;
+  public:
+    // PUBLIC DATA
+    unsigned char d_LCDC;
+    unsigned char d_LCDC_status;
 
-    unsigned char scroll_y;
-    unsigned char scroll_x;
+    unsigned char d_scroll_y;
+    unsigned char d_scroll_x;
 
-    unsigned char line_y;
-    unsigned char line_y_cmp;
+    unsigned char d_line_y;
+    unsigned char d_line_y_cmp;
 
-    unsigned char DMA_addr;
+    unsigned char d_DMA_addr;
 
-    unsigned char bgp;
-    unsigned char obp0;
-    unsigned char obp1;
+    unsigned char d_bgp;
+    unsigned char d_obp0;
+    unsigned char d_obp1;
 
-    Uint32 master_palette[4]; 
-    Uint32 bg_palette[4];
-    Uint32 ob0_palette[4];
-    Uint32 ob1_palette[4];
+    unsigned char d_window_y;
+    unsigned char d_window_x;
 
-    unsigned char window_y;
-    unsigned char window_x;
-
+  public:
+    // PUBLIC ACCESSORS
     void step(int clock_cycle_delta); 
-    unsigned char& operator[](unsigned int); 
 
-    void dump_state();
-    void dump_tiles();
-    void dump_map_indices();
-    void dump_map(unsigned int, unsigned int);
+    unsigned char& operator[](unsigned int); 
+    const unsigned char& operator[](unsigned int) const;
+
+    void dump_state() const;
+    void dump_tiles() const;
+    void dump_map_indices() const;
+    void dump_map(unsigned int, unsigned int) const;
     void dump_display();
 
-    void dump_map_one_tileset_one();
-    void dump_map_one_tileset_two();
-    void dump_map_two_tileset_one();
-    void dump_map_two_tileset_two();
+    void dump_map_one_tileset_one() const;
+    void dump_map_one_tileset_two() const;
+    void dump_map_two_tileset_one() const;
+    void dump_map_two_tileset_two() const;
 };
 
+} // Close Namespace gbemu
 
 #endif

@@ -3,13 +3,28 @@
 
 #include <vector>
 
-using namespace std;
+namespace gbemu {
+
 class Bootstrap {
-        vector<unsigned char> rom; 
+    private:
+        // PRIVATE DATA
+        std::vector<unsigned char> d_rom;
+
+    private:
+        // PRIVATE DATA
+        Bootstrap(const Bootstrap &);           // = delete
+        Bootstrap operator=(const Bootstrap &); // = delete
+
     public: 
+        // CREATORS
         Bootstrap();
+
+    public:
+        // PUBLIC ACCESSORS
         unsigned int size();
         unsigned char& operator[](unsigned int i);
 };
+
+} // Close Namespace gbemu
 
 #endif

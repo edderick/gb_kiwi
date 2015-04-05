@@ -1,69 +1,78 @@
 #include "Cart.h"
 #include <fstream> 
+#include <sstream>
 #include <iostream>
 #include <iomanip>  
 
-void Cartridge::load_rom(string filename) {
-    ifstream f(filename.c_str(), ios::binary);
+namespace gbemu {
+
+void Cartridge::load_rom(const std::string &filename) {
+    std::ifstream f(filename.c_str(), std::ios::binary);
     
     while (f) {
         char c;
         f.get(c);
-        if (f) rom.push_back(c);
+        if (f) d_rom.push_back(c);
     }
 }
 
 unsigned char& Cartridge::operator[](unsigned int i) {
-    return rom[i];
+    return d_rom[i];
 }
 
-unsigned int Cartridge::size() {
-    return rom.size();
+const unsigned char& Cartridge::operator[](unsigned int i) const {
+    return d_rom[i];
 }
 
-bool Cartridge::check_graphic() {
+bool Cartridge::check_graphic() const {
     unsigned char expected[] = 
         {0xce, 0xed, 0x66, 0x66, 0xcc, 0x0d, 0x00, 0x0b, 0x03, 0x73, 0x00, 0x83, 
          0x00, 0x0c, 0x00, 0x0d, 0x00, 0x08, 0x11, 0x1f, 0x88, 0x89, 0x00, 0x0e, 
          0xdc, 0xcc, 0x6e, 0xe6, 0xdd, 0xdd, 0xd9, 0x99, 0xbb, 0xbb, 0x67, 0x63, 
          0x6e, 0x0e, 0xec, 0xcc, 0xdd, 0xdc, 0x99, 0x9f, 0xbb, 0xb9, 0x33, 0x3e};
 
-    cout << "Checking Nintendo Graphic: \n";
+    // TODO: Find a logging library...
+    std::cout << "Checking Nintendo Graphic: \n";
 
     for (int i = 0x0104; i <= 0x0133 ; i++) {
         if ((*this)[i]  != expected[i - 0x0104]) {
             return false;  
         }
-        cout << setfill('0') << setw(2) << hex << (short) ((unsigned char) ((*this)[i])) << " "; 
+        std::cout << std::setfill('0') << std::setw(2) << std::hex
+                  << (short) ((unsigned char) ((*this)[i])) << " ";
     }
 
-    cout << "\nPass!"<< endl;
+    std::cout << "\nPass!\n" << std::flush;
     return true;
 }
 
-string Cartridge::get_title() {
-    string title; 
+std::string Cartridge::get_title() const {
+    std::stringstream title;
     for (int i = 0x0134; i <= 0x0142 ; i++) {
-        title += ((*this)[i]); 
+        title << ((*this)[i]);
     }
-    return title; 
+    return title.str();
 }
 
-bool Cartridge::is_color() {
+bool Cartridge::is_color() const {
     return (*this)[0x0143] == 0x80;
 }
 
-unsigned char Cartridge::get_type() {
+unsigned char Cartridge::get_type() const {
     return (*this)[0x0147];
 }
 
-unsigned char Cartridge::get_rom_size_code(){
+unsigned char Cartridge::get_rom_size_code() const {
     return (*this)[0x0148];
 }
 
-unsigned char Cartridge::get_ram_size_code(){
+unsigned char Cartridge::get_ram_size_code() const {
     return (*this)[0x0149];
 }
+
+}  // Close Namespace gbemu
+
+// TODO: Pull Out into tests
 /*
 int main() {
     Cartridge c;

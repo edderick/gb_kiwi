@@ -1,11 +1,18 @@
+#include "graphics.h"
+#include "cart.h"
 #include "cpu.h"
 
 #include <iostream>
 
-
 int main() {
-    CPU cpu; 
-    cpu.memory.cartridge.load_rom("../res/opus5.gb");
+    using namespace gbemu;
+
+    Graphics graphics;
+
+    Cartridge cartridge;
+    cartridge.load_rom("../res/opus5.gb");
+
+    CPU cpu(&cartridge, &graphics);
 
     cpu.print_state();
 
@@ -16,8 +23,8 @@ int main() {
         //cpu.memory.graphics.dump_tiles();
         cpu.fetch_and_execute();
         cpu.print_state();
-        cpu.memory.graphics.step(1);
-        if ((i % 300) == 0) cpu.memory.graphics.dump_display();
+        graphics.step(1);
+        if ((i % 300) == 0) graphics.dump_display();
     }
 
     //cpu.memory.graphics.dump_state();

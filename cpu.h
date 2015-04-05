@@ -2,8 +2,36 @@
 #define CPU_H
 
 #include "Memory.h"
+#include "Graphics.h"
+
+namespace gbemu {
+
+class Cartridge;
 
 class CPU {
+    private:
+    // PRIVATE DATA
+    Memory d_memory;
+
+    public:
+    // PUBLIC DATA
+    // TODO: Can we hide this?
+
+    //General Purpose Registers
+    unsigned char A, F, B, C, D, E, H, L;
+
+    //Stack Pointer & Program Counter -- Should be 16bits
+    unsigned short SP, PC;
+
+    // Clock counts cycles
+    int CLK;
+
+    struct Flag {
+        bool Z, H, N, C;
+    } flag;
+
+    private:
+    // PRIVATE MANIPULATORS
     void increment_pair(unsigned char &LSB, unsigned char &MSB);
     void decrement_pair(unsigned char &LSB, unsigned char &MSB);
 
@@ -58,33 +86,30 @@ class CPU {
     
     void JUMP(unsigned short addr); 
     void JUMP_R(unsigned char offset); 
-public: 
-    CPU(); 
 
-    //General Purpose Registers
-    unsigned char A, F, B, C, D, E, H, L;
+    private:
+    CPU(const CPU&);            // = delete
+    CPU operator=(const CPU&);  // = delete
 
-    //Stack Pointer & Program Counter -- Should be 16bits
-    unsigned short SP, PC; 
+    public:
+    // PUBLIC CREATOTS
+    CPU(Cartridge *cartridge, IGraphics *graphics);
 
-    // Clock counts cycles
-    int CLK; 
-   
-    struct Flag {
-        bool Z, H, N, C; 
-    } flag;
-
-    Memory memory;
-
+    // PUBLIC MANIPULATORS
     int fetch_and_execute();
 
     unsigned char fetch();
 
-    int execute(unsigned char OP_CODE, 
+    int execute(unsigned char  OP_CODE,
                 unsigned char& ARG1, 
                 unsigned char& ARG2);
 
+    public:
+    // PUBLIC ACCESSORS
     void print_state();
+
+    Memory &memory();
+    const Memory &memory() const;
 };
 
 
@@ -93,17 +118,32 @@ public:
 // ============================================================================
 
 inline
-CPU::CPU() : PC(0) {
+CPU::CPU(Cartridge *cartridge, IGraphics *graphics)
+: d_memory(cartridge, graphics)
+, PC(0)
+{
 }
 
 inline 
 unsigned char CPU::fetch() {
-    return memory[PC];
+    return d_memory[PC];
 }
 
 inline
 int CPU::fetch_and_execute() { 
-    return execute(fetch(), memory[PC + 1], memory[PC + 2]);
+    return execute(fetch(), d_memory[PC + 1], d_memory[PC + 2]);
 }
+
+inline
+Memory &CPU::memory() {
+    return d_memory;
+}
+
+inline
+const Memory &CPU::memory() const {
+    return d_memory;
+}
+
+} // Close namespace gbemu
 
 #endif /* CPU_H */

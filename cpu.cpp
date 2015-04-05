@@ -2,7 +2,7 @@
 #include <iostream>
 #include <iomanip>
 
-using namespace std;
+namespace gbemu {
 
 unsigned char OP_cycles[0x100] = {  
     /*     x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, xA, xB, xC, xD, xE, xF, */
@@ -109,12 +109,12 @@ void CPU::decrement_pair(unsigned char &LSB, unsigned char &MSB) {
 
 void CPU::push_val(unsigned char val) {
     SP--;
-    memory[SP] = val;
+    d_memory[SP] = val;
 }
 
 unsigned char CPU::pop_val() {
     SP++;
-    return memory[SP - 1];
+    return d_memory[SP - 1];
 }
 
 void CPU::push_addr(unsigned short addr) {
@@ -356,6 +356,7 @@ void CPU::JUMP_R(unsigned char offset) {
 }
 
 void CPU::print_state() {
+    using namespace std;
     //XXX:
     if (CLK < 867779) return;
 
@@ -377,10 +378,10 @@ void CPU::print_state() {
     cout << "   CLK: " << dec << CLK;
     cout << "   SP: " << hex << setw(4) << setfill('0') << SP;
     cout << "\n";
-    cout << "OP_CODE: " << hex << setw(2) << setfill('0') << (int) memory[PC];
-    cout << "   ARG1: " << hex << setw(2) << setfill('0') << (int) memory[PC+1];
-    cout << "   ARG2: " << hex << setw(2) << setfill('0') << (int) memory[PC+2];
-    cout << "   DMG: " << hex << setw(2) << setfill('0') << (int) memory[0xFF50];
+    cout << "OP_CODE: " << hex << setw(2) << setfill('0') << (int) d_memory[PC];
+    cout << "   ARG1: " << hex << setw(2) << setfill('0') << (int) d_memory[PC+1];
+    cout << "   ARG2: " << hex << setw(2) << setfill('0') << (int) d_memory[PC+2];
+    cout << "   DMG: " << hex << setw(2) << setfill('0') << (int) d_memory[0xFF50];
     cout << endl;
 }
 
@@ -404,7 +405,7 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
         case 0x7B: LD(A, E); break; 
         case 0x7C: LD(A, H); break; 
         case 0x7D: LD(A, L); break; 
-        case 0x7E: LD(A, memory[concat_bytes(L, H)]); break; 
+        case 0x7E: LD(A, d_memory[concat_bytes(L, H)]); break;
 
         case 0x40: LD(B, B); break; 
         case 0x41: LD(B, C); break; 
@@ -412,7 +413,7 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
         case 0x43: LD(B, E); break; 
         case 0x44: LD(B, H); break; 
         case 0x45: LD(B, L); break; 
-        case 0x46: LD(B, memory[concat_bytes(L, H)]); break; 
+        case 0x46: LD(B, d_memory[concat_bytes(L, H)]); break;
 
         case 0x48: LD(C, B); break; 
         case 0x49: LD(C, C); break; 
@@ -420,7 +421,7 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
         case 0x4B: LD(C, E); break; 
         case 0x4C: LD(C, H); break; 
         case 0x4D: LD(C, L); break; 
-        case 0x4E: LD(C, memory[concat_bytes(L, H)]); break; 
+        case 0x4E: LD(C, d_memory[concat_bytes(L, H)]); break;
 
         case 0x50: LD(D, B); break; 
         case 0x51: LD(D, C); break; 
@@ -428,7 +429,7 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
         case 0x53: LD(D, E); break; 
         case 0x54: LD(D, H); break; 
         case 0x55: LD(D, L); break; 
-        case 0x56: LD(D, memory[concat_bytes(L, H)]); break; 
+        case 0x56: LD(D, d_memory[concat_bytes(L, H)]); break;
 
         case 0x58: LD(E, B); break; 
         case 0x59: LD(E, C); break; 
@@ -436,7 +437,7 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
         case 0x5B: LD(E, E); break; 
         case 0x5C: LD(E, H); break; 
         case 0x5D: LD(E, L); break; 
-        case 0x5E: LD(E, memory[concat_bytes(L, H)]); break; 
+        case 0x5E: LD(E, d_memory[concat_bytes(L, H)]); break;
 
         case 0x60: LD(H, B); break; 
         case 0x61: LD(H, C); break; 
@@ -444,7 +445,7 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
         case 0x63: LD(H, E); break; 
         case 0x64: LD(H, H); break; 
         case 0x65: LD(H, L); break; 
-        case 0x66: LD(H, memory[concat_bytes(L, H)]); break; 
+        case 0x66: LD(H, d_memory[concat_bytes(L, H)]); break;
 
         case 0x68: LD(L, B); break; 
         case 0x69: LD(L, C); break; 
@@ -452,21 +453,21 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
         case 0x6B: LD(L, E); break; 
         case 0x6C: LD(L, H); break; 
         case 0x6D: LD(L, L); break; 
-        case 0x6E: LD(L, memory[concat_bytes(L, H)]); break; 
+        case 0x6E: LD(L, d_memory[concat_bytes(L, H)]); break;
 
-        case 0x70: LD(memory[concat_bytes(L, H)], B); break; 
-        case 0x71: LD(memory[concat_bytes(L, H)], C); break; 
-        case 0x72: LD(memory[concat_bytes(L, H)], D); break; 
-        case 0x73: LD(memory[concat_bytes(L, H)], E); break; 
-        case 0x74: LD(memory[concat_bytes(L, H)], H); break; 
-        case 0x75: LD(memory[concat_bytes(L, H)], L); break; 
+        case 0x70: LD(d_memory[concat_bytes(L, H)], B); break;
+        case 0x71: LD(d_memory[concat_bytes(L, H)], C); break;
+        case 0x72: LD(d_memory[concat_bytes(L, H)], D); break;
+        case 0x73: LD(d_memory[concat_bytes(L, H)], E); break;
+        case 0x74: LD(d_memory[concat_bytes(L, H)], H); break;
+        case 0x75: LD(d_memory[concat_bytes(L, H)], L); break;
 
-        case 0x36: LD(memory[concat_bytes(L, H)], ARG1); break; 
+        case 0x36: LD(d_memory[concat_bytes(L, H)], ARG1); break;
     
         /* 3. LD A,n */
-        case 0x0A: LD(A, memory[concat_bytes(C, B)]); break;
-        case 0x1A: LD(A, memory[concat_bytes(E, D)]); break;
-        case 0xFA: LD(A, memory[concat_bytes(ARG1, ARG2)]); break;
+        case 0x0A: LD(A, d_memory[concat_bytes(C, B)]); break;
+        case 0x1A: LD(A, d_memory[concat_bytes(E, D)]); break;
+        case 0xFA: LD(A, d_memory[concat_bytes(ARG1, ARG2)]); break;
         case 0x3E: LD(A, ARG1); break;
 
         /* 4. LD n,A */
@@ -476,34 +477,34 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
         case 0x5F: LD(E, A); break;
         case 0x67: LD(H, A); break;
         case 0x6F: LD(L, A); break;
-        case 0x02: LD(memory[concat_bytes(C, B)], A); break;
-        case 0x12: LD(memory[concat_bytes(E, D)], A); break;
-        case 0x77: LD(memory[concat_bytes(L, H)], A); break;
-        case 0xEA: LD(memory[concat_bytes(ARG1, ARG2)], A); break;
+        case 0x02: LD(d_memory[concat_bytes(C, B)], A); break;
+        case 0x12: LD(d_memory[concat_bytes(E, D)], A); break;
+        case 0x77: LD(d_memory[concat_bytes(L, H)], A); break;
+        case 0xEA: LD(d_memory[concat_bytes(ARG1, ARG2)], A); break;
 
         /* 5. LD A,(C) */
-        case 0xF2: LD(A, memory[0xFF00 + C]); break; 
+        case 0xF2: LD(A, d_memory[0xFF00 + C]); break;
 
         /* 6. LD (C),A */
-        case 0xE2: LD(memory[0xFF00 + C], A); break;
+        case 0xE2: LD(d_memory[0xFF00 + C], A); break;
 
         /* 9. LDD A,(HL) */ 
-        case 0x3A: LD(A, memory[concat_bytes(L, H)]); decrement_pair(L, H); break;
+        case 0x3A: LD(A, d_memory[concat_bytes(L, H)]); decrement_pair(L, H); break;
 
         /* 12. LDD (HL),A */ 
-        case 0x32: LD(memory[concat_bytes(L, H)], A); decrement_pair(L, H); break;
+        case 0x32: LD(d_memory[concat_bytes(L, H)], A); decrement_pair(L, H); break;
 
         /* 15. LDI A,(HL) */
-        case 0x2A: LD(A, memory[concat_bytes(L, H)]); increment_pair(L, H); break;
+        case 0x2A: LD(A, d_memory[concat_bytes(L, H)]); increment_pair(L, H); break;
 
         /* 18. LDI (HL),A */ 
-        case 0x22: LD(memory[concat_bytes(L, H)], A); increment_pair(L, H); break;
+        case 0x22: LD(d_memory[concat_bytes(L, H)], A); increment_pair(L, H); break;
 
         /* 19. LDH (n),A */
-        case 0xE0:  LD(memory[0xFF00 + ARG1], A); break;
+        case 0xE0:  LD(d_memory[0xFF00 + ARG1], A); break;
 
         /* 20. LDH A,(n) */
-        case 0xF0: LD(A, memory[0xFF00 + ARG1]); break;
+        case 0xF0: LD(A, d_memory[0xFF00 + ARG1]); break;
 
         
         /*** 16-bit Loads ***/
@@ -520,8 +521,8 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
         case 0xF8: LDHL(SP, ARG1); break;
 
         /* 5. LD (nn),SP */
-        case 0x08: LD_16(memory[concat_bytes(ARG1, ARG2) + 1], 
-                         memory[concat_bytes(ARG1, ARG2)], 
+        case 0x08: LD_16(d_memory[concat_bytes(ARG1, ARG2) + 1],
+                         d_memory[concat_bytes(ARG1, ARG2)],
                          ((SP & 0xFF00) >> 8), (SP & 0xFF)); break;  
 
         /* 6. PUSH nn */
@@ -546,7 +547,7 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
         case 0x83: ADD(A, E); break; 
         case 0x84: ADD(A, H); break; 
         case 0x85: ADD(A, L); break; 
-        case 0x86: ADD(A, memory[concat_bytes(L, H)]); break; 
+        case 0x86: ADD(A, d_memory[concat_bytes(L, H)]); break;
         case 0xC6: ADD(A, ARG1); break; 
     
         /* 2. ADC A,n */ 
@@ -557,7 +558,7 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
         case 0x8B: ADC(A, E); break; 
         case 0x8C: ADC(A, H); break; 
         case 0x8D: ADC(A, L); break; 
-        case 0x8E: ADC(A, memory[concat_bytes(L, H)]); break; 
+        case 0x8E: ADC(A, d_memory[concat_bytes(L, H)]); break;
         case 0xCE: ADC(A, ARG1); break; 
 
         /* 3. SUB A,n */
@@ -568,7 +569,7 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
         case 0x93: SUB(A, E); break; 
         case 0x94: SUB(A, H); break; 
         case 0x95: SUB(A, L); break; 
-        case 0x96: SUB(A, memory[concat_bytes(L, H)]); break; 
+        case 0x96: SUB(A, d_memory[concat_bytes(L, H)]); break;
         case 0xD6: SUB(A, ARG1); break; 
     
         /* 4. SBC A,n */ 
@@ -579,7 +580,7 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
         case 0x9B: SBC(A, E); break; 
         case 0x9C: SBC(A, H); break; 
         case 0x9D: SBC(A, L); break; 
-        case 0x9E: SBC(A, memory[concat_bytes(L, H)]); break; 
+        case 0x9E: SBC(A, d_memory[concat_bytes(L, H)]); break;
         case 0xDE: SBC(A, ARG1); break; 
 
         /* 5. AND n */
@@ -590,7 +591,7 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
         case 0xA3: AND(A, E); break; 
         case 0xA4: AND(A, H); break; 
         case 0xA5: AND(A, L); break; 
-        case 0xA6: AND(A, memory[concat_bytes(L, H)]); break; 
+        case 0xA6: AND(A, d_memory[concat_bytes(L, H)]); break;
         case 0xE6: AND(A, ARG1); break; 
 
         /* 6. OR n */
@@ -601,7 +602,7 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
         case 0xB3: OR(A, E); break; 
         case 0xB4: OR(A, H); break; 
         case 0xB5: OR(A, L); break; 
-        case 0xB6: OR(A, memory[concat_bytes(L, H)]); break; 
+        case 0xB6: OR(A, d_memory[concat_bytes(L, H)]); break;
         case 0xF6: OR(A, ARG1); break; 
 
         /* 7. XOR n */
@@ -612,7 +613,7 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
         case 0xAB: XOR(A, E); break; 
         case 0xAC: XOR(A, H); break; 
         case 0xAD: XOR(A, L); break; 
-        case 0xAE: XOR(A, memory[concat_bytes(L, H)]); break; 
+        case 0xAE: XOR(A, d_memory[concat_bytes(L, H)]); break;
         case 0xEE: XOR(A, ARG1); break; 
 
         /* 8. CP n */
@@ -623,7 +624,7 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
         case 0xBB: CP(A, E); break; 
         case 0xBC: CP(A, H); break; 
         case 0xBD: CP(A, L); break; 
-        case 0xBE: CP(A, memory[concat_bytes(L, H)]); break; 
+        case 0xBE: CP(A, d_memory[concat_bytes(L, H)]); break;
         case 0xFE: CP(A, ARG1); break; 
 
         /* 9. INC n */
@@ -634,7 +635,7 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
         case 0x1C: INC(E); break;
         case 0x24: INC(H); break;
         case 0x2C: INC(L); break;
-        case 0x34: INC(memory[concat_bytes(L, H)]); break;
+        case 0x34: INC(d_memory[concat_bytes(L, H)]); break;
 
         /* 10. DEC n */
         case 0x3D: DEC(A); break;
@@ -644,7 +645,7 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
         case 0x1D: DEC(E); break;
         case 0x25: DEC(H); break;
         case 0x2D: DEC(L); break;
-        case 0x35: DEC(memory[concat_bytes(L, H)]); break;
+        case 0x35: DEC(d_memory[concat_bytes(L, H)]); break;
 
         /*** 16-bit ALU ***/
         /* 1. ADD HL,n */
@@ -692,11 +693,15 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
 
         /* 9. DI */
         //TODO: Implement this 
-        case 0xF3: cout << "WARNING: Attempting to disable interrupts!" << endl; break;
+        case 0xF3: std::cout << "WARNING: Attempting to disable interrupts!"
+                             << std::endl;
+        break;
 
         /* 10. EI */
         //TODO: Implement this
-        case 0xFB: cout << "WARNING: Attempting to enable interrupts!" << endl; break;
+        case 0xFB: std::cout << "WARNING: Attempting to enable interrupts!"
+                             << std::endl;
+        break;
 
         /*** Rotates & Shifts ***/
         /* 1. RLCA */
@@ -730,7 +735,7 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
                             case 0x03: RLC(E); break;
                             case 0x04: RLC(H); break;
                             case 0x05: RLC(L); break;
-                            case 0x06: RLC(memory[concat_bytes(L,H)]); break;
+                            case 0x06: RLC(d_memory[concat_bytes(L,H)]); break;
                             
                             /* 6. RL n */
                             case 0x17: RL(A); break;
@@ -740,7 +745,7 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
                             case 0x13: RL(E); break;
                             case 0x14: RL(H); break;
                             case 0x15: RL(L); break;
-                            case 0x16: RL(memory[concat_bytes(L,H)]); break;
+                            case 0x16: RL(d_memory[concat_bytes(L,H)]); break;
                             
                             /* 7. RRC n */
                             case 0x0F: RRC(A); break;
@@ -750,7 +755,7 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
                             case 0x0B: RRC(E); break;
                             case 0x0C: RRC(H); break;
                             case 0x0D: RRC(L); break;
-                            case 0x0E: RRC(memory[concat_bytes(L,H)]); break;
+                            case 0x0E: RRC(d_memory[concat_bytes(L,H)]); break;
                             
                             /* 8. RR n */
                             case 0x1F: RR(A); break;
@@ -760,7 +765,7 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
                             case 0x1B: RR(E); break;
                             case 0x1C: RR(H); break;
                             case 0x1D: RR(L); break;
-                            case 0x1E: RR(memory[concat_bytes(L,H)]); break;
+                            case 0x1E: RR(d_memory[concat_bytes(L,H)]); break;
 
                             /* 9. SLA n */
                             case 0x27: SLA(A); break;
@@ -770,7 +775,7 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
                             case 0x23: SLA(E); break;
                             case 0x24: SLA(H); break;
                             case 0x25: SLA(L); break;
-                            case 0x26: SLA(memory[concat_bytes(L,H)]); break;
+                            case 0x26: SLA(d_memory[concat_bytes(L,H)]); break;
 
                             /* 10. SRA n */
                             case 0x2F: SRA(A); break;
@@ -780,7 +785,7 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
                             case 0x2B: SRA(E); break;
                             case 0x2C: SRA(H); break;
                             case 0x2D: SRA(L); break;
-                            case 0x2E: SRA(memory[concat_bytes(L,H)]); break;
+                            case 0x2E: SRA(d_memory[concat_bytes(L,H)]); break;
 
                             /* 11. SRL n */
                             case 0x3F: SRL(A); break;
@@ -790,7 +795,7 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
                             case 0x3B: SRL(E); break;
                             case 0x3C: SRL(H); break;
                             case 0x3D: SRL(L); break;
-                            case 0x3E: SRL(memory[concat_bytes(L,H)]); break;
+                            case 0x3E: SRL(d_memory[concat_bytes(L,H)]); break;
 
                             /* 1. SWAP n */
                             case 0x37: SWAP(A); break;
@@ -800,7 +805,7 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
                             case 0x33: SWAP(E); break;
                             case 0x34: SWAP(H); break;
                             case 0x35: SWAP(L); break;
-                            case 0x36: SWAP(memory[concat_bytes(L, H)]); break;
+                            case 0x36: SWAP(d_memory[concat_bytes(L, H)]); break;
                         }
                         break;
                     case 01:
@@ -812,7 +817,7 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
                             case 3: BIT(E, y); break;
                             case 4: BIT(H, y); break;
                             case 5: BIT(L, y); break;
-                            case 6: BIT(memory[concat_bytes(L, H)], y); break; 
+                            case 6: BIT(d_memory[concat_bytes(L, H)], y); break;
                             case 7: BIT(A, y); break;
                         }
                         break;
@@ -825,7 +830,7 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
                             case 3: RESET(E, y); break;
                             case 4: RESET(H, y); break;
                             case 5: RESET(L, y); break;
-                            case 6: RESET(memory[concat_bytes(L, H)], y); break; 
+                            case 6: RESET(d_memory[concat_bytes(L, H)], y); break;
                             case 7: RESET(A, y); break;
                         }
                         break;
@@ -838,7 +843,7 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
                             case 3: SET(E, y); break;
                             case 4: SET(H, y); break;
                             case 5: SET(L, y); break;
-                            case 6: SET(memory[concat_bytes(L, H)], y); break; 
+                            case 6: SET(d_memory[concat_bytes(L, H)], y); break;
                             case 7: SET(A, y); break;
                         }
                         break;
@@ -848,25 +853,43 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
         
         /*** Jumps ***/ 
         /* 1. JP nn */
-        case 0xC3: JUMP(concat_bytes(memory[PC+1], memory[PC+2])); break;
+        case 0xC3: JUMP(concat_bytes(d_memory[PC+1], d_memory[PC+2])); break;
 
         /* 2. JP cc,nn */
-        case 0xC2: if (!flag.Z) {JUMP(concat_bytes(memory[PC+1], memory[PC+2])); PC -= 3;} break;
-        case 0xCA: if (flag.Z) {JUMP(concat_bytes(memory[PC+1], memory[PC+2])); PC -= 3;} break;
-        case 0xD2: if (!flag.C) {JUMP(concat_bytes(memory[PC+1], memory[PC+2])); PC -= 3;} break;
-        case 0xDA: if (flag.C) {JUMP(concat_bytes(memory[PC+1], memory[PC+2])); PC -= 3;} break;
+        case 0xC2: if (!flag.Z) {
+                       JUMP(concat_bytes(d_memory[PC+1], d_memory[PC+2]));
+                       PC -= 3;
+                    }
+        break;
+        case 0xCA: if (flag.Z) {
+                       JUMP(concat_bytes(d_memory[PC+1], d_memory[PC+2]));
+                       PC -= 3;
+                   }
+        break;
+        case 0xD2: if (!flag.C) {
+                       JUMP(concat_bytes(d_memory[PC+1], d_memory[PC+2]));
+                       PC -= 3;
+                   }
+        break;
+        case 0xDA: if (flag.C) {
+                       JUMP(concat_bytes(d_memory[PC+1], d_memory[PC+2]));
+                       PC -= 3;
+                   }
+        break;
 
         /* 3. JP (HL) */ 
-        case 0xE9: JUMP(concat_bytes(memory[concat_bytes(L, H)], memory[concat_bytes(L, H) + 1])); break;
+        case 0xE9: JUMP(concat_bytes(d_memory[concat_bytes(L, H)],
+                                     d_memory[concat_bytes(L, H) + 1]));
+        break;
 
         /* 4. JR n */ 
         case 0x18: JUMP_R(ARG1); break;
 
         /* 5. JR cc,n */ 
-        case 0x20: if (!flag.Z) JUMP_R(memory[PC+1]); break;
-        case 0x28: if (flag.Z) JUMP_R(memory[PC+1]); break;
-        case 0x30: if (!flag.C) JUMP_R(memory[PC+1]); break;
-        case 0x38: if (flag.C) JUMP_R(memory[PC+1]); break;
+        case 0x20: if (!flag.Z) JUMP_R(d_memory[PC+1]); break;
+        case 0x28: if (flag.Z) JUMP_R(d_memory[PC+1]); break;
+        case 0x30: if (!flag.C) JUMP_R(d_memory[PC+1]); break;
+        case 0x38: if (flag.C) JUMP_R(d_memory[PC+1]); break;
 
         /*** Calls ***/ 
         /* 1. CALL nn */
@@ -877,22 +900,26 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
                        push_addr(PC + 3); 
                        JUMP(concat_bytes(ARG1, ARG2)); 
                        PC -= 3;
-                   } break;
+                   }
+        break;
         case 0xCC: if (flag.Z) {
                        push_addr(PC + 3); 
                        JUMP(concat_bytes(ARG1, ARG2)); 
                        PC -= 3;
-                   } break;
+                   }
+        break;
         case 0xD4: if (!flag.C) {
                        push_addr(PC + 3); 
                        JUMP(concat_bytes(ARG1, ARG2)); 
                        PC -= 3;
-                   } break;
+                   }
+        break;
         case 0xDC: if (flag.C) {
                        push_addr(PC + 3); 
                        JUMP(concat_bytes(ARG1, ARG2)); 
                        PC -= 3;
-                   } break;
+                   }
+        break;
         
         /*** Restarts ***/ 
         /* 1. RST n*/
@@ -917,7 +944,10 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
 
         /* 3. RETI */ 
         //TODO: case 0xD9
-        case 0xD9: PC = pop_addr(); cout << "WARNING: Attempting to enable interrupts!" << endl; break;
+        case 0xD9: PC = pop_addr();
+                   std::cout << "WARNING: Attempting to enable interrupts!"
+                             << std::endl;
+        break;
         
     }
 
@@ -934,3 +964,4 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
     return 0;
 }
 
+} // Close Namespace gbemu

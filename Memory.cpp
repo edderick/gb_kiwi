@@ -3,49 +3,67 @@
 #include <iomanip> 
 #include <string>
 
-Memory::Memory() : IO_Ports() {
+namespace gbemu {
 
+Memory::Memory(Cartridge *cartridge,
+               IGraphics *graphics)
+: d_IO_Ports()
+, d_cartridge(cartridge)
+, d_graphics(graphics)
+{
 }
 
-bool Memory::is_DMG() {
-    return (*this)[0xFF50] == 0x00; 
+bool Memory::is_DMG() const {
+    return this->get(0xFF50) == 0x00;
+}
+
+const unsigned char& Memory::operator[](unsigned int i) const {
+    return this->get(i);
 }
 
 unsigned char& Memory::operator[](unsigned int i) {
+    return this->get(i);
+}
+
+const unsigned char& Memory::get(unsigned int i) const {
+    return (const_cast<Memory*>(this))->get(i);
+}
+
+unsigned char& Memory::get(unsigned int i) {
     if (i < 0x0100 && is_DMG()) {
         //Bootstrapping ROM 
-        return bootstrap[i];
+        return d_bootstrap[i];
     } else if (i < 0x4000) {
         //ROM Bank 0
-        return cartridge[i];
+        return (*d_cartridge)[i];
 
     } else if ((i >= 0x4000) && (i < 0x8000)) {
         //Switchable ROM Bank 
-        return cartridge[i];
+        return (*d_cartridge)[i];
 
     } else if ((i >= 0x8000) && (i < 0xA000)) {
         //Video RAM 
-        return graphics[i];
+        return (*d_graphics)[i];
 
     } else if ((i >= 0xA000) && (i < 0xC000)) {
         //Switchable RAM Bank 
-        return cartridge[i]; 
+        return (*d_cartridge)[i];
 
     } else if ((i >= 0xC000) && (i < 0xE000)) {
         //Internal RAM
-        return main_mem[i - 0xC000];
+        return d_main_mem[i - 0xC000];
 
     } else if ((i >= 0xE000) && (i < 0xFE00)) {
         //Echo of Internal RAM
-        return main_mem[i - 0xE000];
+        return d_main_mem[i - 0xE000];
 
     } else if ((i >= 0xFE00) && (i < 0xFEA0)) {
         //Sprite Attrib Memory (OAM)
-        return graphics[i];
+        return (*d_graphics)[i];
 
     } else if ((i >= 0xFEA0) && (i < 0xFF00)) {
         //*** UNUSED ***
-        return unused[i - 0xFEA0];
+        return d_unused[i - 0xFEA0];
 
     } else if ((i >= 0xFF00) && (i < 0xFF4C)) {
         //I/O Ports
@@ -57,50 +75,53 @@ unsigned char& Memory::operator[](unsigned int i) {
 
     } else if ((i >= 0xFF80) && (i < 0xFFFF)) {
         //Internal RAM 
-        return hi_mem[i - 0xFF80]; 
+        return d_hi_mem[i - 0xFF80];
 
     } else if (i == 0xFFFF) {
         // Interrupt Enable Register
-        return interrupt_enable_register;
+        return d_interrupt_enable_register;
 
     } else { 
         //Some  kind of error? 
-        return NONE;
+        return d_NONE;
     }
 }
 
 unsigned char& Memory::handle_IO(unsigned int i) {
     switch (i) {
         case 0xFF40: // LCDC
-            return graphics.LCDC; 
+            return d_graphics->d_LCDC;
         case 0xFF41: // LCDC Status
-            return graphics.LCDC_status; 
+            return d_graphics->d_LCDC_status;
         case 0xFF42: // Scroll Y
-            return graphics.scroll_y;
+            return d_graphics->d_scroll_y;
         case 0xFF43: // Scroll X
-            return graphics.scroll_x; 
+            return d_graphics->d_scroll_x;
         case 0xFF44: // Line Y
-            return graphics.line_y;
+            return d_graphics->d_line_y;
         case 0xFF45: // Line Y Compare 
-            return graphics.line_y_cmp;
+            return d_graphics->d_line_y_cmp;
         case 0xFF46: // DMA Start address
-            return graphics.DMA_addr;
+            return d_graphics->d_DMA_addr;
         case 0xFF47: // BG & Window Pallete Data
-            return graphics.bgp;
+            return d_graphics->d_bgp;
         case 0xFF48: // Object Pallette 0 Data
-            return graphics.obp0;
+            return d_graphics->d_obp0;
         case 0xFF49: // Object Pallette 1 Data
-            return graphics.obp1;
+            return d_graphics->d_obp1;
         case 0xFF4A: // Window Y
-            return graphics.window_y;
+            return d_graphics->d_window_y;
         case 0xFF4B: // Window X
-            return graphics.window_x;
+            return d_graphics->d_window_x;
     }
 
     //Error?
-    return IO_Ports[i - 0xFF00];
+    return d_IO_Ports[i - 0xFF00];
 }
 
+} // Close Namespace gbemu
+
+// TODO: Pull out into tests
 /*
 int main(){
     Memory m;

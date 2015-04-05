@@ -1,16 +1,29 @@
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
 #include "../cpu.h"
+#include "mock_graphics.h"
 
-TEST(CPU, cpuCanBeCreated) {
-    CPU cpu; 
+using namespace gbemu;
+
+class TestCpu : public ::testing::Test {
+    protected:
+        Cartridge cartridge;
+        MockGraphics mockGraphics;
+        CPU cpu;
+
+        TestCpu()
+        : cpu(&cartridge, &mockGraphics)
+        {
+        }
+};
+
+TEST_F(TestCpu, cpuCanBeCreated) {
     EXPECT_EQ(0, cpu.PC); 
 }
 
 // Page 65
-TEST(CPU, 8BitLoads_LoadNIntoReg) {
+TEST_F(TestCpu, 8BitLoads_LoadNIntoReg) {
     //TODO: Refactor into two tests
-    CPU cpu; 
-
     // 0x86 LD B,n
     unsigned char arg1 = 'a'; 
     unsigned char arg2 = '0'; 
@@ -61,8 +74,7 @@ TEST(CPU, 8BitLoads_LoadNIntoReg) {
 }
 
 // Page 66
-TEST(CPU, 8BitLoads_LD_regIntoA) {
-    CPU cpu; 
+TEST_F(TestCpu, 8BitLoads_LD_regIntoA) {
 
     unsigned char arg1 = '0'; 
     unsigned char arg2 = '0'; 
@@ -103,7 +115,7 @@ TEST(CPU, 8BitLoads_LD_regIntoA) {
     EXPECT_EQ('l', cpu.A);
 
     //LD A,(HL)
-    cpu.memory[0xFFFF] = 'M';
+    cpu.memory()[0xFFFF] = 'M';
     cpu.H = 0xFF;
     cpu.L = 0xFF;
     cpu.execute(0x7E, arg1, arg2);
@@ -111,9 +123,7 @@ TEST(CPU, 8BitLoads_LD_regIntoA) {
 }
 
 // Page 66
-TEST(CPU, 8BitLoads_LD_regIntoB) {
-    CPU cpu; 
-
+TEST_F(TestCpu, 8BitLoads_LD_regIntoB) {
     unsigned char arg1 = '0'; 
     unsigned char arg2 = '0'; 
 
@@ -148,7 +158,7 @@ TEST(CPU, 8BitLoads_LD_regIntoB) {
     EXPECT_EQ('l', cpu.B);
 
     //LD B,(HL)
-    cpu.memory[0xFFFF] = 'M';
+    cpu.memory()[0xFFFF] = 'M';
     cpu.H = 0xFF;
     cpu.L = 0xFF;
     cpu.execute(0x46, arg1, arg2);
@@ -156,9 +166,7 @@ TEST(CPU, 8BitLoads_LD_regIntoB) {
 }
 
 // Page 66
-TEST(CPU, 8BitLoads_LD_regIntoC) {
-    CPU cpu; 
-
+TEST_F(TestCpu, 8BitLoads_LD_regIntoC) {
     unsigned char arg1 = '0'; 
     unsigned char arg2 = '0'; 
 
@@ -193,7 +201,7 @@ TEST(CPU, 8BitLoads_LD_regIntoC) {
     EXPECT_EQ('l', cpu.C);
 
     //LD C,(HL)
-    cpu.memory[0xFFFF] = 'M';
+    cpu.memory()[0xFFFF] = 'M';
     cpu.H = 0xFF;
     cpu.L = 0xFF;
     cpu.execute(0x4E, arg1, arg2);
@@ -201,9 +209,7 @@ TEST(CPU, 8BitLoads_LD_regIntoC) {
 }
 
 // Page 67
-TEST(CPU, 8BitLoads_LD_regIntoD) {
-    CPU cpu; 
-
+TEST_F(TestCpu, 8BitLoads_LD_regIntoD) {
     unsigned char arg1 = '0'; 
     unsigned char arg2 = '0'; 
 
@@ -238,7 +244,7 @@ TEST(CPU, 8BitLoads_LD_regIntoD) {
     EXPECT_EQ('l', cpu.D);
 
     //LD D,(HL)
-    cpu.memory[0xFFFF] = 'M';
+    cpu.memory()[0xFFFF] = 'M';
     cpu.H = 0xFF;
     cpu.L = 0xFF;
     cpu.execute(0x56, arg1, arg2);
@@ -246,9 +252,7 @@ TEST(CPU, 8BitLoads_LD_regIntoD) {
 }
 
 // Page 67
-TEST(CPU, 8BitLoads_LD_regIntoE) {
-    CPU cpu; 
-
+TEST_F(TestCpu, 8BitLoads_LD_regIntoE) {
     unsigned char arg1 = '0'; 
     unsigned char arg2 = '0'; 
 
@@ -283,7 +287,7 @@ TEST(CPU, 8BitLoads_LD_regIntoE) {
     EXPECT_EQ('l', cpu.E);
 
     // LD E,(HL)
-    cpu.memory[0xFFFF] = 'M';
+    cpu.memory()[0xFFFF] = 'M';
     cpu.H = 0xFF;
     cpu.L = 0xFF;
     cpu.execute(0x5E, arg1, arg2);
@@ -291,9 +295,7 @@ TEST(CPU, 8BitLoads_LD_regIntoE) {
 }
 
 // Page 67
-TEST(CPU, 8BitLoads_LD_regIntoH) {
-    CPU cpu; 
-
+TEST_F(TestCpu, 8BitLoads_LD_regIntoH) {
     unsigned char arg1 = '0'; 
     unsigned char arg2 = '0'; 
 
@@ -328,7 +330,7 @@ TEST(CPU, 8BitLoads_LD_regIntoH) {
     EXPECT_EQ('l', cpu.H);
 
     // LD H,(HL)
-    cpu.memory[0xFFFF] = 'M';
+    cpu.memory()[0xFFFF] = 'M';
     cpu.H = 0xFF;
     cpu.L = 0xFF;
     cpu.execute(0x66, arg1, arg2);
@@ -336,9 +338,7 @@ TEST(CPU, 8BitLoads_LD_regIntoH) {
 }
   
 // Page 67
-TEST(CPU, 8BitLoads_LD_regIntoL) {
-    CPU cpu; 
-
+TEST_F(TestCpu, 8BitLoads_LD_regIntoL) {
     unsigned char arg1 = '0'; 
     unsigned char arg2 = '0'; 
 
@@ -373,7 +373,7 @@ TEST(CPU, 8BitLoads_LD_regIntoL) {
     EXPECT_EQ('l', cpu.L);
 
     // LD L,(HL)
-    cpu.memory[0xFFFF] = 'M';
+    cpu.memory()[0xFFFF] = 'M';
     cpu.H = 0xFF;
     cpu.L = 0xFF;
     cpu.execute(0x6E, arg1, arg2);
@@ -381,65 +381,61 @@ TEST(CPU, 8BitLoads_LD_regIntoL) {
 }
 
 // Page 67
-TEST(CPU, 8BitLoads_LD_regInto_HL) {
-    CPU cpu; 
-
+TEST_F(TestCpu, 8BitLoads_LD_regInto_HL) {
     unsigned char arg1 = '0'; 
     unsigned char arg2 = '0'; 
 
     // LD (HL),B
-    cpu.memory[0xFFFF] = '0';
+    cpu.memory()[0xFFFF] = '0';
     cpu.H = 0xFF;
     cpu.L = 0xFF;
     cpu.B = 'b';
     cpu.execute(0x70, arg1, arg2);
-    EXPECT_EQ('b', cpu.memory[0xFFFF]);
+    EXPECT_EQ('b', cpu.memory()[0xFFFF]);
 
     // LD (HL),C
     cpu.H = 0xFF;
     cpu.L = 0xFF;
     cpu.C = 'c';
     cpu.execute(0x71, arg1, arg2);
-    EXPECT_EQ('c', cpu.memory[0xFFFF]);
+    EXPECT_EQ('c', cpu.memory()[0xFFFF]);
 
     // LD (HL),D
     cpu.H = 0xFF;
     cpu.L = 0xFF;
     cpu.D = 'd';
     cpu.execute(0x72, arg1, arg2);
-    EXPECT_EQ('d', cpu.memory[0xFFFF]);
+    EXPECT_EQ('d', cpu.memory()[0xFFFF]);
 
     // LD (HL),E
     cpu.H = 0xFF;
     cpu.L = 0xFF;
     cpu.E = 'e';
     cpu.execute(0x73, arg1, arg2);
-    EXPECT_EQ('e', cpu.memory[0xFFFF]);
+    EXPECT_EQ('e', cpu.memory()[0xFFFF]);
 
     // LD (HL),H
     cpu.H = 0xFF;
     cpu.L = 0xFF;
     cpu.execute(0x74, arg1, arg2);
-    EXPECT_EQ(0xFF, cpu.memory[0xFFFF]);
+    EXPECT_EQ(0xFF, cpu.memory()[0xFFFF]);
 
     // LD (HL),L
     cpu.H = 0xFF;
     cpu.L = 0xFF;
     cpu.execute(0x75, arg1, arg2);
-    EXPECT_EQ(0xFF, cpu.memory[0xFFFF]);
+    EXPECT_EQ(0xFF, cpu.memory()[0xFFFF]);
 
     // LD (HL),n
     cpu.H = 0xFF;
     cpu.L = 0xFF;
     arg1 = 'n'; 
     cpu.execute(0x36, arg1, arg2);
-    EXPECT_EQ('n', cpu.memory[0xFFFF]);
+    EXPECT_EQ('n', cpu.memory()[0xFFFF]);
 }
 
 //Page 68
-TEST(CPU, 8BitLoads_LD_IntoA) {
-    CPU cpu; 
-
+TEST_F(TestCpu, 8BitLoads_LD_IntoA) {
     unsigned char arg1 = '0'; 
     unsigned char arg2 = '0'; 
 
@@ -479,28 +475,28 @@ TEST(CPU, 8BitLoads_LD_IntoA) {
     EXPECT_EQ('l', cpu.A);
 
     // LD A,(BC)
-    cpu.memory[0xFF01] = 'B';
+    cpu.memory()[0xFF01] = 'B';
     cpu.B = 0xFF;
     cpu.C = 0x01;
     cpu.execute(0x0A, arg1, arg2);
     EXPECT_EQ('B', cpu.A);
 
     // LD A,(DE)
-    cpu.memory[0xFF02] = 'D';
+    cpu.memory()[0xFF02] = 'D';
     cpu.D = 0xFF;
     cpu.E = 0x02;
     cpu.execute(0x1A, arg1, arg2);
     EXPECT_EQ('D', cpu.A);
 
     // LD A,(HL)
-    cpu.memory[0xFF03] = 'H';
+    cpu.memory()[0xFF03] = 'H';
     cpu.H = 0xFF;
     cpu.L = 0x03;
     cpu.execute(0x7E, arg1, arg2);
     EXPECT_EQ('H', cpu.A);
 
     // LD A,(nn)
-    cpu.memory[0xFF04] = 'N';
+    cpu.memory()[0xFF04] = 'N';
     arg1 = 0x04; 
     arg2 = 0xFF; 
     cpu.execute(0xFA, arg1, arg2);
@@ -513,9 +509,7 @@ TEST(CPU, 8BitLoads_LD_IntoA) {
 }
 
 // Page 69
-TEST(CPU, 8BitLoads_LD_AIntoReg) {
-    CPU cpu; 
-
+TEST_F(TestCpu, 8BitLoads_LD_AIntoReg) {
     unsigned char arg1 = '0'; 
     unsigned char arg2 = '0'; 
 
@@ -565,39 +559,37 @@ TEST(CPU, 8BitLoads_LD_AIntoReg) {
     cpu.B = 0xFF;
     cpu.C = 0x11;
     cpu.execute(0x02, arg1, arg2);
-    EXPECT_EQ('a', cpu.memory[0xFF11]);
+    EXPECT_EQ('a', cpu.memory()[0xFF11]);
 
     // LD (DE),A
     cpu.A = 'a';
     cpu.D = 0xFF;
     cpu.E = 0x12;
     cpu.execute(0x12, arg1, arg2);
-    EXPECT_EQ('a', cpu.memory[0xFF12]);
+    EXPECT_EQ('a', cpu.memory()[0xFF12]);
 
     // LD (HL),A
     cpu.A = 'a';
     cpu.H = 0xFF;
     cpu.L = 0x13;
     cpu.execute(0x77, arg1, arg2);
-    EXPECT_EQ('a', cpu.memory[0xFF13]);
+    EXPECT_EQ('a', cpu.memory()[0xFF13]);
 
     // LD (nn),A
     cpu.A = 'a';
     arg1 = 0x14;
     arg2 = 0xFF;
     cpu.execute(0xEA, arg1, arg2);
-    EXPECT_EQ('a', cpu.memory[0xFF14]);
+    EXPECT_EQ('a', cpu.memory()[0xFF14]);
 }
 
 // Page 70
-TEST(CPU, 8BitLoads_LD_FFCIntoA) {
-    CPU cpu; 
-
+TEST_F(TestCpu, 8BitLoads_LD_FFCIntoA) {
     unsigned char arg1 = '0'; 
     unsigned char arg2 = '0'; 
 
     // LD A,(0xFF00+C)
-    cpu.memory[0xFFFA] = 'c';
+    cpu.memory()[0xFFFA] = 'c';
     cpu.A = 'a';
     cpu.C = 0xFA;
     cpu.execute(0xF2, arg1, arg2);
@@ -605,9 +597,7 @@ TEST(CPU, 8BitLoads_LD_FFCIntoA) {
 }
 
 // Page 70
-TEST(CPU, 8BitLoads_LD_AIntoFFC) {
-    CPU cpu; 
-
+TEST_F(TestCpu, 8BitLoads_LD_AIntoFFC) {
     unsigned char arg1 = '0'; 
     unsigned char arg2 = '0'; 
 
@@ -615,18 +605,16 @@ TEST(CPU, 8BitLoads_LD_AIntoFFC) {
     cpu.A = 'a';
     cpu.C = 0xFB;
     cpu.execute(0xE2, arg1, arg2);
-    EXPECT_EQ('a', cpu.memory[0xFFFB]);
+    EXPECT_EQ('a', cpu.memory()[0xFFFB]);
 }
 
 // Page 71
-TEST(CPU, 8BitLoads_LDD_AIntoHL) {
-    CPU cpu; 
-
+TEST_F(TestCpu, 8BitLoads_LDD_AIntoHL) {
     unsigned char arg1 = '0'; 
     unsigned char arg2 = '0'; 
 
     // LD A,(HL--) Normal case 
-    cpu.memory[0xFFFF] = 'H';
+    cpu.memory()[0xFFFF] = 'H';
     cpu.H = 0xFF;
     cpu.L = 0xFF;
     cpu.execute(0x3A, arg1, arg2);
@@ -635,7 +623,7 @@ TEST(CPU, 8BitLoads_LDD_AIntoHL) {
     EXPECT_EQ(0xFE, cpu.L); // Decrementing has worked
 
     // LD A,(HL--) Byte boundary
-    cpu.memory[0xFF00] = 'H';
+    cpu.memory()[0xFF00] = 'H';
     cpu.H = 0xFF;
     cpu.L = 0x00;
     cpu.execute(0x3A, arg1, arg2);
@@ -644,7 +632,7 @@ TEST(CPU, 8BitLoads_LDD_AIntoHL) {
     EXPECT_EQ(0xFF, cpu.L); // Decrementing has worked
 
     // LD A,(HL--) Low case
-    cpu.memory[0x0000] = 'H';
+    cpu.memory()[0x0000] = 'H';
     cpu.H = 0x00;
     cpu.L = 0x00;
     cpu.execute(0x3A, arg1, arg2);
@@ -654,9 +642,7 @@ TEST(CPU, 8BitLoads_LDD_AIntoHL) {
 }
 
 // Page 72
-TEST(CPU, 8BitLoads_LDD_HLIntoA) {
-    CPU cpu; 
-
+TEST_F(TestCpu, 8BitLoads_LDD_HLIntoA) {
     unsigned char arg1 = '0'; 
     unsigned char arg2 = '0'; 
 
@@ -665,7 +651,7 @@ TEST(CPU, 8BitLoads_LDD_HLIntoA) {
     cpu.H = 0xFF;
     cpu.L = 0xFF;
     cpu.execute(0x32, arg1, arg2);
-    EXPECT_EQ('A', cpu.memory[0xFFFF]);
+    EXPECT_EQ('A', cpu.memory()[0xFFFF]);
     EXPECT_EQ(0xFF, cpu.H); // Decrementing has worked
     EXPECT_EQ(0xFE, cpu.L); // Decrementing has worked
 
@@ -674,7 +660,7 @@ TEST(CPU, 8BitLoads_LDD_HLIntoA) {
     cpu.H = 0xFF;
     cpu.L = 0x00;
     cpu.execute(0x32, arg1, arg2);
-    EXPECT_EQ('A', cpu.memory[0xFF00]);
+    EXPECT_EQ('A', cpu.memory()[0xFF00]);
     EXPECT_EQ(0xFE, cpu.H); // Decrementing has worked
     EXPECT_EQ(0xFF, cpu.L); // Decrementing has worked
 
@@ -683,21 +669,19 @@ TEST(CPU, 8BitLoads_LDD_HLIntoA) {
     cpu.H = 0x00;
     cpu.L = 0x00;
     cpu.execute(0x32, arg1, arg2);
-    EXPECT_EQ('A', cpu.memory[0x0000]);
+    EXPECT_EQ('A', cpu.memory()[0x0000]);
     EXPECT_EQ(0xFF, cpu.H); // Decrementing has worked
     EXPECT_EQ(0xFF, cpu.L); // Decrementing has worked
 }
 
 
 // Page 73
-TEST(CPU, 8BitLoads_LDI_AIntoHL) {
-    CPU cpu; 
-
+TEST_F(TestCpu, 8BitLoads_LDI_AIntoHL) {
     unsigned char arg1 = '0'; 
     unsigned char arg2 = '0'; 
 
     // LD A,(HL++) Normal case 
-    cpu.memory[0xFFF0] = 'H';
+    cpu.memory()[0xFFF0] = 'H';
     cpu.H = 0xFF;
     cpu.L = 0xF0;
     cpu.execute(0x2A, arg1, arg2);
@@ -706,7 +690,7 @@ TEST(CPU, 8BitLoads_LDI_AIntoHL) {
     EXPECT_EQ(0xF1, cpu.L); // Decrementing has worked
 
     // LD A,(HL++) Byte boundary
-    cpu.memory[0xF0FF] = 'H';
+    cpu.memory()[0xF0FF] = 'H';
     cpu.H = 0xF0;
     cpu.L = 0xFF;
     cpu.execute(0x2A, arg1, arg2);
@@ -715,7 +699,7 @@ TEST(CPU, 8BitLoads_LDI_AIntoHL) {
     EXPECT_EQ(0x00, cpu.L); // Decrementing has worked
 
     // LD A,(HL++) High case
-    cpu.memory[0xFFFF] = 'H';
+    cpu.memory()[0xFFFF] = 'H';
     cpu.H = 0xFF;
     cpu.L = 0xFF;
     cpu.execute(0x2A, arg1, arg2);
@@ -725,9 +709,7 @@ TEST(CPU, 8BitLoads_LDI_AIntoHL) {
 }
 
 // Page 74
-TEST(CPU, 8BitLoads_LDI_HLIntoA) {
-    CPU cpu; 
-
+TEST_F(TestCpu, 8BitLoads_LDI_HLIntoA) {
     unsigned char arg1 = '0'; 
     unsigned char arg2 = '0'; 
 
@@ -736,7 +718,7 @@ TEST(CPU, 8BitLoads_LDI_HLIntoA) {
     cpu.H = 0x00;
     cpu.L = 0x00;
     cpu.execute(0x22, arg1, arg2);
-    EXPECT_EQ('A', cpu.memory[0x0000]);
+    EXPECT_EQ('A', cpu.memory()[0x0000]);
     EXPECT_EQ(0x00, cpu.H); // Decrementing has worked
     EXPECT_EQ(0x01, cpu.L); // Decrementing has worked
 
@@ -745,7 +727,7 @@ TEST(CPU, 8BitLoads_LDI_HLIntoA) {
     cpu.H = 0xFE;
     cpu.L = 0xFF;
     cpu.execute(0x22, arg1, arg2);
-    EXPECT_EQ('A', cpu.memory[0xFEFF]);
+    EXPECT_EQ('A', cpu.memory()[0xFEFF]);
     EXPECT_EQ(0xFF, cpu.H); // Decrementing has worked
     EXPECT_EQ(0x00, cpu.L); // Decrementing has worked
 
@@ -754,20 +736,18 @@ TEST(CPU, 8BitLoads_LDI_HLIntoA) {
     cpu.H = 0xFF;
     cpu.L = 0xFF;
     cpu.execute(0x22, arg1, arg2);
-    EXPECT_EQ('A', cpu.memory[0x0000]);
+    EXPECT_EQ('A', cpu.memory()[0x0000]);
     EXPECT_EQ(0x00, cpu.H); // Decrementing has worked
     EXPECT_EQ(0x00, cpu.L); // Decrementing has worked
 }
 
 // Page 75
-TEST(CPU, 8BitLoads_LD_FFnnIntoA) {
-    CPU cpu; 
-
+TEST_F(TestCpu, 8BitLoads_LD_FFnnIntoA) {
     unsigned char arg1 = '0'; 
     unsigned char arg2 = '0'; 
 
     // LD A,(0xFF00+C)
-    cpu.memory[0xFFFA] = 'c';
+    cpu.memory()[0xFFFA] = 'c';
     cpu.A = 'a';
     arg1 = 0xFA;
     cpu.execute(0xF0, arg1, arg2);
@@ -775,9 +755,7 @@ TEST(CPU, 8BitLoads_LD_FFnnIntoA) {
 }
 
 // Page 75
-TEST(CPU, 8BitLoads_LD_AIntoFFnn) {
-    CPU cpu; 
-
+TEST_F(TestCpu, 8BitLoads_LD_AIntoFFnn) {
     unsigned char arg1 = '0'; 
     unsigned char arg2 = '0'; 
 
@@ -785,13 +763,11 @@ TEST(CPU, 8BitLoads_LD_AIntoFFnn) {
     cpu.A = 'a';
     arg1 = 0xFB;
     cpu.execute(0xE0, arg1, arg2);
-    EXPECT_EQ('a', cpu.memory[0xFFFB]);
+    EXPECT_EQ('a', cpu.memory()[0xFFFB]);
 }
 
 // Page 76 
-TEST(CPU, 16BitLoads_LD_nnInton) {
-    CPU cpu; 
-
+TEST_F(TestCpu, 16BitLoads_LD_nnInton) {
     unsigned char arg1 = '1';
     unsigned char arg2 = '2';
 
@@ -831,9 +807,7 @@ TEST(CPU, 16BitLoads_LD_nnInton) {
 }
 
 //Page 76
-TEST(CPU, 16BitLoads_LD_HLintoSP) {
-    CPU cpu; 
-    
+TEST_F(TestCpu, 16BitLoads_LD_HLintoSP) {
     unsigned char arg1 = '0';
     unsigned char arg2 = '0';
 
@@ -845,9 +819,7 @@ TEST(CPU, 16BitLoads_LD_HLintoSP) {
 }
 
 //Page 77
-TEST(CPU, 16BitLoads_LDHL_SPn) {
-    CPU cpu; 
-
+TEST_F(TestCpu, 16BitLoads_LDHL_SPn) {
     unsigned char arg1;
     unsigned char arg2;
 
@@ -888,21 +860,17 @@ TEST(CPU, 16BitLoads_LDHL_SPn) {
 }
 
 //Page 78
-TEST(CPU, 16BitLoads_LD_nnSP) {
-    CPU cpu;
-
+TEST_F(TestCpu, 16BitLoads_LD_nnSP) {
     unsigned char arg1 = 0x00;
     unsigned char arg2 = 0xfc;
     cpu.SP = 0x1234; 
     cpu.execute(0x08, arg1, arg2); 
-    EXPECT_EQ(0x34, cpu.memory[0xFC00]);
-    EXPECT_EQ(0x12, cpu.memory[0xFC01]);
+    EXPECT_EQ(0x34, cpu.memory()[0xFC00]);
+    EXPECT_EQ(0x12, cpu.memory()[0xFC01]);
 }
 
 //Page 78 
-TEST(CPU, PUSH_nn) {
-    CPU cpu; 
-
+TEST_F(TestCpu, PUSH_nn) {
     unsigned char arg1;
     unsigned char arg2;
 
@@ -910,69 +878,67 @@ TEST(CPU, PUSH_nn) {
     cpu.A = 0x11;
     cpu.F = 0x22; 
     cpu.execute(0xF5, arg1, arg2); 
-    EXPECT_EQ(0x11, cpu.memory[0xFF87]); 
-    EXPECT_EQ(0x22, cpu.memory[0xFF86]);
+    EXPECT_EQ(0x11, cpu.memory()[0xFF87]);
+    EXPECT_EQ(0x22, cpu.memory()[0xFF86]);
     EXPECT_EQ(0xFF86, cpu.SP);
 
     cpu.SP = 0xFF92;
     cpu.B = 0x33;
     cpu.C = 0x44; 
     cpu.execute(0xC5, arg1, arg2); 
-    EXPECT_EQ(0x33, cpu.memory[0xFF91]); 
-    EXPECT_EQ(0x44, cpu.memory[0xFF90]);
+    EXPECT_EQ(0x33, cpu.memory()[0xFF91]);
+    EXPECT_EQ(0x44, cpu.memory()[0xFF90]);
     EXPECT_EQ(0xFF90, cpu.SP);
 
     cpu.SP = 0xFF96;
     cpu.D = 0x55;
     cpu.E = 0x66; 
     cpu.execute(0xD5, arg1, arg2); 
-    EXPECT_EQ(0x55, cpu.memory[0xFF95]); 
-    EXPECT_EQ(0x66, cpu.memory[0xFF94]);
+    EXPECT_EQ(0x55, cpu.memory()[0xFF95]);
+    EXPECT_EQ(0x66, cpu.memory()[0xFF94]);
     EXPECT_EQ(0xFF94, cpu.SP);
 
     cpu.SP = 0xFF98;
     cpu.H = 0x77;
     cpu.L = 0x88; 
     cpu.execute(0xE5, arg1, arg2); 
-    EXPECT_EQ(0x77, cpu.memory[0xFF97]); 
-    EXPECT_EQ(0x88, cpu.memory[0xFF96]);
+    EXPECT_EQ(0x77, cpu.memory()[0xFF97]);
+    EXPECT_EQ(0x88, cpu.memory()[0xFF96]);
     EXPECT_EQ(0xFF96, cpu.SP);
 }
 
 //Page 78 
-TEST(CPU, POP_nn) {
-    CPU cpu; 
-
+TEST_F(TestCpu, POP_nn) {
     unsigned char arg1;
     unsigned char arg2;
 
     cpu.SP = 0xFF86;
-    cpu.memory[0xFF86] = 0x11;
-    cpu.memory[0xFF87] = 0x22;
+    cpu.memory()[0xFF86] = 0x11;
+    cpu.memory()[0xFF87] = 0x22;
     cpu.execute(0xF1, arg1, arg2); 
     EXPECT_EQ(0x11, cpu.F); 
     EXPECT_EQ(0x22, cpu.A);
     EXPECT_EQ(0xFF88, cpu.SP);
 
     cpu.SP = 0xFF84;
-    cpu.memory[0xFF84] = 0x33;
-    cpu.memory[0xFF85] = 0x44;
+    cpu.memory()[0xFF84] = 0x33;
+    cpu.memory()[0xFF85] = 0x44;
     cpu.execute(0xC1, arg1, arg2); 
     EXPECT_EQ(0x33, cpu.C); 
     EXPECT_EQ(0x44, cpu.B);
     EXPECT_EQ(0xFF86, cpu.SP);
 
     cpu.SP = 0xFF82;
-    cpu.memory[0xFF82] = 0x55;
-    cpu.memory[0xFF83] = 0x66;
+    cpu.memory()[0xFF82] = 0x55;
+    cpu.memory()[0xFF83] = 0x66;
     cpu.execute(0xD1, arg1, arg2); 
     EXPECT_EQ(0x55, cpu.E); 
     EXPECT_EQ(0x66, cpu.D);
     EXPECT_EQ(0xFF84, cpu.SP);
 
     cpu.SP = 0xFF80;
-    cpu.memory[0xFF80] = 0x77;
-    cpu.memory[0xFF81] = 0x88;
+    cpu.memory()[0xFF80] = 0x77;
+    cpu.memory()[0xFF81] = 0x88;
     cpu.execute(0xE1, arg1, arg2); 
     EXPECT_EQ(0x77, cpu.L); 
     EXPECT_EQ(0x88, cpu.H);
