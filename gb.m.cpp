@@ -14,7 +14,7 @@ int main() {
     CPU cpu(&cartridge, &graphics);
 
     cpu.print_state();
-    cartridge.load_rom("../res/opus5.gb");
+    cartridge.load_rom("../res/SuperMarioLand.gb");
 //    for (int i = 0; i < 6 + 3 * (0x9FFF - 0x8000) + 26 + 30 + 50 + 3948 + 46 + 6 + 58 + 79 + 120 + 13 + 18500 + 375 + 102; i++) {
     int i = 0;
     while (true) {
