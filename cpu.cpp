@@ -276,10 +276,10 @@ void CPU::SBC(unsigned char &reg1, unsigned char reg2) {
 }
 
 void CPU::CP(unsigned char reg1, unsigned char reg2) {
-    //TODO: Check this
-    flag.H = !(((reg1 & (1 << 3)) == 0) && ((reg2 & (1 << 3))) != 0);
-    flag.C = (reg1 < reg2);
-    flag.Z = (reg1 == reg2); flag.N = true;
+    flag.H = !((reg1 & 0x0F) < (reg2 & 0x0F));
+    flag.C = !(reg1 < reg2);
+    flag.Z = (reg1 == reg2);
+    flag.N = true;
 }
 
 void CPU::AND(unsigned char &reg1, unsigned char reg2) {
