@@ -308,18 +308,18 @@ void CPU::XOR(unsigned char &reg1, unsigned char reg2) {
 
 template<typename T>
 void CPU::INC(T &reg) {
+    flag.H = ((0x0F & reg) == 0x0F);
     reg++;
     flag.Z = (reg == 0);
     flag.N = false; 
-    flag.H = ((0xF & reg) == 0xF);
 }
 
 template<typename T>
 void CPU::DEC(T &reg) {
+    flag.H = ((0xF & reg) == 0x0);
     reg--;
     flag.Z = (reg == 0);
     flag.N = true; 
-    flag.H = ((0xF & reg) == 0x0);
 }
 
 void CPU::INC_16(unsigned char &LSB, unsigned char &MSB) {
