@@ -259,20 +259,20 @@ void CPU::ADC(unsigned char &reg1, unsigned char reg2) {
 }
 
 void CPU::SUB(unsigned char &reg1, unsigned char reg2) {
-    //TODO: Check this
-    flag.H = !(((reg1 & (1 << 3)) == 0) && ((reg2 & (1 << 3))) != 0);
-    flag.C = (reg1 < reg2);
+    flag.H = !((reg1 & 0x0F) < (reg2 & 0x0F));
+    flag.C = !(reg1 < reg2);
     reg1 -= reg2;
-    flag.Z = (reg1 == 0); flag.N = true;
+    flag.Z = (reg1 == 0); 
+    flag.N = true;
 }
 
 void CPU::SBC(unsigned char &reg1, unsigned char reg2) {
-    //TODO: Check this
     unsigned char carry = flag.C ? 1 : 0;
-    flag.H = !(((reg1 & (1 << 3)) == 0) && ((reg2 & (1 << 3))) != 0);
-    flag.C = (reg1 < reg2);
+    flag.H = !(((reg1 & 0x0F) + carry) < (reg2 & 0x0F));
+    flag.C = !((reg1 + carry) < reg2);
     reg1 = reg1 - reg2  + carry;
-    flag.Z = (reg1 == 0); flag.N = true;
+    flag.Z = (reg1 == 0); 
+    flag.N = true;
 }
 
 void CPU::CP(unsigned char reg1, unsigned char reg2) {
