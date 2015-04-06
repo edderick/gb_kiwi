@@ -4459,3 +4459,87 @@ TEST_F(TestCpu, INC16_nn_MSBOverflow) {
     cpu.execute(0x33, arg1, arg2);
     EXPECT_EQ(0x0000, cpu.SP);
 }
+
+// Page 93
+TEST_F(TestCpu, DEC16_nn_NoBorrow) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.B = 0x01;
+    cpu.C = 0x01;
+    cpu.execute(0x0B, arg1, arg2);
+    EXPECT_EQ(0x01, cpu.B);
+    EXPECT_EQ(0x00, cpu.C);
+
+    cpu.D = 0x02;
+    cpu.E = 0x02;
+    cpu.execute(0x1B, arg1, arg2);
+    EXPECT_EQ(0x02, cpu.D);
+    EXPECT_EQ(0x01, cpu.E);
+
+    cpu.H = 0x01;
+    cpu.L = 0x01;
+    cpu.execute(0x2B, arg1, arg2);
+    EXPECT_EQ(0x01, cpu.B);
+    EXPECT_EQ(0x00, cpu.C);
+
+    cpu.SP = 0x0011;
+    cpu.execute(0x3B, arg1, arg2);
+    EXPECT_EQ(0x0010, cpu.SP);
+}
+
+// Page 93
+TEST_F(TestCpu, DEC16_nn_LSBBorrow) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.B = 0x01;
+    cpu.C = 0x00;
+    cpu.execute(0x0B, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.B);
+    EXPECT_EQ(0xFF, cpu.C);
+
+    cpu.D = 0x02;
+    cpu.E = 0x00;
+    cpu.execute(0x1B, arg1, arg2);
+    EXPECT_EQ(0x01, cpu.D);
+    EXPECT_EQ(0xFF, cpu.E);
+
+    cpu.H = 0x01;
+    cpu.L = 0x00;
+    cpu.execute(0x2B, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.B);
+    EXPECT_EQ(0xFF, cpu.C);
+
+    cpu.SP = 0x0100;
+    cpu.execute(0x3B, arg1, arg2);
+    EXPECT_EQ(0x00FF, cpu.SP);
+}
+
+// Page 93
+TEST_F(TestCpu, DEC16_nn_MSBBorrow) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.B = 0x00;
+    cpu.C = 0x00;
+    cpu.execute(0x0B, arg1, arg2);
+    EXPECT_EQ(0xFF, cpu.B);
+    EXPECT_EQ(0xFF, cpu.C);
+
+    cpu.D = 0x00;
+    cpu.E = 0x00;
+    cpu.execute(0x1B, arg1, arg2);
+    EXPECT_EQ(0xFF, cpu.D);
+    EXPECT_EQ(0xFF, cpu.E);
+
+    cpu.H = 0x00;
+    cpu.L = 0x00;
+    cpu.execute(0x2B, arg1, arg2);
+    EXPECT_EQ(0xFF, cpu.B);
+    EXPECT_EQ(0xFF, cpu.C);
+
+    cpu.SP = 0x0000;
+    cpu.execute(0x3B, arg1, arg2);
+    EXPECT_EQ(0xFFFF, cpu.SP);
+}
