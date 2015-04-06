@@ -299,10 +299,11 @@ void CPU::OR(unsigned char &reg1, unsigned char reg2) {
 }
 
 void CPU::XOR(unsigned char &reg1, unsigned char reg2) {
-    //TODO: Check this
     reg1 = reg1 ^ reg2;
     flag.Z = (reg1 == 0); 
-    flag.N = false; flag.H = false; flag.C = false;
+    flag.N = false;
+    flag.H = false;
+    flag.C = false;
 }
 
 template<typename T>
