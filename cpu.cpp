@@ -219,7 +219,7 @@ void CPU::LDHL(unsigned short reg, unsigned char n) {
 template<>
 void CPU::ADD(unsigned char &reg1, unsigned char reg2) {
     flag.H = ((reg1 & 0x0F) + (reg2 & 0x0F) > 0x0F);
-    flag.C = (((reg1 & 0xF0) >> 4) + ((reg2 & 0xF0) >> 4) > 0x0F);
+    flag.C = (((int) reg1) + ((int) reg2) > 0xFF);
     reg1 += reg2;
     flag.Z = (reg1 == 0);
     flag.N = false;
@@ -236,9 +236,8 @@ void CPU::ADD(unsigned short &reg1, unsigned short reg2) {
 
 void CPU::ADD_16(unsigned char &reg1_lsb, unsigned char &reg1_msb, 
                  unsigned char reg2_lsb, unsigned char reg2_msb) {
-    //TODO: Check this
-    flag.H = (((reg1_msb & (1 << (11-7))) & (reg2_msb & (1 << (11-7)))) != 0);
-    flag.C = (((reg1_msb & (1 << (15-7))) & (reg2_msb & (1 << (15-7)))) != 0);
+    flag.H = ((reg1_msb & 0x0F) + (reg2_msb & 0x0F) > 0x0F);
+    flag.C = (((int) reg1_msb) + ((int) reg2_msb) > 0xFF);
     flag.N = false;
         
     unsigned short tmp = 0;
