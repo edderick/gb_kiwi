@@ -2518,3 +2518,199 @@ TEST_F(TestCpu, SBC_An_CarryIn_3Borrow) {
     EXPECT_EQ(false, cpu.flag.H);
     EXPECT_EQ(true, cpu.flag.C);
 }
+
+// Page 84
+TEST_F(TestCpu, AND_An_NonZero) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.A = 0x01;
+    cpu.execute(0xA7, arg1, arg2);
+    EXPECT_EQ(0x01, cpu.A);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.A = 0x0F;
+    cpu.B = 0x02;
+    cpu.execute(0xA0, arg1, arg2);
+    EXPECT_EQ(0x02, cpu.A);
+    EXPECT_EQ(0x02, cpu.B);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.A = 0x07;
+    cpu.C = 0x03;
+    cpu.execute(0xA1, arg1, arg2);
+    EXPECT_EQ(0x03, cpu.A);
+    EXPECT_EQ(0x03, cpu.C);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.A = 0xFF;
+    cpu.D = 0x44;
+    cpu.execute(0xA2, arg1, arg2);
+    EXPECT_EQ(0x44, cpu.A);
+    EXPECT_EQ(0x44, cpu.D);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.A = 0xFF;
+    cpu.E = 0x57;
+    cpu.execute(0xA3, arg1, arg2);
+    EXPECT_EQ(0x57, cpu.A);
+    EXPECT_EQ(0x57, cpu.E);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.A = 0x08;
+    cpu.H = 0xFF;
+    cpu.execute(0xA4, arg1, arg2);
+    EXPECT_EQ(0x08, cpu.A);
+    EXPECT_EQ(0xFF, cpu.H);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.A = 0x13;
+    cpu.L = 0xFF;
+    cpu.execute(0xA5, arg1, arg2);
+    EXPECT_EQ(0x13, cpu.A);
+    EXPECT_EQ(0xFF, cpu.L);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.A = 0xF0;
+    cpu.H = 0x00;
+    cpu.L = 0x01;
+    cpu.memory()[0x0001] = 0x85;
+    cpu.execute(0xA6, arg1, arg2);
+    EXPECT_EQ(0x80, cpu.A);
+    EXPECT_EQ(0x00, cpu.H);
+    EXPECT_EQ(0x01, cpu.L);
+    EXPECT_EQ(0x85, cpu.memory()[0x0001]);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.A = 0x67;
+    arg1 = 0xA3;
+    cpu.execute(0xE6, arg1, arg2);
+    EXPECT_EQ(0x67 & 0xA3, cpu.A);
+    EXPECT_EQ(0xA3, arg1);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+}
+
+// Page 84
+TEST_F(TestCpu, AND_An_Zero) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.A = 0x00;
+    cpu.execute(0xA7, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.A = 0x00;
+    cpu.B = 0x77;
+    cpu.execute(0xA0, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+    EXPECT_EQ(0x77, cpu.B);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.A = 0xF0;
+    cpu.C = 0x0F;
+    cpu.execute(0xA1, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+    EXPECT_EQ(0x0F, cpu.C);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.A = 0x0F;
+    cpu.D = 0xF0;
+    cpu.execute(0xA2, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+    EXPECT_EQ(0xF0, cpu.D);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.A = 0x04;
+    cpu.E = 0x08;
+    cpu.execute(0xA3, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+    EXPECT_EQ(0x08, cpu.E);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.A = 0x01;
+    cpu.H = 0x0A;
+    cpu.execute(0xA4, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+    EXPECT_EQ(0x0A, cpu.H);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.A = 0x20;
+    cpu.L = 0x02;
+    cpu.execute(0xA5, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+    EXPECT_EQ(0x02, cpu.L);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.A = 0x00;
+    cpu.H = 0x00;
+    cpu.L = 0x02;
+    cpu.memory()[0x0002] = 0x00;
+    cpu.execute(0xA6, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+    EXPECT_EQ(0x00, cpu.H);
+    EXPECT_EQ(0x02, cpu.L);
+    EXPECT_EQ(0x00, cpu.memory()[0x0002]);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.A = 0x00;
+    arg1 = 0x00;
+    cpu.execute(0xE6, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+    EXPECT_EQ(0x00, arg1);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+}
