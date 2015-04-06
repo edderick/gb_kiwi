@@ -316,7 +316,7 @@ void CPU::INC(T &reg) {
 
 template<typename T>
 void CPU::DEC(T &reg) {
-    flag.H = ((0xF & reg) == 0x0);
+    flag.H = !((0xF & reg) == 0x0);
     reg--;
     flag.Z = (reg == 0);
     flag.N = true; 
