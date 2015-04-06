@@ -4131,7 +4131,7 @@ TEST_F(TestCpu, ADD16_HLn_NoCarry) {
 }
 
 // Page 90
-TEST_F(TestCpu, ADD16_An_11Carry) {
+TEST_F(TestCpu, ADD16_HLn_11Carry) {
     unsigned char arg1;
     unsigned char arg2;
 
@@ -4193,7 +4193,7 @@ TEST_F(TestCpu, ADD16_An_11Carry) {
 }
 
 // Page 90
-TEST_F(TestCpu, ADD16_An_15Carry) {
+TEST_F(TestCpu, ADD16_HLn_15Carry) {
     unsigned char arg1;
     unsigned char arg2;
 
@@ -4255,7 +4255,7 @@ TEST_F(TestCpu, ADD16_An_15Carry) {
 }
 
 // Page 90
-TEST_F(TestCpu, ADD16_An_BothCarry) {
+TEST_F(TestCpu, ADD16_HLn_BothCarry) {
     unsigned char arg1;
     unsigned char arg2;
 
@@ -4311,6 +4311,66 @@ TEST_F(TestCpu, ADD16_An_BothCarry) {
     EXPECT_EQ(0x32, cpu.L);
     EXPECT_EQ(0xAA10, cpu.SP);
     EXPECT_EQ(OLD_Z, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(true, cpu.flag.C);
+}
+
+// Page 91
+TEST_F(TestCpu, ADD16_SPn_NoCarry) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.SP = 0x0001;
+    arg1 = 0x01;
+    cpu.execute(0xE8, arg1, arg2);
+    EXPECT_EQ(0x02, cpu.SP);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+}
+
+// Page 91
+TEST_F(TestCpu, ADD16_SPn_3Carry) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.SP = 0x000F;
+    arg1 = 0x01;
+    cpu.execute(0xE8, arg1, arg2);
+    EXPECT_EQ(0x0010, cpu.SP);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+}
+
+// Page 91
+TEST_F(TestCpu, ADD16_SPn_7Carry) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.SP = 0x00F0;
+    arg1 = 0x10;
+    cpu.execute(0xE8, arg1, arg2);
+    EXPECT_EQ(0x0100, cpu.SP);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(true, cpu.flag.C);
+}
+
+// Page 91
+TEST_F(TestCpu, ADD16_SPn_BothCarry) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.SP = 0x00FF;
+    arg1 = 0x01;
+    cpu.execute(0xE8, arg1, arg2);
+    EXPECT_EQ(0x0100, cpu.SP);
+    EXPECT_EQ(false, cpu.flag.Z);
     EXPECT_EQ(false, cpu.flag.N);
     EXPECT_EQ(true, cpu.flag.H);
     EXPECT_EQ(true, cpu.flag.C);

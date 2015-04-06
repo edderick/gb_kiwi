@@ -227,10 +227,10 @@ void CPU::ADD(unsigned char &reg1, unsigned char reg2) {
 
 template<>
 void CPU::ADD(unsigned short &reg1, unsigned short reg2) {
-    //TODO: Check this
-    flag.H = (((reg1 & (1 << 11)) & (reg2 & (1 << 11))) != 0);
-    flag.C = (((reg1 & (1 << 15)) & (reg2 & (1 << 15))) != 0);
+    flag.H = ((reg1 & 0x0F) + (reg2 & 0x0F) > 0x0F);
+    flag.C = (((int) reg1) + ((int) reg2) > 0xFF);
     reg1 += reg2;
+    flag.Z = false;
     flag.N = false;
 }
 
