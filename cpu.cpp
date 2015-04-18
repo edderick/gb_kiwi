@@ -357,6 +357,38 @@ void CPU::JUMP_R(unsigned char offset) {
     PC += (signed char) offset;
 }
 
+void CPU::DAA() {
+    bool carry = flag.C; 
+
+    unsigned char upperNibble = (0xF0 & A) >> 4; 
+    unsigned char lowerNibble = 0x0F & A; 
+
+    if (flag.H && lowerNibble <= 0x03) {
+        lowerNibble += 0x06; 
+    } else if (flag.H && lowerNibble >= 0x06) {
+        lowerNibble -= 0x06;
+    } else if (lowerNibble > 0x09) {
+        lowerNibble -= 0x0A;
+        upperNibble += 0x01; 
+    }
+
+    if (flag.C && upperNibble <= 0x03) {
+        upperNibble += 0x06; 
+    } else if (flag.C && upperNibble >= 0x06) {
+        upperNibble -= 0x06;
+        carry = true; 
+    } else if (upperNibble > 0x09) {
+        upperNibble -= 0x0A; 
+        carry = true; 
+    }
+    
+    A = (upperNibble << 4) | lowerNibble;
+
+    flag.Z = (A == 0x00);
+    flag.H = false;
+    flag.C = carry; 
+}
+
 void CPU::print_state() {
     using namespace std;
     //XXX:
@@ -673,7 +705,7 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
         
         /*** Miscellaneous ***/
         /* 2. DAA */ 
-        //TODO: DAA
+        case 0x27: DAA(); break;
 
         /* 3. CPL */
         case 0x2F: A = ~A; flag.N = true; flag.H = true; break;

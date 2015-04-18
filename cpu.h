@@ -87,6 +87,8 @@ class CPU {
     void JUMP(unsigned short addr); 
     void JUMP_R(unsigned char offset); 
 
+    void DAA();
+
     private:
     CPU(const CPU&);            // = delete
     CPU operator=(const CPU&);  // = delete
