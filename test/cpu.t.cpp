@@ -5175,3 +5175,51 @@ TEST_F(TestCpu, CPL_A) {
     EXPECT_EQ(true, cpu.flag.N);
     EXPECT_EQ(true, cpu.flag.H);
 }
+
+// Page 96
+TEST_F(TestCpu, CCF) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    bool OLD_Z;
+
+    OLD_Z = cpu.flag.Z;
+    cpu.flag.C = false;
+    cpu.execute(0x3F, arg1, arg2);
+    EXPECT_EQ(true, cpu.flag.C);
+    EXPECT_EQ(OLD_Z, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+
+    OLD_Z = cpu.flag.Z;
+    cpu.flag.C = true;
+    cpu.execute(0x3F, arg1, arg2);
+    EXPECT_EQ(false, cpu.flag.C);
+    EXPECT_EQ(OLD_Z, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+}
+
+// Page 96
+TEST_F(TestCpu, SCF) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    bool OLD_Z;
+
+    OLD_Z = cpu.flag.Z;
+    cpu.flag.C = false;
+    cpu.execute(0x37, arg1, arg2);
+    EXPECT_EQ(true, cpu.flag.C);
+    EXPECT_EQ(OLD_Z, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+
+    OLD_Z = cpu.flag.Z;
+    cpu.flag.C = true;
+    cpu.execute(0x37, arg1, arg2);
+    EXPECT_EQ(true, cpu.flag.C);
+    EXPECT_EQ(OLD_Z, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+}
