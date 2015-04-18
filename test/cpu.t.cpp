@@ -4707,3 +4707,412 @@ TEST_F(TestCpu, SWAP_n_Zero) {
     EXPECT_EQ(false, cpu.flag.H);
     EXPECT_EQ(false, cpu.flag.C);
 }
+
+#if 0
+This instruction is a little hard, so I based the test case on this table from
+http://www.z80.info/z80syntx.htm#DAA
+--------------------------------------------------------------------------------
+|           | C Flag  | HEX value in | H Flag | HEX value in | Number  | C flag|
+| Operation | Before  | upper digit  | Before | lower digit  | added   | After |
+|           | DAA     | (bit 7-4)    | DAA    | (bit 3-0)    | to byte | DAA   |
+|------------------------------------------------------------------------------|
+|01|        |    0    |     0-9      |   0    |     0-9      |   00    |   0   |
+|02|  ADD   |    0    |     0-8      |   0    |     A-F      |   06    |   0   |
+|03|        |    0    |     0-9      |   1    |     0-3      |   06    |   0   |
+|04|  ADC   |    0    |     A-F      |   0    |     0-9      |   60    |   1   |
+|05|        |    0    |     9-F      |   0    |     A-F      |   66    |   1   |
+|06|  INC   |    0    |     A-F      |   1    |     0-3      |   66    |   1   |
+|07|        |    1    |     0-2      |   0    |     0-9      |   60    |   1   |
+|08|        |    1    |     0-2      |   0    |     A-F      |   66    |   1   |
+|09|        |    1    |     0-3      |   1    |     0-3      |   66    |   1   |
+|--|---------------------------------------------------------------------------|
+|10|  SUB   |    0    |     0-9      |   0    |     0-9      |   00    |   0   |
+|11|  SBC   |    0    |     0-8      |   1    |     6-F      |   FA    |   0   |
+|12|  DEC   |    1    |     7-F      |   0    |     0-9      |   A0    |   1   |
+|13|  NEG   |    1    |     6-F      |   1    |     6-F      |   9A    |   1   |
+|------------------------------------------------------------------------------|
+#endif
+
+void doDAA(CPU &cpu,
+           unsigned char lower,
+           unsigned char upper,
+           unsigned char error,
+           bool C_before,
+           bool H_before,
+           bool C_after)
+{
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.flag.C = C_before;
+    cpu.flag.H = H_before;
+    cpu.A = lower | upper;
+    cpu.execute(0x27, arg1, arg2);
+    EXPECT_EQ((unsigned char) ((lower | upper) + error),
+              (unsigned char) cpu.A);
+    EXPECT_EQ(((unsigned char) ((lower | upper) + error)) == 0x00U,
+              cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(C_after, cpu.flag.C);
+}
+
+void testDAA(CPU &cpu,
+    unsigned char lowLower,
+    unsigned char midLower,
+    unsigned char hiLower,
+    unsigned char lowUpper,
+    unsigned char midUpper,
+    unsigned char hiUpper,
+    unsigned char error,
+    bool C_before,
+    bool H_before,
+    bool C_after)
+{
+    // Low-Low
+    doDAA(cpu,
+          lowLower, lowUpper, error,
+          C_before, H_before, C_after);
+
+    // Low-Mid
+    doDAA(cpu,
+          lowLower, midUpper, error,
+          C_before, H_before, C_after);
+
+    // Low-Hi
+    doDAA(cpu,
+          lowLower, hiUpper, error,
+          C_before, H_before, C_after);
+
+    // Mid-Low
+    doDAA(cpu,
+          midLower, lowUpper, error,
+          C_before, H_before, C_after);
+
+    // Mid-Mid
+    doDAA(cpu,
+          midLower, midUpper, error,
+          C_before, H_before, C_after);
+
+    // Mid-Hi
+    doDAA(cpu,
+          midLower, hiUpper, error,
+          C_before, H_before, C_after);
+
+    // Hi-Low
+    doDAA(cpu,
+          hiLower, lowUpper, error,
+          C_before, H_before, C_after);
+
+    // Hi-Mid
+    doDAA(cpu,
+          hiLower, midUpper, error,
+          C_before, H_before, C_after);
+
+    // Hi-Hi
+    doDAA(cpu,
+          hiLower, hiUpper, error,
+          C_before, H_before, C_after);
+}
+
+// Page 95
+TEST_F(TestCpu, DAA_Case_01) {
+    unsigned char lowUpper = 0x00;
+    unsigned char midUpper = 0x50;
+    unsigned char hiUpper  = 0x90;
+
+    unsigned char lowLower = 0x00;
+    unsigned char midLower = 0x05;
+    unsigned char hiLower  = 0x09;
+
+    unsigned char error = 0x00;
+
+    bool C_before = false;
+    bool H_before = false;
+    bool C_after  = false;
+
+    testDAA(cpu,
+            lowLower, midLower, hiLower,
+            lowUpper, midUpper, hiUpper,
+            error,
+            C_before, H_before, C_after);
+}
+
+// Page 95
+TEST_F(TestCpu, DAA_Case_02) {
+    unsigned char lowUpper = 0x00;
+    unsigned char midUpper = 0x40;
+    unsigned char hiUpper  = 0x80;
+
+    unsigned char lowLower = 0x0A;
+    unsigned char midLower = 0x0C;
+    unsigned char hiLower  = 0x0F;
+
+    unsigned char error = 0x06;
+
+    bool C_before = false;
+    bool H_before = false;
+    bool C_after  = false;
+
+    testDAA(cpu,
+            lowLower, midLower, hiLower,
+            lowUpper, midUpper, hiUpper,
+            error,
+            C_before, H_before, C_after);
+}
+
+// Page 95
+TEST_F(TestCpu, DAA_Case_03) {
+    unsigned char lowUpper = 0x00;
+    unsigned char midUpper = 0x40;
+    unsigned char hiUpper  = 0x90;
+
+    unsigned char lowLower = 0x00;
+    unsigned char midLower = 0x02;
+    unsigned char hiLower  = 0x03;
+
+    unsigned char error = 0x06;
+
+    bool C_before = false;
+    bool H_before = true;
+    bool C_after  = false;
+
+    testDAA(cpu,
+            lowLower, midLower, hiLower,
+            lowUpper, midUpper, hiUpper,
+            error,
+            C_before, H_before, C_after);
+}
+
+// Page 95
+TEST_F(TestCpu, DAA_Case_04) {
+    unsigned char lowUpper = 0xA0;
+    unsigned char midUpper = 0xC0;
+    unsigned char hiUpper  = 0xF0;
+
+    unsigned char lowLower = 0x00;
+    unsigned char midLower = 0x05;
+    unsigned char hiLower  = 0x09;
+
+    unsigned char error = 0x60;
+
+    bool C_before = false;
+    bool H_before = false;
+    bool C_after  = true;
+
+    testDAA(cpu,
+            lowLower, midLower, hiLower,
+            lowUpper, midUpper, hiUpper,
+            error,
+            C_before, H_before, C_after);
+}
+
+// Page 95
+TEST_F(TestCpu, DAA_Case_05) {
+    unsigned char lowUpper = 0x90;
+    unsigned char midUpper = 0xC0;
+    unsigned char hiUpper  = 0xF0;
+
+    unsigned char lowLower = 0x0A;
+    unsigned char midLower = 0x0C;
+    unsigned char hiLower  = 0x0F;
+
+    unsigned char error = 0x66;
+
+    bool C_before = false;
+    bool H_before = false;
+    bool C_after  = true;
+
+    testDAA(cpu,
+            lowLower, midLower, hiLower,
+            lowUpper, midUpper, hiUpper,
+            error,
+            C_before, H_before, C_after);
+}
+
+// Page 95
+TEST_F(TestCpu, DAA_Case_06) {
+    unsigned char lowUpper = 0xA0;
+    unsigned char midUpper = 0xC0;
+    unsigned char hiUpper  = 0xF0;
+
+    unsigned char lowLower = 0x00;
+    unsigned char midLower = 0x02;
+    unsigned char hiLower  = 0x03;
+
+    unsigned char error = 0x66;
+
+    bool C_before = false;
+    bool H_before = true;
+    bool C_after  = true;
+
+    testDAA(cpu,
+            lowLower, midLower, hiLower,
+            lowUpper, midUpper, hiUpper,
+            error,
+            C_before, H_before, C_after);
+}
+
+// Page 95
+TEST_F(TestCpu, DAA_Case_07) {
+    unsigned char lowUpper = 0x00;
+    unsigned char midUpper = 0x10;
+    unsigned char hiUpper  = 0x20;
+
+    unsigned char lowLower = 0x00;
+    unsigned char midLower = 0x05;
+    unsigned char hiLower  = 0x09;
+
+    unsigned char error = 0x60;
+
+    bool C_before = true;
+    bool H_before = false;
+    bool C_after  = true;
+
+    testDAA(cpu,
+            lowLower, midLower, hiLower,
+            lowUpper, midUpper, hiUpper,
+            error,
+            C_before, H_before, C_after);
+}
+
+// Page 95
+TEST_F(TestCpu, DAA_Case_08) {
+    unsigned char lowUpper = 0x00;
+    unsigned char midUpper = 0x10;
+    unsigned char hiUpper  = 0x20;
+
+    unsigned char lowLower = 0x0A;
+    unsigned char midLower = 0x0C;
+    unsigned char hiLower  = 0x0F;
+
+    unsigned char error = 0x66;
+
+    bool C_before = true;
+    bool H_before = false;
+    bool C_after  = true;
+
+    testDAA(cpu,
+            lowLower, midLower, hiLower,
+            lowUpper, midUpper, hiUpper,
+            error,
+            C_before, H_before, C_after);
+}
+
+// Page 95
+TEST_F(TestCpu, DAA_Case_09) {
+    unsigned char lowUpper = 0x00;
+    unsigned char midUpper = 0x10;
+    unsigned char hiUpper  = 0x30;
+
+    unsigned char lowLower = 0x00;
+    unsigned char midLower = 0x02;
+    unsigned char hiLower  = 0x03;
+
+    unsigned char error = 0x66;
+
+    bool C_before = true;
+    bool H_before = true;
+    bool C_after  = true;
+
+    testDAA(cpu,
+            lowLower, midLower, hiLower,
+            lowUpper, midUpper, hiUpper,
+            error,
+            C_before, H_before, C_after);
+}
+
+// Page 95
+TEST_F(TestCpu, DAA_Case_10) {
+    // Same as 01 but left in for completeness
+    unsigned char lowUpper = 0x00;
+    unsigned char midUpper = 0x50;
+    unsigned char hiUpper  = 0x90;
+
+    unsigned char lowLower = 0x00;
+    unsigned char midLower = 0x05;
+    unsigned char hiLower  = 0x09;
+
+    unsigned char error = 0x00;
+
+    bool C_before = false;
+    bool H_before = false;
+    bool C_after  = false;
+
+    testDAA(cpu,
+            lowLower, midLower, hiLower,
+            lowUpper, midUpper, hiUpper,
+            error,
+            C_before, H_before, C_after);
+}
+
+// Page 95
+TEST_F(TestCpu, DAA_Case_11) {
+    // Same as 01 but left in for completeness
+    unsigned char lowUpper = 0x00;
+    unsigned char midUpper = 0x40;
+    unsigned char hiUpper  = 0x80;
+
+    unsigned char lowLower = 0x06;
+    unsigned char midLower = 0x0A;
+    unsigned char hiLower  = 0x0F;
+
+    unsigned char error = 0xFA;
+
+    bool C_before = false;
+    bool H_before = true;
+    bool C_after  = false;
+
+    testDAA(cpu,
+            lowLower, midLower, hiLower,
+            lowUpper, midUpper, hiUpper,
+            error,
+            C_before, H_before, C_after);
+}
+
+// Page 95
+TEST_F(TestCpu, DAA_Case_12) {
+    // Same as 01 but left in for completeness
+    unsigned char lowUpper = 0x70;
+    unsigned char midUpper = 0x90;
+    unsigned char hiUpper  = 0xF0;
+
+    unsigned char lowLower = 0x00;
+    unsigned char midLower = 0x05;
+    unsigned char hiLower  = 0x09;
+
+    unsigned char error = 0xA0;
+
+    bool C_before = true;
+    bool H_before = false;
+    bool C_after  = true;
+
+    testDAA(cpu,
+            lowLower, midLower, hiLower,
+            lowUpper, midUpper, hiUpper,
+            error,
+            C_before, H_before, C_after);
+}
+
+// Page 95
+TEST_F(TestCpu, DAA_Case_13) {
+    // Same as 01 but left in for completeness
+    unsigned char lowUpper = 0x60;
+    unsigned char midUpper = 0x90;
+    unsigned char hiUpper  = 0xF0;
+
+    unsigned char lowLower = 0x06;
+    unsigned char midLower = 0x0A;
+    unsigned char hiLower  = 0x0F;
+
+    unsigned char error = 0x9A;
+
+    bool C_before = true;
+    bool H_before = true;
+    bool C_after  = true;
+
+    testDAA(cpu,
+            lowLower, midLower, hiLower,
+            lowUpper, midUpper, hiUpper,
+            error,
+            C_before, H_before, C_after);
+}
