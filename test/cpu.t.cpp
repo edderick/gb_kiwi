@@ -5223,3 +5223,51 @@ TEST_F(TestCpu, SCF) {
     EXPECT_EQ(false, cpu.flag.N);
     EXPECT_EQ(false, cpu.flag.H);
 }
+
+// Page 97
+TEST_F(TestCpu, NOP) {
+    // I decided to use this test to confirm that operations
+    // in general don't corrupt the state of the cpu.
+
+    unsigned char arg1 = 0x00;
+    unsigned char arg2 = 0x00;
+
+    bool OLD_flag_Z = cpu.flag.Z;
+    bool OLD_flag_H = cpu.flag.H;
+    bool OLD_flag_N = cpu.flag.N;
+    bool OLD_flag_C = cpu.flag.C;
+
+    unsigned char OLD_A = cpu.A;
+    unsigned char OLD_B = cpu.B;
+    unsigned char OLD_C = cpu.C;
+    unsigned char OLD_D = cpu.D;
+    unsigned char OLD_E = cpu.E;
+    unsigned char OLD_F = cpu.F;
+    unsigned char OLD_H = cpu.H;
+    unsigned char OLD_L = cpu.L;
+
+    unsigned short OLD_SP = cpu.SP;
+    unsigned short OLD_PC = cpu.PC;
+
+    cpu.execute(0x00, arg1, arg2);
+
+    EXPECT_EQ(0x00, arg1);
+    EXPECT_EQ(0x00, arg2);
+
+    EXPECT_EQ(OLD_flag_Z, cpu.flag.Z);
+    EXPECT_EQ(OLD_flag_H, cpu.flag.H);
+    EXPECT_EQ(OLD_flag_N, cpu.flag.N);
+    EXPECT_EQ(OLD_flag_C, cpu.flag.C);
+
+    EXPECT_EQ(OLD_A, cpu.A);
+    EXPECT_EQ(OLD_B, cpu.B);
+    EXPECT_EQ(OLD_C, cpu.C);
+    EXPECT_EQ(OLD_D, cpu.D);
+    EXPECT_EQ(OLD_E, cpu.E);
+    EXPECT_EQ(OLD_F, cpu.F);
+    EXPECT_EQ(OLD_H, cpu.H);
+    EXPECT_EQ(OLD_L, cpu.L);
+
+    EXPECT_EQ(OLD_SP, cpu.SP);
+    EXPECT_EQ(OLD_PC + 1, cpu.PC);
+}
