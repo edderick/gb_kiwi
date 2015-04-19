@@ -6661,3 +6661,1411 @@ TEST_F(TestCpu, SRL_n) {
     EXPECT_EQ(false, cpu.flag.H);
     EXPECT_EQ(false, cpu.flag.C);
 }
+
+// Page 108
+TEST_F(TestCpu, BIT_b_A) {
+    // I like the idea of writing these tests in functions to avoid repetition,
+    // but it makes it far too difficult to see exactly what is failing
+    // -- Viva la Repetition!
+
+    unsigned char arg1;
+    unsigned char arg2;
+
+    bool OLD_C;
+
+    // ============================== BIT ZERO ===============================
+    // All OFF
+    OLD_C = cpu.flag.C;
+    cpu.A = 0x00;
+    arg1 = 0x47;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+
+    // All ON
+    OLD_C = cpu.flag.C;
+    cpu.A = 0xFF;
+    arg1 = 0x47;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0xFF, cpu.A);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+
+    // Zero ON
+    OLD_C = cpu.flag.C;
+    cpu.A = 0x01;
+    arg1 = 0x47;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x01, cpu.A);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+
+    // Others ON
+    OLD_C = cpu.flag.C;
+    cpu.A = 0xFE;
+    arg1 = 0x47;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0xFE, cpu.A);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+
+    // ============================== BIT ONE ================================
+    // All OFF
+    OLD_C = cpu.flag.C;
+    cpu.A = 0x00;
+    arg1 = 0x4F;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+
+    // All ON
+    OLD_C = cpu.flag.C;
+    cpu.A = 0xFF;
+    arg1 = 0x4F;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0xFF, cpu.A);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+
+    // One ON
+    OLD_C = cpu.flag.C;
+    cpu.A = 0x02;
+    arg1 = 0x4F;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x02, cpu.A);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+
+    // Others ON
+    OLD_C = cpu.flag.C;
+    cpu.A = 0xFD;
+    arg1 = 0x4F;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0xFD, cpu.A);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+
+    // ============================== BIT TWO ================================
+    // All OFF
+    OLD_C = cpu.flag.C;
+    cpu.A = 0x00;
+    arg1 = 0x57;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+
+    // All ON
+    OLD_C = cpu.flag.C;
+    cpu.A = 0xFF;
+    arg1 = 0x57;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0xFF, cpu.A);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+
+    // Two ON
+    OLD_C = cpu.flag.C;
+    cpu.A = 0x04;
+    arg1 = 0x57;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x04, cpu.A);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+
+    // Others ON
+    OLD_C = cpu.flag.C;
+    cpu.A = 0xFB;
+    arg1 = 0x57;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0xFB, cpu.A);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+
+    // ============================== BIT THREE ==============================
+    // All OFF
+    OLD_C = cpu.flag.C;
+    cpu.A = 0x00;
+    arg1 = 0x5F;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+
+    // All ON
+    OLD_C = cpu.flag.C;
+    cpu.A = 0xFF;
+    arg1 = 0x5F;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0xFF, cpu.A);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+
+    // Three ON
+    OLD_C = cpu.flag.C;
+    cpu.A = 0x08;
+    arg1 = 0x5F;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x08, cpu.A);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+
+    // Others ON
+    OLD_C = cpu.flag.C;
+    cpu.A = 0xF7;
+    arg1 = 0x5F;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0xF7, cpu.A);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+
+    // ============================== BIT FOUR ===============================
+    // All OFF
+    OLD_C = cpu.flag.C;
+    cpu.A = 0x00;
+    arg1 = 0x67;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+
+    // All ON
+    OLD_C = cpu.flag.C;
+    cpu.A = 0xFF;
+    arg1 = 0x67;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0xFF, cpu.A);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+
+    // Four  ON
+    OLD_C = cpu.flag.C;
+    cpu.A = 0x10;
+    arg1 = 0x67;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x10, cpu.A);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+
+    // Others ON
+    OLD_C = cpu.flag.C;
+    cpu.A = 0xEF;
+    arg1 = 0x67;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0xEF, cpu.A);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+
+    // ============================== BIT FIVE ===============================
+    // All OFF
+    OLD_C = cpu.flag.C;
+    cpu.A = 0x00;
+    arg1 = 0x6F;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+
+    // All ON
+    OLD_C = cpu.flag.C;
+    cpu.A = 0xFF;
+    arg1 = 0x6F;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0xFF, cpu.A);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+
+    //Five ON
+    OLD_C = cpu.flag.C;
+    cpu.A = 0x20;
+    arg1 = 0x6F;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x20, cpu.A);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+
+    // Others ON
+    OLD_C = cpu.flag.C;
+    cpu.A = 0xDF;
+    arg1 = 0x6F;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0xDF, cpu.A);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+
+    // ============================== BIT SIX ================================
+    // All OFF
+    OLD_C = cpu.flag.C;
+    cpu.A = 0x00;
+    arg1 = 0x77;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+
+    // All ON
+    OLD_C = cpu.flag.C;
+    cpu.A = 0xFF;
+    arg1 = 0x77;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0xFF, cpu.A);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+
+    // Six ON
+    OLD_C = cpu.flag.C;
+    cpu.A = 0x40;
+    arg1 = 0x77;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x40, cpu.A);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+
+    // Others ON
+    OLD_C = cpu.flag.C;
+    cpu.A = 0xBF;
+    arg1 = 0x77;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0xBF, cpu.A);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+
+    // ============================== BIT SEVEN ==============================
+    // All OFF
+    OLD_C = cpu.flag.C;
+    cpu.A = 0x00;
+    arg1 = 0x7F;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+
+    // All ON
+    OLD_C = cpu.flag.C;
+    cpu.A = 0xFF;
+    arg1 = 0x7F;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0xFF, cpu.A);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+
+    // Seven ON
+    OLD_C = cpu.flag.C;
+    cpu.A = 0x80;
+    arg1 = 0x7F;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x80, cpu.A);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+
+    // Others ON
+    OLD_C = cpu.flag.C;
+    cpu.A = 0x7F;
+    arg1 = 0x7F;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x7F, cpu.A);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(true, cpu.flag.H);
+    EXPECT_EQ(OLD_C, cpu.flag.C);
+}
+
+// Page 108
+TEST_F(TestCpu, BIT_b_B) {
+    // This is not super thorough becuase it is only testing wiring, the actual
+    // business logic is tested in BIT_b_A.
+    unsigned char arg1;
+    unsigned char arg2;
+
+    // ============================== BIT ZERO ===============================
+    // OFF
+    cpu.B = 0x00;
+    arg1 = 0x40;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.B);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.B = 0x01;
+    arg1 = 0x40;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x01, cpu.B);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT ONE ================================
+    // OFF
+    cpu.B = 0x00;
+    arg1 = 0x48;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.B);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.B = 0x02;
+    arg1 = 0x48;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x02, cpu.B);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT TWO ================================
+    // OFF
+    cpu.B = 0x00;
+    arg1 = 0x50;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.B);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.B = 0x04;
+    arg1 = 0x50;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x04, cpu.B);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT THREE ==============================
+    // OFF
+    cpu.B = 0x00;
+    arg1 = 0x58;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.B);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.B = 0x08;
+    arg1 = 0x58;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x08, cpu.B);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT FOUR ===============================
+    // OFF
+    cpu.B = 0x00;
+    arg1 = 0x60;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.B);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.B = 0x10;
+    arg1 = 0x60;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x10, cpu.B);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT FIVE ===============================
+    // OFF
+    cpu.B = 0x00;
+    arg1 = 0x68;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.B);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.B = 0x20;
+    arg1 = 0x68;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x20, cpu.B);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT SIX ================================
+    // OFF
+    cpu.B = 0x00;
+    arg1 = 0x70;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.B);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.B = 0x40;
+    arg1 = 0x70;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x40, cpu.B);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT SEVEN ==============================
+    // OFF
+    cpu.B = 0x00;
+    arg1 = 0x78;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.B);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.B = 0x80;
+    arg1 = 0x78;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x80, cpu.B);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+}
+
+// Page 108
+TEST_F(TestCpu, BIT_b_C) {
+    // This is not super thorough becuase it is only testing wiring, the actual
+    // business logic is tested in BIT_b_A.
+    unsigned char arg1;
+    unsigned char arg2;
+
+    // ============================== BIT ZERO ===============================
+    // OFF
+    cpu.C = 0x00;
+    arg1 = 0x41;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.C);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.C = 0x01;
+    arg1 = 0x41;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x01, cpu.C);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT ONE ================================
+    // OFF
+    cpu.C = 0x00;
+    arg1 = 0x49;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.C);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.C = 0x02;
+    arg1 = 0x49;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x02, cpu.C);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT TWO ================================
+    // OFF
+    cpu.C = 0x00;
+    arg1 = 0x51;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.C);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.C = 0x04;
+    arg1 = 0x51;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x04, cpu.C);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT THREE ==============================
+    // OFF
+    cpu.C = 0x00;
+    arg1 = 0x59;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.C);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.C = 0x08;
+    arg1 = 0x59;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x08, cpu.C);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT FOUR ===============================
+    // OFF
+    cpu.C = 0x00;
+    arg1 = 0x61;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.C);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.C = 0x10;
+    arg1 = 0x61;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x10, cpu.C);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT FIVE ===============================
+    // OFF
+    cpu.C = 0x00;
+    arg1 = 0x69;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.C);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.C = 0x20;
+    arg1 = 0x69;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x20, cpu.C);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT SIX ================================
+    // OFF
+    cpu.C = 0x00;
+    arg1 = 0x71;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.C);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.C = 0x40;
+    arg1 = 0x71;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x40, cpu.C);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT SEVEN ==============================
+    // OFF
+    cpu.C = 0x00;
+    arg1 = 0x79;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.C);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.C = 0x80;
+    arg1 = 0x79;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x80, cpu.C);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+}
+
+// Page 108
+TEST_F(TestCpu, BIT_b_D) {
+    // This is not super thorough becuase it is only testing wiring, the actual
+    // business logic is tested in BIT_b_A.
+    unsigned char arg1;
+    unsigned char arg2;
+
+    // ============================== BIT ZERO ===============================
+    // OFF
+    cpu.D = 0x00;
+    arg1 = 0x42;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.D);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.D = 0x01;
+    arg1 = 0x42;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x01, cpu.D);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT ONE ================================
+    // OFF
+    cpu.D = 0x00;
+    arg1 = 0x4A;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.D);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.D = 0x02;
+    arg1 = 0x4A;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x02, cpu.D);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT TWO ================================
+    // OFF
+    cpu.D = 0x00;
+    arg1 = 0x52;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.D);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.D = 0x04;
+    arg1 = 0x52;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x04, cpu.D);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT THREE ==============================
+    // OFF
+    cpu.D = 0x00;
+    arg1 = 0x5A;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.D);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.D = 0x08;
+    arg1 = 0x5A;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x08, cpu.D);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT FOUR ===============================
+    // OFF
+    cpu.D = 0x00;
+    arg1 = 0x62;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.D);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.D = 0x10;
+    arg1 = 0x62;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x10, cpu.D);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT FIVE ===============================
+    // OFF
+    cpu.D = 0x00;
+    arg1 = 0x6A;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.D);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.D = 0x20;
+    arg1 = 0x6A;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x20, cpu.D);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT SIX ================================
+    // OFF
+    cpu.D = 0x00;
+    arg1 = 0x72;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.D);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.D = 0x40;
+    arg1 = 0x72;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x40, cpu.D);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT SEVEN ==============================
+    // OFF
+    cpu.D = 0x00;
+    arg1 = 0x7A;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.D);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.D = 0x80;
+    arg1 = 0x7A;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x80, cpu.D);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+}
+
+TEST_F(TestCpu, BIT_b_E) {
+    // This is not super thorough becuase it is only testing wiring, the actual
+    // business logic is tested in BIT_b_A.
+    unsigned char arg1;
+    unsigned char arg2;
+
+    // ============================== BIT ZERO ===============================
+    // OFF
+    cpu.E = 0x00;
+    arg1 = 0x43;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.E);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.E = 0x01;
+    arg1 = 0x43;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x01, cpu.E);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT ONE ================================
+    // OFF
+    cpu.E = 0x00;
+    arg1 = 0x4B;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.E);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.E = 0x02;
+    arg1 = 0x4B;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x02, cpu.E);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT TWO ================================
+    // OFF
+    cpu.E = 0x00;
+    arg1 = 0x53;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.E);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.E = 0x04;
+    arg1 = 0x53;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x04, cpu.E);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT THREE ==============================
+    // OFF
+    cpu.E = 0x00;
+    arg1 = 0x5B;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.E);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.E = 0x08;
+    arg1 = 0x5B;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x08, cpu.E);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT FOUR ===============================
+    // OFF
+    cpu.E = 0x00;
+    arg1 = 0x63;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.E);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.E = 0x10;
+    arg1 = 0x63;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x10, cpu.E);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT FIVE ===============================
+    // OFF
+    cpu.E = 0x00;
+    arg1 = 0x6B;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.E);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.E = 0x20;
+    arg1 = 0x6B;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x20, cpu.E);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT SIX ================================
+    // OFF
+    cpu.E = 0x00;
+    arg1 = 0x73;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.E);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.E = 0x40;
+    arg1 = 0x73;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x40, cpu.E);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT SEVEN ==============================
+    // OFF
+    cpu.E = 0x00;
+    arg1 = 0x7B;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.E);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.E = 0x80;
+    arg1 = 0x7B;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x80, cpu.E);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+}
+
+TEST_F(TestCpu, BIT_b_H) {
+    // This is not super thorough becuase it is only testing wiring, the actual
+    // business logic is tested in BIT_b_A.
+    unsigned char arg1;
+    unsigned char arg2;
+
+    // ============================== BIT ZERO ===============================
+    // OFF
+    cpu.H = 0x00;
+    arg1 = 0x44;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.H);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.H = 0x01;
+    arg1 = 0x44;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x01, cpu.H);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT ONE ================================
+    // OFF
+    cpu.H = 0x00;
+    arg1 = 0x4C;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.H);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.H = 0x02;
+    arg1 = 0x4C;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x02, cpu.H);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT TWO ================================
+    // OFF
+    cpu.H = 0x00;
+    arg1 = 0x54;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.H);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.H = 0x04;
+    arg1 = 0x54;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x04, cpu.H);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT THREE ==============================
+    // OFF
+    cpu.H = 0x00;
+    arg1 = 0x5C;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.H);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.H = 0x08;
+    arg1 = 0x5C;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x08, cpu.H);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT FOUR ===============================
+    // OFF
+    cpu.H = 0x00;
+    arg1 = 0x64;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.H);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.H = 0x10;
+    arg1 = 0x64;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x10, cpu.H);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT FIVE ===============================
+    // OFF
+    cpu.H = 0x00;
+    arg1 = 0x6C;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.H);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.H = 0x20;
+    arg1 = 0x6C;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x20, cpu.H);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT SIX ================================
+    // OFF
+    cpu.H = 0x00;
+    arg1 = 0x74;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.H);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.H = 0x40;
+    arg1 = 0x74;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x40, cpu.H);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT SEVEN ==============================
+    // OFF
+    cpu.H = 0x00;
+    arg1 = 0x7C;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.H);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.H = 0x80;
+    arg1 = 0x7C;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x80, cpu.H);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+}
+
+TEST_F(TestCpu, BIT_b_L) {
+    // This is not super thorough becuase it is only testing wiring, the actual
+    // business logic is tested in BIT_b_A.
+    unsigned char arg1;
+    unsigned char arg2;
+
+    // ============================== BIT ZERO ===============================
+    // OFF
+    cpu.L = 0x00;
+    arg1 = 0x45;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.L);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.L = 0x01;
+    arg1 = 0x45;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x01, cpu.L);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT ONE ================================
+    // OFF
+    cpu.L = 0x00;
+    arg1 = 0x4D;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.L);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.L = 0x02;
+    arg1 = 0x4D;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x02, cpu.L);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT TWO ================================
+    // OFF
+    cpu.L = 0x00;
+    arg1 = 0x55;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.L);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.L = 0x04;
+    arg1 = 0x55;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x04, cpu.L);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT THREE ==============================
+    // OFF
+    cpu.L = 0x00;
+    arg1 = 0x5D;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.L);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.L = 0x08;
+    arg1 = 0x5D;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x08, cpu.L);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT FOUR ===============================
+    // OFF
+    cpu.L = 0x00;
+    arg1 = 0x65;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.L);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.L = 0x10;
+    arg1 = 0x65;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x10, cpu.L);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT FIVE ===============================
+    // OFF
+    cpu.L = 0x00;
+    arg1 = 0x6D;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.L);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.L = 0x20;
+    arg1 = 0x6D;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x20, cpu.L);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT SIX ================================
+    // OFF
+    cpu.L = 0x00;
+    arg1 = 0x75;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.L);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.L = 0x40;
+    arg1 = 0x75;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x40, cpu.L);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT SEVEN ==============================
+    // OFF
+    cpu.L = 0x00;
+    arg1 = 0x7D;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.L);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.L = 0x80;
+    arg1 = 0x7D;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x80, cpu.L);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+}
+
+TEST_F(TestCpu, BIT_b_HL) {
+    // This is not super thorough becuase it is only testing wiring, the actual
+    // business logic is tested in BIT_b_A.
+    unsigned char arg1;
+    unsigned char arg2;
+
+    // ============================== BIT ZERO ===============================
+    // OFF
+    cpu.H = 0x00;
+    cpu.L = 0x01;
+    cpu.memory()[0x0001] = 0x00;
+    arg1 = 0x46;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.memory()[0x0001]);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.H = 0x00;
+    cpu.L = 0x01;
+    cpu.memory()[0x0001] = 0x01;
+    arg1 = 0x46;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x01, cpu.memory()[0x0001]);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT ONE ================================
+    // OFF
+    cpu.H = 0x00;
+    cpu.L = 0x01;
+    cpu.memory()[0x0001] = 0x00;
+    arg1 = 0x4E;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.memory()[0x0001]);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.H = 0x00;
+    cpu.L = 0x01;
+    cpu.memory()[0x0001] = 0x02;
+    arg1 = 0x4E;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x02, cpu.memory()[0x0001]);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT TWO ================================
+    // OFF
+    cpu.H = 0x00;
+    cpu.L = 0x01;
+    cpu.memory()[0x0001] = 0x00;
+    arg1 = 0x56;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.memory()[0x0001]);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.H = 0x00;
+    cpu.L = 0x01;
+    cpu.memory()[0x0001] = 0x04;
+    arg1 = 0x56;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x04, cpu.memory()[0x0001]);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT THREE ==============================
+    // OFF
+    cpu.H = 0x00;
+    cpu.L = 0x01;
+    cpu.memory()[0x0001] = 0x00;
+    arg1 = 0x5E;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.memory()[0x0001]);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.H = 0x00;
+    cpu.L = 0x01;
+    cpu.memory()[0x0001] = 0x08;
+    arg1 = 0x5E;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x08, cpu.memory()[0x0001]);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT FOUR ===============================
+    // OFF
+    cpu.H = 0x00;
+    cpu.L = 0x01;
+    cpu.memory()[0x0001] = 0x00;
+    arg1 = 0x66;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.memory()[0x0001]);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.H = 0x00;
+    cpu.L = 0x01;
+    cpu.memory()[0x0001] = 0x10;
+    arg1 = 0x66;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x10, cpu.memory()[0x0001]);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT FIVE ===============================
+    // OFF
+    cpu.H = 0x00;
+    cpu.L = 0x01;
+    cpu.memory()[0x0001] = 0x00;
+    arg1 = 0x6E;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.memory()[0x0001]);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.H = 0x00;
+    cpu.L = 0x01;
+    cpu.memory()[0x0001] = 0x20;
+    arg1 = 0x6E;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x20, cpu.memory()[0x0001]);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT SIX ===============================
+    // OFF
+    cpu.H = 0x00;
+    cpu.L = 0x01;
+    cpu.memory()[0x0001] = 0x00;
+    arg1 = 0x76;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.memory()[0x0001]);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.H = 0x00;
+    cpu.L = 0x01;
+    cpu.memory()[0x0001] = 0x40;
+    arg1 = 0x76;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x40, cpu.memory()[0x0001]);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+
+    // ============================== BIT SEVEN ===============================
+    // OFF
+    cpu.H = 0x00;
+    cpu.L = 0x01;
+    cpu.memory()[0x0001] = 0x00;
+    arg1 = 0x7E;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.memory()[0x0001]);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N); EXPECT_EQ(true, cpu.flag.H);
+
+    // ON
+    cpu.H = 0x00;
+    cpu.L = 0x01;
+    cpu.memory()[0x0001] = 0x80;
+    arg1 = 0x7E;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x80, cpu.memory()[0x0001]);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);  EXPECT_EQ(true, cpu.flag.H);
+}
