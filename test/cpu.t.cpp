@@ -5664,3 +5664,376 @@ TEST_F(TestCpu, RRA) {
     EXPECT_EQ(false, cpu.flag.H);
     EXPECT_EQ(true, cpu.flag.C);
 }
+
+// Page 101
+TEST_F(TestCpu, RLC_n) {
+    // For the sake of brevity, only a single case from each OP Code has been
+    // tested. The full functionality was tested in RCLA:  all this test is
+    // really checking for is correct "wiring".
+
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.flag.C = false;
+    cpu.A = 0x00;
+    arg1 = 0x07;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.flag.C = false;
+    cpu.B = 0x01;
+    arg1 = 0x00;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x02, cpu.B);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.flag.C = false;
+    cpu.C = 0x08;
+    arg1 = 0x01;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x10, cpu.C);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.flag.C = false;
+    cpu.D = 0x0F;
+    arg1 = 0x02;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x1E, cpu.D);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.flag.C = false;
+    cpu.E = 0x10;
+    arg1 = 0x03;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x20, cpu.E);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.flag.C = false;
+    cpu.H = 0x80;
+    arg1 = 0x04;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x01, cpu.H);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(true, cpu.flag.C);
+
+    cpu.flag.C = true;
+    cpu.L = 0x00;
+    arg1 = 0x05;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.L);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.flag.C = true;
+    cpu.H = 0x00;
+    cpu.L = 0x01;
+    cpu.memory()[0x0001] = 0x01;
+    arg1 = 0x06;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.H);
+    EXPECT_EQ(0x01, cpu.L);
+    EXPECT_EQ(0x02, cpu.memory()[0x0001]);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+}
+
+// Page 102
+TEST_F(TestCpu, RL_n) {
+    // For the sake of brevity, only a single case from each OP Code has been
+    // tested. The full functionality was tested in RLA:  all this test is
+    // really checking for is correct "wiring".
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.flag.C = false;
+    cpu.A = 0x00;
+    arg1 = 0x17;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.flag.C = false;
+    cpu.B = 0x01;
+    arg1 = 0x10;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x02, cpu.B);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.flag.C = false;
+    cpu.C = 0x08;
+    arg1 = 0x11;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x10, cpu.C);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.flag.C = false;
+    cpu.D = 0x0F;
+    arg1 = 0x12;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x1E, cpu.D);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.flag.C = false;
+    cpu.E = 0x10;
+    arg1 = 0x13;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x20, cpu.E);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.flag.C = false;
+    cpu.H = 0x80;
+    arg1 = 0x14;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.H);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(true, cpu.flag.C);
+
+    cpu.flag.C = true;
+    cpu.L = 0x00;
+    arg1 = 0x15;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x01, cpu.L);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.flag.C = true;
+    cpu.H = 0x00;
+    cpu.L = 0x01;
+    cpu.memory()[0x0001] = 0x01;
+    arg1 = 0x16;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.H);
+    EXPECT_EQ(0x01, cpu.L);
+    EXPECT_EQ(0x03, cpu.memory()[0x0001]);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+}
+
+// Page 103
+TEST_F(TestCpu, RRC_n) {
+    // For the sake of brevity, only a single case from each OP Code has been
+    // tested. The full functionality was tested in RLA:  all this test is
+    // really checking for is correct "wiring".
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.flag.C = false;
+    cpu.A = 0x00;
+    arg1 = 0x0F;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.flag.C = false;
+    cpu.B = 0x80;
+    arg1 = 0x08;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x40, cpu.B);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.flag.C = false;
+    cpu.C = 0x10;
+    arg1 = 0x09;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x08, cpu.C);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.flag.C = false;
+    cpu.D = 0xF0;
+    arg1 = 0x0A;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x78, cpu.D);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.flag.C = false;
+    cpu.E = 0x08;
+    arg1 = 0x0B;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x04, cpu.E);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.flag.C = false;
+    cpu.H = 0x01;
+    arg1 = 0x0C;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x80, cpu.H);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(true, cpu.flag.C);
+
+    cpu.flag.C = true;
+    cpu.L = 0x00;
+    arg1 = 0x0D;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.L);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.flag.C = true;
+    cpu.H = 0x00;
+    cpu.L = 0x01;
+    cpu.memory()[0x0001] = 0x80;
+    arg1 = 0x0E;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.H);
+    EXPECT_EQ(0x01, cpu.L);
+    EXPECT_EQ(0x40, cpu.memory()[0x0001]);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+}
+
+// Page 104
+TEST_F(TestCpu, RR_n) {
+    // For the sake of brevity, only a single case from each OP Code has been
+    // tested. The full functionality was tested in RLA:  all this test is
+    // really checking for is correct "wiring".
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.flag.C = false;
+    cpu.A = 0x00;
+    arg1 = 0x1F;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.flag.C = false;
+    cpu.B = 0x80;
+    arg1 = 0x18;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x40, cpu.B);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.flag.C = false;
+    cpu.C = 0x10;
+    arg1 = 0x19;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x08, cpu.C);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.flag.C = false;
+    cpu.D = 0xF0;
+    arg1 = 0x1A;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x78, cpu.D);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.flag.C = false;
+    cpu.E = 0x08;
+    arg1 = 0x1B;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x04, cpu.E);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.flag.C = false;
+    cpu.H = 0x01;
+    arg1 = 0x1C;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.H);
+    EXPECT_EQ(true, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(true, cpu.flag.C);
+
+    cpu.flag.C = true;
+    cpu.L = 0x00;
+    arg1 = 0x1D;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x80, cpu.L);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+
+    cpu.flag.C = true;
+    cpu.H = 0x00;
+    cpu.L = 0x01;
+    cpu.memory()[0x0001] = 0x80;
+    arg1 = 0x1E;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.H);
+    EXPECT_EQ(0x01, cpu.L);
+    EXPECT_EQ(0xC0, cpu.memory()[0x0001]);
+    EXPECT_EQ(false, cpu.flag.Z);
+    EXPECT_EQ(false, cpu.flag.N);
+    EXPECT_EQ(false, cpu.flag.H);
+    EXPECT_EQ(false, cpu.flag.C);
+}
