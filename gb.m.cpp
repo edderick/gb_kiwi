@@ -18,6 +18,7 @@ int main() {
         i++;
         cpu.fetch_and_execute();
         graphics.step(1);
+        if ((i % 300) == 0) graphics.dump_display();
     }
 
     std::cout << std::endl; //XXX: Voodoo...

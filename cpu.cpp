@@ -47,7 +47,7 @@ unsigned char EX_OP_cycles[0x100] = {
 unsigned char OP_len[0x100] = {  
     /*     x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, xA, xB, xC, xD, xE, xF, */
     /*0x*/  1,  3,  1,  1,  1,  1,  2,  1,  3,  1,  1,  1,  1,  1,  2,  1,
-    /*1x*/  0,  3,  1,  1,  1,  1,  2,  1,  0,  1,  1,  1,  1,  1,  2,  1,
+    /*1x*/  0,  3,  1,  1,  1,  1,  2,  1,  2,  1,  1,  1,  1,  1,  2,  1,
     /*2x*/  2,  3,  1,  1,  1,  1,  2,  0,  2,  1,  1,  1,  1,  1,  2,  1,
     /*3x*/  2,  3,  1,  1,  1,  1,  2,  1,  2,  1,  1,  1,  1,  1,  2,  1,
     /*4x*/  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
@@ -925,22 +925,18 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
         /* 5. JR cc,n */ 
         case 0x20: if (!flag.Z) {
                        JUMP_R(ARG1);
-                       PC -= 2;
                    }
         break;
         case 0x28: if (flag.Z) {
                        JUMP_R(ARG1);
-                       PC -= 2;
                    }
         break;
         case 0x30: if (!flag.C) {
                        JUMP_R(ARG1);
-                       PC -= 2;
                    }
         break;
         case 0x38: if (flag.C) {
                        JUMP_R(ARG1);
-                       PC -= 2;
                    }
         break;
 

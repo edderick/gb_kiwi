@@ -9214,17 +9214,17 @@ TEST_F(TestCpu, JR_n) {
     cpu.PC = 0x0000;
     arg1 = 0x01;
     cpu.execute(0x18, arg1, arg2);
-    EXPECT_EQ(0x0001, cpu.PC);
+    EXPECT_EQ(0x0003, cpu.PC);
 
     cpu.PC = 0xAB00;
     arg1 = 0x0F;
     cpu.execute(0x18, arg1, arg2);
-    EXPECT_EQ(0xAB0F, cpu.PC);
+    EXPECT_EQ(0xAB11, cpu.PC);
 
     cpu.PC = 0xAB01;
     arg1 = 0xFF;
     cpu.execute(0x18, arg1, arg2);
-    EXPECT_EQ(0xAB00, cpu.PC);
+    EXPECT_EQ(0xAB02, cpu.PC);
 }
 
 // Page 113
@@ -9242,19 +9242,19 @@ TEST_F(TestCpu, JR_NZ_n) {
     cpu.flag.Z = false;
     arg1 = 0x01;
     cpu.execute(0x20, arg1, arg2);
-    EXPECT_EQ(0x0001, cpu.PC);
+    EXPECT_EQ(0x0003, cpu.PC);
 
     cpu.PC = 0xAB00;
     cpu.flag.Z = false;
     arg1 = 0x0F;
     cpu.execute(0x20, arg1, arg2);
-    EXPECT_EQ(0xAB0F, cpu.PC);
+    EXPECT_EQ(0xAB11, cpu.PC);
 
     cpu.PC = 0xAB01;
     cpu.flag.Z = false;
     arg1 = 0xFF;
     cpu.execute(0x20, arg1, arg2);
-    EXPECT_EQ(0xAB00, cpu.PC);
+    EXPECT_EQ(0xAB02, cpu.PC);
 }
 
 // Page 113
@@ -9272,19 +9272,19 @@ TEST_F(TestCpu, JR_Z_n) {
     cpu.flag.Z = true;
     arg1 = 0x01;
     cpu.execute(0x28, arg1, arg2);
-    EXPECT_EQ(0x0001, cpu.PC);
+    EXPECT_EQ(0x0003, cpu.PC);
 
     cpu.PC = 0xAB00;
     cpu.flag.Z = true;
     arg1 = 0x0F;
     cpu.execute(0x28, arg1, arg2);
-    EXPECT_EQ(0xAB0F, cpu.PC);
+    EXPECT_EQ(0xAB11, cpu.PC);
 
     cpu.PC = 0xAB01;
     cpu.flag.Z = true;
     arg1 = 0xFF;
     cpu.execute(0x28, arg1, arg2);
-    EXPECT_EQ(0xAB00, cpu.PC);
+    EXPECT_EQ(0xAB02, cpu.PC);
 }
 
 // Page 113
@@ -9302,19 +9302,19 @@ TEST_F(TestCpu, JR_NC_n) {
     cpu.flag.C = false;
     arg1 = 0x01;
     cpu.execute(0x30, arg1, arg2);
-    EXPECT_EQ(0x0001, cpu.PC);
+    EXPECT_EQ(0x0003, cpu.PC);
 
     cpu.PC = 0xAB00;
     cpu.flag.C = false;
     arg1 = 0x0F;
     cpu.execute(0x30, arg1, arg2);
-    EXPECT_EQ(0xAB0F, cpu.PC);
+    EXPECT_EQ(0xAB11, cpu.PC);
 
     cpu.PC = 0xAB01;
     cpu.flag.C = false;
     arg1 = 0xFF;
     cpu.execute(0x30, arg1, arg2);
-    EXPECT_EQ(0xAB00, cpu.PC);
+    EXPECT_EQ(0xAB02, cpu.PC);
 }
 
 // Page 113
@@ -9332,17 +9332,17 @@ TEST_F(TestCpu, JR_C_n) {
     cpu.flag.C = true;
     arg1 = 0x01;
     cpu.execute(0x38, arg1, arg2);
-    EXPECT_EQ(0x0001, cpu.PC);
+    EXPECT_EQ(0x0003, cpu.PC);
 
     cpu.PC = 0xAB00;
     cpu.flag.C = true;
     arg1 = 0x0F;
     cpu.execute(0x38, arg1, arg2);
-    EXPECT_EQ(0xAB0F, cpu.PC);
+    EXPECT_EQ(0xAB11, cpu.PC);
 
     cpu.PC = 0xAB01;
     cpu.flag.C = true;
     arg1 = 0xFF;
     cpu.execute(0x38, arg1, arg2);
-    EXPECT_EQ(0xAB00, cpu.PC);
+    EXPECT_EQ(0xAB02, cpu.PC);
 }
