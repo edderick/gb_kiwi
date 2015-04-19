@@ -9504,3 +9504,125 @@ TEST_F(TestCpu, RST_n) {
     EXPECT_EQ(0x33, cpu.memory()[cpu.SP]);
     EXPECT_EQ(0x00, cpu.memory()[cpu.SP + 1]);
 }
+
+// Page 117
+TEST_F(TestCpu, RET) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    unsigned short OLD_SP = cpu.SP;
+
+    cpu.PC = 0x1234;
+
+    // Push some bytes
+    cpu.execute(0xFF, arg1, arg2);
+
+    cpu.execute(0xC9, arg1, arg2);
+    EXPECT_EQ(0x1234 + 0x03, cpu.PC);
+    EXPECT_EQ(OLD_SP, cpu.SP);
+}
+
+// Page 117
+TEST_F(TestCpu, RET_NZ) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    unsigned short OLD_SP = cpu.SP;
+
+    cpu.PC = 0x1234;
+
+    // Push some bytes
+    cpu.execute(0xFF, arg1, arg2);
+
+    cpu.flag.Z = true;
+    cpu.execute(0xC0, arg1, arg2);
+    EXPECT_EQ(0x0038 + 0x01, cpu.PC);
+
+    cpu.flag.Z = false;
+    cpu.execute(0xC0, arg1, arg2);
+    EXPECT_EQ(0x1234 + 0x03, cpu.PC);
+    EXPECT_EQ(OLD_SP, cpu.SP);
+}
+
+// Page 117
+TEST_F(TestCpu, RET_Z) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    unsigned short OLD_SP = cpu.SP;
+
+    cpu.PC = 0x1234;
+
+    // Push some bytes
+    cpu.execute(0xFF, arg1, arg2);
+
+    cpu.flag.Z = false;
+    cpu.execute(0xC8, arg1, arg2);
+    EXPECT_EQ(0x0038 + 0x01, cpu.PC);
+
+    cpu.flag.Z = true;
+    cpu.execute(0xC8, arg1, arg2);
+    EXPECT_EQ(0x1234 + 0x03, cpu.PC);
+    EXPECT_EQ(OLD_SP, cpu.SP);
+}
+
+// Page 117
+TEST_F(TestCpu, RET_NC) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    unsigned short OLD_SP = cpu.SP;
+
+    cpu.PC = 0x1234;
+
+    // Push some bytes
+    cpu.execute(0xFF, arg1, arg2);
+
+    cpu.flag.C = true;
+    cpu.execute(0xD0, arg1, arg2);
+    EXPECT_EQ(0x0038 + 0x01, cpu.PC);
+
+    cpu.flag.C = false;
+    cpu.execute(0xD0, arg1, arg2);
+    EXPECT_EQ(0x1234 + 0x03, cpu.PC);
+    EXPECT_EQ(OLD_SP, cpu.SP);
+}
+
+// Page 117
+TEST_F(TestCpu, RET_C) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    unsigned short OLD_SP = cpu.SP;
+
+    cpu.PC = 0x1234;
+
+    // Push some bytes
+    cpu.execute(0xFF, arg1, arg2);
+
+    cpu.flag.C = false;
+    cpu.execute(0xD8, arg1, arg2);
+    EXPECT_EQ(0x0038 + 0x01, cpu.PC);
+
+    cpu.flag.C = true;
+    cpu.execute(0xD8, arg1, arg2);
+    EXPECT_EQ(0x1234 + 0x03, cpu.PC);
+    EXPECT_EQ(OLD_SP, cpu.SP);
+}
+
+// Page 118
+TEST_F(TestCpu, RETI) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    unsigned short OLD_SP = cpu.SP;
+
+    cpu.PC = 0x1234;
+
+    // Push some bytes
+    cpu.execute(0xFF, arg1, arg2);
+
+    cpu.execute(0xD9, arg1, arg2);
+    EXPECT_EQ(0x1234 + 0x03, cpu.PC);
+    EXPECT_EQ(OLD_SP, cpu.SP);
+}
