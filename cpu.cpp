@@ -720,10 +720,13 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
         case 0x00: break;        
 
         /* 7. HALT */ 
-        //TODO: case 0x76: 
-        
+        //TODO: Implement this
+        case 0x76: std::cout << "WARNING: Attempting to HALT!"
+                             << std::endl;
         /* 8. STOP */
-        //TODO: case 0x10:
+        //TODO: Implement this
+        case 0x10: std::cout << "WARNING: Attempting to STOP!"
+                             << std::endl;
 
         /* 9. DI */
         //TODO: Implement this 
@@ -979,7 +982,8 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
         /* 3. RETI */ 
         //TODO: case 0xD9
         case 0xD9: PC = pop_addr();
-                   std::cout << "WARNING: Attempting to enable interrupts!"
+                   std::cout << "WARNING: Attempting to enable interrupts"
+                                "(RETI)!"
                              << std::endl;
         break;
         
