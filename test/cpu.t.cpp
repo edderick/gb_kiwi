@@ -9456,3 +9456,51 @@ TEST_F(TestCpu, CALL_C_nn) {
     EXPECT_EQ(0x06, cpu.memory()[cpu.SP]);
     EXPECT_EQ(0x00, cpu.memory()[cpu.SP + 1]);
 }
+
+// Page 116
+TEST_F(TestCpu, RST_n) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.PC = 0x0000;
+
+    cpu.execute(0xC7, arg1, arg2);
+    EXPECT_EQ(0x0000, cpu.PC);
+    EXPECT_EQ(0x03, cpu.memory()[cpu.SP]);
+    EXPECT_EQ(0x00, cpu.memory()[cpu.SP + 1]);
+
+    cpu.execute(0xCF, arg1, arg2);
+    EXPECT_EQ(0x0008, cpu.PC);
+    EXPECT_EQ(0x03, cpu.memory()[cpu.SP]);
+    EXPECT_EQ(0x00, cpu.memory()[cpu.SP + 1]);
+
+    cpu.execute(0xD7, arg1, arg2);
+    EXPECT_EQ(0x0010, cpu.PC);
+    EXPECT_EQ(0x0B, cpu.memory()[cpu.SP]);
+    EXPECT_EQ(0x00, cpu.memory()[cpu.SP + 1]);
+
+    cpu.execute(0xDF, arg1, arg2);
+    EXPECT_EQ(0x0018, cpu.PC);
+    EXPECT_EQ(0x13, cpu.memory()[cpu.SP]);
+    EXPECT_EQ(0x00, cpu.memory()[cpu.SP + 1]);
+
+    cpu.execute(0xE7, arg1, arg2);
+    EXPECT_EQ(0x0020, cpu.PC);
+    EXPECT_EQ(0x1B, cpu.memory()[cpu.SP]);
+    EXPECT_EQ(0x00, cpu.memory()[cpu.SP + 1]);
+
+    cpu.execute(0xEF, arg1, arg2);
+    EXPECT_EQ(0x0028, cpu.PC);
+    EXPECT_EQ(0x23, cpu.memory()[cpu.SP]);
+    EXPECT_EQ(0x00, cpu.memory()[cpu.SP + 1]);
+
+    cpu.execute(0xF7, arg1, arg2);
+    EXPECT_EQ(0x0030, cpu.PC);
+    EXPECT_EQ(0x2B, cpu.memory()[cpu.SP]);
+    EXPECT_EQ(0x00, cpu.memory()[cpu.SP + 1]);
+
+    cpu.execute(0xFF, arg1, arg2);
+    EXPECT_EQ(0x0038, cpu.PC);
+    EXPECT_EQ(0x33, cpu.memory()[cpu.SP]);
+    EXPECT_EQ(0x00, cpu.memory()[cpu.SP + 1]);
+}

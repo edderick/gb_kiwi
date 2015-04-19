@@ -972,14 +972,14 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
         
         /*** Restarts ***/ 
         /* 1. RST n*/
-        case 0xC7: push_addr(PC + 1); JUMP(0x00); break;
-        case 0xCF: push_addr(PC + 1); JUMP(0x08); break;
-        case 0xD7: push_addr(PC + 1); JUMP(0x10); break;
-        case 0xDF: push_addr(PC + 1); JUMP(0x18); break;
-        case 0xE7: push_addr(PC + 1); JUMP(0x20); break;
-        case 0xEF: push_addr(PC + 1); JUMP(0x28); break;
-        case 0xF7: push_addr(PC + 1); JUMP(0x30); break;
-        case 0xFF: push_addr(PC + 1); JUMP(0x38); break;
+        case 0xC7: push_addr(PC + 3); JUMP(0x00); break;
+        case 0xCF: push_addr(PC + 3); JUMP(0x08); break;
+        case 0xD7: push_addr(PC + 3); JUMP(0x10); break;
+        case 0xDF: push_addr(PC + 3); JUMP(0x18); break;
+        case 0xE7: push_addr(PC + 3); JUMP(0x20); break;
+        case 0xEF: push_addr(PC + 3); JUMP(0x28); break;
+        case 0xF7: push_addr(PC + 3); JUMP(0x30); break;
+        case 0xFF: push_addr(PC + 3); JUMP(0x38); break;
 
         /*** Returns ***/
         /* 1. RET */ 
