@@ -999,6 +999,27 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
                              << std::endl;
         break;
         
+        default:
+                if (d_lastOpCode != OP_CODE) {
+                     std::cout << "Unrecognised OP Code! "
+                           << std::hex << (int) OP_CODE << "\n"
+                           << "    Context: "
+                           << std::hex << (int) d_memory[PC - 9] << " "
+                           << std::hex << (int) d_memory[PC - 8] << " "
+                           << std::hex << (int) d_memory[PC - 7] << " | "
+                           << std::hex << (int) d_memory[PC - 6] << " "
+                           << std::hex << (int) d_memory[PC - 5] << " "
+                           << std::hex << (int) d_memory[PC - 4] << " | "
+                           << std::hex << (int) d_memory[PC - 3] << " "
+                           << std::hex << (int) d_memory[PC - 2] << " "
+                           << std::hex << (int) d_memory[PC - 1] << " "
+                           << "    Last Operation: "
+                           << std::hex << (int) d_lastOpCode << " "
+                           << std::hex << (int) d_lastArg1 << " "
+                           << std::hex << (int) d_lastArg2 << "\n";
+                }
+                PC++; // Treat it as a NOOP
+        break;
     }
 
 
@@ -1010,6 +1031,10 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
         CLK += EX_OP_cycles[EX_OP_CODE]; 
         PC += EX_OP_len[EX_OP_CODE];
     }
+
+    d_lastOpCode = OP_CODE;
+    d_lastArg1 = ARG1;
+    d_lastArg2 = ARG2;
 
     return 0;
 }

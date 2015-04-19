@@ -31,6 +31,11 @@ class CPU {
     } flag;
 
     private:
+    // PRIVATE DATA
+    unsigned char d_lastOpCode;
+    unsigned char d_lastArg1;
+    unsigned char d_lastArg2;
+
     // PRIVATE MANIPULATORS
     void increment_pair(unsigned char &LSB, unsigned char &MSB);
     void decrement_pair(unsigned char &LSB, unsigned char &MSB);
