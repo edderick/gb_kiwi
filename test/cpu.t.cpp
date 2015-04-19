@@ -8584,3 +8584,514 @@ TEST_F(TestCpu, SET_b_HL) {
     cpu.execute(0xCB, arg1, arg2);
     EXPECT_EQ(0x80, cpu.memory()[0x0001]);
 }
+
+// Page 110
+TEST_F(TestCpu, RES_b_A) {
+    // Set_b_A is overly thorough, so the others don't have to be...
+    // That's the theory at least :)
+
+    unsigned char arg1;
+    unsigned char arg2;
+
+    // ============================ NOT SET ==================================
+    cpu.A = 0x00;
+    arg1 = 0x87;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+
+    cpu.A = 0x00;
+    arg1 = 0x8F;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+
+    cpu.A = 0x00;
+    arg1 = 0x97;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+
+    cpu.A = 0x00;
+    arg1 = 0x9F;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+
+    cpu.A = 0x00;
+    arg1 = 0xA7;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+
+    cpu.A = 0x00;
+    arg1 = 0xAF;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+
+    cpu.A = 0x00;
+    arg1 = 0xB7;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+
+    cpu.A = 0x00;
+    arg1 = 0xBF;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+
+    // ============================== SET ====================================
+    cpu.A = 0x01;
+    arg1 = 0x87;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+
+    cpu.A = 0x02;
+    arg1 = 0x8F;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+
+    cpu.A = 0x04;
+    arg1 = 0x97;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+
+    cpu.A = 0x08;
+    arg1 = 0x9F;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+
+    cpu.A = 0x10;
+    arg1 = 0xA7;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+
+    cpu.A = 0x20;
+    arg1 = 0xAF;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+
+    cpu.A = 0x40;
+    arg1 = 0xB7;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+
+    cpu.A = 0x80;
+    arg1 = 0xBF;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.A);
+
+    // ========================== ALL SET ====================================
+    cpu.A = 0xFF;
+    arg1 = 0x87;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0xFE, cpu.A);
+
+    cpu.A = 0xFF;
+    arg1 = 0x8F;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0xFD, cpu.A);
+
+    cpu.A = 0xFF;
+    arg1 = 0x97;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0xFB, cpu.A);
+
+    cpu.A = 0xFF;
+    arg1 = 0x9F;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0xF7, cpu.A);
+
+    cpu.A = 0xFF;
+    arg1 = 0xA7;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0xEF, cpu.A);
+
+    cpu.A = 0xFF;
+    arg1 = 0xAF;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0xDF, cpu.A);
+
+    cpu.A = 0xFF;
+    arg1 = 0xB7;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0xBF, cpu.A);
+
+    cpu.A = 0xFF;
+    arg1 = 0xBF;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x7F, cpu.A);
+
+    // ======================= OTHERS SET ====================================
+    cpu.A = 0xFE;
+    arg1 = 0x87;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0xFE, cpu.A);
+
+    cpu.A = 0xFD;
+    arg1 = 0x8F;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0xFD, cpu.A);
+
+    cpu.A = 0xFB;
+    arg1 = 0x97;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0xFB, cpu.A);
+
+    cpu.A = 0xF7;
+    arg1 = 0x9F;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0xF7, cpu.A);
+
+    cpu.A = 0xEF;
+    arg1 = 0xA7;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0xEF, cpu.A);
+
+    cpu.A = 0xDF;
+    arg1 = 0xAF;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0xDF, cpu.A);
+
+    cpu.A = 0xBF;
+    arg1 = 0xB7;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0xBF, cpu.A);
+
+    cpu.A = 0x7F;
+    arg1 = 0xBF;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x7F, cpu.A);
+}
+
+// Page 110
+TEST_F(TestCpu, RES_b_B) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.B = 0x01;
+    arg1 = 0x80;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.B);
+
+    cpu.B = 0x02;
+    arg1 = 0x88;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.B);
+
+    cpu.B = 0x04;
+    arg1 = 0x90;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.B);
+
+    cpu.B = 0x08;
+    arg1 = 0x98;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.B);
+
+    cpu.B = 0x10;
+    arg1 = 0xA0;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.B);
+
+    cpu.B = 0x20;
+    arg1 = 0xA8;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.B);
+
+    cpu.B = 0x40;
+    arg1 = 0xB0;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.B);
+
+    cpu.B = 0x80;
+    arg1 = 0xB8;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.B);
+}
+
+// Page 110
+TEST_F(TestCpu, RES_b_C) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.C = 0x01;
+    arg1 = 0x81;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.C);
+
+    cpu.C = 0x02;
+    arg1 = 0x89;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.C);
+
+    cpu.C = 0x04;
+    arg1 = 0x91;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.C);
+
+    cpu.C = 0x08;
+    arg1 = 0x99;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.C);
+
+    cpu.C = 0x10;
+    arg1 = 0xA1;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.C);
+
+    cpu.C = 0x20;
+    arg1 = 0xA9;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.C);
+
+    cpu.C = 0x40;
+    arg1 = 0xB1;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.C);
+
+    cpu.C = 0x80;
+    arg1 = 0xB9;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.C);
+}
+
+// Page 110
+TEST_F(TestCpu, RES_b_D) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.D = 0x01;
+    arg1 = 0x82;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.D);
+
+    cpu.D = 0x02;
+    arg1 = 0x8A;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.D);
+
+    cpu.D = 0x04;
+    arg1 = 0x92;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.D);
+
+    cpu.D = 0x08;
+    arg1 = 0x9A;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.D);
+
+    cpu.D = 0x10;
+    arg1 = 0xA2;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.D);
+
+    cpu.D = 0x20;
+    arg1 = 0xAA;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.D);
+
+    cpu.D = 0x40;
+    arg1 = 0xB2;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.D);
+
+    cpu.D = 0x80;
+    arg1 = 0xBA;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.D);
+}
+
+// Page 110
+TEST_F(TestCpu, RES_b_E) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.E = 0x01;
+    arg1 = 0x83;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.E);
+
+    cpu.E = 0x02;
+    arg1 = 0x8B;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.E);
+
+    cpu.E = 0x04;
+    arg1 = 0x93;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.E);
+
+    cpu.E = 0x08;
+    arg1 = 0x9B;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.E);
+
+    cpu.E = 0x10;
+    arg1 = 0xA3;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.E);
+
+    cpu.E = 0x00;
+    arg1 = 0xAB;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.E);
+
+    cpu.E = 0x00;
+    arg1 = 0xB3;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.E);
+
+    cpu.E = 0x00;
+    arg1 = 0xBB;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.E);
+}
+
+// Page 110
+TEST_F(TestCpu, RES_b_H) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.H = 0x01;
+    arg1 = 0x84;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.H);
+
+    cpu.H = 0x02;
+    arg1 = 0x8C;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.H);
+
+    cpu.H = 0x04;
+    arg1 = 0x94;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.H);
+
+    cpu.H = 0x08;
+    arg1 = 0x9C;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.H);
+
+    cpu.H = 0x10;
+    arg1 = 0xA4;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.H);
+
+    cpu.H = 0x20;
+    arg1 = 0xAC;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.H);
+
+    cpu.H = 0x40;
+    arg1 = 0xB4;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.H);
+
+    cpu.H = 0x80;
+    arg1 = 0xBC;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.H);
+}
+
+// Page 110
+TEST_F(TestCpu, RES_b_L) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.L = 0x01;
+    arg1 = 0x85;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.L);
+
+    cpu.L = 0x02;
+    arg1 = 0x8D;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.L);
+
+    cpu.L = 0x04;
+    arg1 = 0x95;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.L);
+
+    cpu.L = 0x08;
+    arg1 = 0x9D;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.L);
+
+    cpu.L = 0x10;
+    arg1 = 0xA5;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.L);
+
+    cpu.L = 0x20;
+    arg1 = 0xAD;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.L);
+
+    cpu.L = 0x40;
+    arg1 = 0xB5;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.L);
+
+    cpu.L = 0x80;
+    arg1 = 0xBD;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.L);
+}
+
+// Page 110
+TEST_F(TestCpu, RES_b_HL) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.H = 0x00;
+    cpu.L = 0x01;
+    cpu.memory()[0x0001] = 0x01;
+    arg1 = 0x86;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.memory()[0x0001]);
+
+    cpu.H = 0x00;
+    cpu.L = 0x01;
+    cpu.memory()[0x0001] = 0x02;
+    arg1 = 0x8E;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.memory()[0x0001]);
+
+    cpu.H = 0x00;
+    cpu.L = 0x01;
+    cpu.memory()[0x0001] = 0x04;
+    arg1 = 0x96;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.memory()[0x0001]);
+
+    cpu.H = 0x00;
+    cpu.L = 0x01;
+    cpu.memory()[0x0001] = 0x08;
+    arg1 = 0x9E;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.memory()[0x0001]);
+
+    cpu.H = 0x00;
+    cpu.L = 0x01;
+    cpu.memory()[0x0001] = 0x10;
+    arg1 = 0xA6;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.memory()[0x0001]);
+
+    cpu.H = 0x00;
+    cpu.L = 0x01;
+    cpu.memory()[0x0001] = 0x20;
+    arg1 = 0xAE;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.memory()[0x0001]);
+
+    cpu.H = 0x00;
+    cpu.L = 0x01;
+    cpu.memory()[0x0001] = 0x40;
+    arg1 = 0xB6;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.memory()[0x0001]);
+
+    cpu.H = 0x00;
+    cpu.L = 0x01;
+    cpu.memory()[0x0001] = 0x80;
+    arg1 = 0xBE;
+    cpu.execute(0xCB, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.memory()[0x0001]);
+}
