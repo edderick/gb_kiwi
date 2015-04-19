@@ -9095,3 +9095,254 @@ TEST_F(TestCpu, RES_b_HL) {
     cpu.execute(0xCB, arg1, arg2);
     EXPECT_EQ(0x00, cpu.memory()[0x0001]);
 }
+
+// Page 111
+TEST_F(TestCpu, JP_nn) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    arg1 = 0x00;
+    arg2 = 0x00;
+    cpu.execute(0xC3, arg1, arg2);
+    EXPECT_EQ(0x0000, cpu.PC);
+
+    arg1 = 0xCD;
+    arg2 = 0xAB;
+    cpu.execute(0xC3, arg1, arg2);
+    EXPECT_EQ(0xABCD, cpu.PC);
+}
+
+// Page 111
+TEST_F(TestCpu, JP_NZ_nn) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.PC = 0x0000;
+    cpu.flag.Z = true;
+    arg1 = 0xCD;
+    arg2 = 0xAB;
+    cpu.execute(0xC2, arg1, arg2);
+    EXPECT_EQ(0x0003, cpu.PC);
+
+    cpu.PC = 0x0000;
+    cpu.flag.Z = false;
+    arg1 = 0xCD;
+    arg2 = 0xAB;
+    cpu.execute(0xC2, arg1, arg2);
+    EXPECT_EQ(0xABCD, cpu.PC);
+}
+
+// Page 111
+TEST_F(TestCpu, JP_Z_nn) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.PC = 0x0000;
+    cpu.flag.Z = false;
+    arg1 = 0xCD;
+    arg2 = 0xAB;
+    cpu.execute(0xCA, arg1, arg2);
+    EXPECT_EQ(0x0003, cpu.PC);
+
+    cpu.PC = 0x0000;
+    cpu.flag.Z = true;
+    arg1 = 0xCD;
+    arg2 = 0xAB;
+    cpu.execute(0xCA, arg1, arg2);
+    EXPECT_EQ(0xABCD, cpu.PC);
+}
+
+// Page 111
+TEST_F(TestCpu, JP_NC_nn) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.PC = 0x0000;
+    cpu.flag.C = true;
+    arg1 = 0xCD;
+    arg2 = 0xAB;
+    cpu.execute(0xD2, arg1, arg2);
+    EXPECT_EQ(0x0003, cpu.PC);
+
+    cpu.PC = 0x0000;
+    cpu.flag.C = false;
+    arg1 = 0xCD;
+    arg2 = 0xAB;
+    cpu.execute(0xD2, arg1, arg2);
+    EXPECT_EQ(0xABCD, cpu.PC);
+}
+
+// Page 111
+TEST_F(TestCpu, JP_C_nn) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.PC = 0x0000;
+    cpu.flag.C = false;
+    arg1 = 0xCD;
+    arg2 = 0xAB;
+    cpu.execute(0xDA, arg1, arg2);
+    EXPECT_EQ(0x0003, cpu.PC);
+
+    cpu.PC = 0x0000;
+    cpu.flag.C = true;
+    arg1 = 0xCD;
+    arg2 = 0xAB;
+    cpu.execute(0xDA, arg1, arg2);
+    EXPECT_EQ(0xABCD, cpu.PC);
+}
+
+// Page 112
+TEST_F(TestCpu, JP_HL) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.PC = 0x0000;
+    cpu.H = 0x00;
+    cpu.L = 0x01;
+    cpu.memory()[0x0001] = 0xCD;
+    cpu.memory()[0x0002] = 0xAB;
+    cpu.execute(0xE9, arg1, arg2);
+    EXPECT_EQ(0xABCD, cpu.PC);
+}
+
+// Page 112
+TEST_F(TestCpu, JR_n) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.PC = 0x0000;
+    arg1 = 0x01;
+    cpu.execute(0x18, arg1, arg2);
+    EXPECT_EQ(0x0001, cpu.PC);
+
+    cpu.PC = 0xAB00;
+    arg1 = 0x0F;
+    cpu.execute(0x18, arg1, arg2);
+    EXPECT_EQ(0xAB0F, cpu.PC);
+
+    cpu.PC = 0xAB01;
+    arg1 = 0xFF;
+    cpu.execute(0x18, arg1, arg2);
+    EXPECT_EQ(0xAB00, cpu.PC);
+}
+
+// Page 113
+TEST_F(TestCpu, JR_NZ_n) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.PC = 0x0000;
+    cpu.flag.Z = true;
+    arg1 = 0xCD;
+    cpu.execute(0x20, arg1, arg2);
+    EXPECT_EQ(0x0002, cpu.PC);
+
+    cpu.PC = 0x0000;
+    cpu.flag.Z = false;
+    arg1 = 0x01;
+    cpu.execute(0x20, arg1, arg2);
+    EXPECT_EQ(0x0001, cpu.PC);
+
+    cpu.PC = 0xAB00;
+    cpu.flag.Z = false;
+    arg1 = 0x0F;
+    cpu.execute(0x20, arg1, arg2);
+    EXPECT_EQ(0xAB0F, cpu.PC);
+
+    cpu.PC = 0xAB01;
+    cpu.flag.Z = false;
+    arg1 = 0xFF;
+    cpu.execute(0x20, arg1, arg2);
+    EXPECT_EQ(0xAB00, cpu.PC);
+}
+
+// Page 113
+TEST_F(TestCpu, JR_Z_n) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.PC = 0x0000;
+    cpu.flag.Z = false;
+    arg1 = 0xCD;
+    cpu.execute(0x28, arg1, arg2);
+    EXPECT_EQ(0x0002, cpu.PC);
+
+    cpu.PC = 0x0000;
+    cpu.flag.Z = true;
+    arg1 = 0x01;
+    cpu.execute(0x28, arg1, arg2);
+    EXPECT_EQ(0x0001, cpu.PC);
+
+    cpu.PC = 0xAB00;
+    cpu.flag.Z = true;
+    arg1 = 0x0F;
+    cpu.execute(0x28, arg1, arg2);
+    EXPECT_EQ(0xAB0F, cpu.PC);
+
+    cpu.PC = 0xAB01;
+    cpu.flag.Z = true;
+    arg1 = 0xFF;
+    cpu.execute(0x28, arg1, arg2);
+    EXPECT_EQ(0xAB00, cpu.PC);
+}
+
+// Page 113
+TEST_F(TestCpu, JR_NC_n) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.PC = 0x0000;
+    cpu.flag.C = true;
+    arg1 = 0xCD;
+    cpu.execute(0x30, arg1, arg2);
+    EXPECT_EQ(0x0002, cpu.PC);
+
+    cpu.PC = 0x0000;
+    cpu.flag.C = false;
+    arg1 = 0x01;
+    cpu.execute(0x30, arg1, arg2);
+    EXPECT_EQ(0x0001, cpu.PC);
+
+    cpu.PC = 0xAB00;
+    cpu.flag.C = false;
+    arg1 = 0x0F;
+    cpu.execute(0x30, arg1, arg2);
+    EXPECT_EQ(0xAB0F, cpu.PC);
+
+    cpu.PC = 0xAB01;
+    cpu.flag.C = false;
+    arg1 = 0xFF;
+    cpu.execute(0x30, arg1, arg2);
+    EXPECT_EQ(0xAB00, cpu.PC);
+}
+
+// Page 113
+TEST_F(TestCpu, JR_C_n) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.PC = 0x0000;
+    cpu.flag.C = false;
+    arg1 = 0xCD;
+    cpu.execute(0x38, arg1, arg2);
+    EXPECT_EQ(0x0002, cpu.PC);
+
+    cpu.PC = 0x0000;
+    cpu.flag.C = true;
+    arg1 = 0x01;
+    cpu.execute(0x38, arg1, arg2);
+    EXPECT_EQ(0x0001, cpu.PC);
+
+    cpu.PC = 0xAB00;
+    cpu.flag.C = true;
+    arg1 = 0x0F;
+    cpu.execute(0x38, arg1, arg2);
+    EXPECT_EQ(0xAB0F, cpu.PC);
+
+    cpu.PC = 0xAB01;
+    cpu.flag.C = true;
+    arg1 = 0xFF;
+    cpu.execute(0x38, arg1, arg2);
+    EXPECT_EQ(0xAB00, cpu.PC);
+}
