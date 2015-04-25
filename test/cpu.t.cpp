@@ -5272,6 +5272,84 @@ TEST_F(TestCpu, NOP) {
     EXPECT_EQ(OLD_PC + 1, cpu.PC);
 }
 
+// Page 97
+TEST_F(TestCpu, not_HALT_or_STOP) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.memory()[0xFFFF] = 0x00;
+    EXPECT_EQ(CPU::CONTINUE_EXECUTION, cpu.execute(0x00, arg1, arg2));
+    EXPECT_NE(CPU::HALT_EXECUTION, cpu.execute(0x00, arg1, arg2));
+    EXPECT_NE(CPU::STOP_EXECUTION, cpu.execute(0x00, arg1, arg2));
+
+    cpu.memory()[0xFFFF] = 0xFF;
+    EXPECT_EQ(CPU::CONTINUE_EXECUTION, cpu.execute(0x00, arg1, arg2));
+    EXPECT_NE(CPU::HALT_EXECUTION, cpu.execute(0x00, arg1, arg2));
+    EXPECT_NE(CPU::STOP_EXECUTION, cpu.execute(0x00, arg1, arg2));
+}
+
+// Page 97
+TEST_F(TestCpu, HALT) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.memory()[0xFFFF] = 0x00;
+    EXPECT_EQ(CPU::CONTINUE_EXECUTION, cpu.execute(0x76, arg1, arg2));
+    EXPECT_NE(CPU::HALT_EXECUTION, cpu.execute(0x76, arg1, arg2));
+    EXPECT_NE(CPU::STOP_EXECUTION, cpu.execute(0x76, arg1, arg2));
+
+    cpu.memory()[0xFFFF] = 0xFF;
+    EXPECT_NE(CPU::CONTINUE_EXECUTION, cpu.execute(0x76, arg1, arg2));
+    EXPECT_EQ(CPU::HALT_EXECUTION, cpu.execute(0x76, arg1, arg2));
+    EXPECT_NE(CPU::STOP_EXECUTION, cpu.execute(0x76, arg1, arg2));
+}
+
+// Page 97
+TEST_F(TestCpu, STOP) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    arg1 = 0x00;
+
+    cpu.memory()[0xFFFF] = 0x00;
+    EXPECT_EQ(CPU::CONTINUE_EXECUTION, cpu.execute(0x10, arg1, arg2));
+    EXPECT_NE(CPU::HALT_EXECUTION, cpu.execute(0x10, arg1, arg2));
+    EXPECT_NE(CPU::STOP_EXECUTION, cpu.execute(0x10, arg1, arg2));
+
+    cpu.memory()[0xFFFF] = 0xFF;
+    EXPECT_NE(CPU::CONTINUE_EXECUTION, cpu.execute(0x10, arg1, arg2));
+    EXPECT_NE(CPU::HALT_EXECUTION, cpu.execute(0x10, arg1, arg2));
+    EXPECT_EQ(CPU::STOP_EXECUTION, cpu.execute(0x10, arg1, arg2));
+}
+
+// Page 98
+TEST_F(TestCpu, DI) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.memory()[0xFFFF] = 0x00;
+    cpu.execute(0xF3, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.memory()[0xFFFF]);
+
+    cpu.memory()[0xFFFF] = 0xFF;
+    cpu.execute(0xF3, arg1, arg2);
+    EXPECT_EQ(0x00, cpu.memory()[0xFFFF]);
+}
+
+// Page 98
+TEST_F(TestCpu, EI) {
+    unsigned char arg1;
+    unsigned char arg2;
+
+    cpu.memory()[0xFFFF] = 0x00;
+    cpu.execute(0xFB, arg1, arg2);
+    EXPECT_EQ(0xFF, cpu.memory()[0xFFFF]);
+
+    cpu.memory()[0xFFFF] = 0xFF;
+    cpu.execute(0xFB, arg1, arg2);
+    EXPECT_EQ(0xFF, cpu.memory()[0xFFFF]);
+}
+
 // Page 99
 TEST_F(TestCpu, RLCA) {
     unsigned char arg1;

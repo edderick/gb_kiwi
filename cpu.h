@@ -9,6 +9,14 @@ namespace gbemu {
 class Cartridge;
 
 class CPU {
+    public:
+    // TYPES
+    enum ReturnCodes {
+        CONTINUE_EXECUTION = 0,
+        HALT_EXECUTION     = 1,
+        STOP_EXECUTION     = 2,
+    };
+
     private:
     // PRIVATE DATA
     Memory d_memory;
@@ -45,6 +53,8 @@ class CPU {
 
     void push_addr(unsigned short addr);
     unsigned short pop_addr();
+
+    bool interruptsEnabled() const;
 
     void RL(unsigned char &reg);
     void RLC(unsigned char &reg);
@@ -93,6 +103,9 @@ class CPU {
     void JUMP_R(unsigned char offset); 
 
     void DAA();
+
+    void EI();
+    void DI();
 
     private:
     CPU(const CPU&);            // = delete

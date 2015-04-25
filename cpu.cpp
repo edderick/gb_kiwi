@@ -129,6 +129,10 @@ unsigned short CPU::pop_addr() {
     return concat_bytes(val_A, val_B);
 }
 
+bool CPU::interruptsEnabled() const {
+    return d_memory[0xFFFF] != 0x00;
+}
+
 void CPU::RL(unsigned char &reg) {
     bool carry_out = ((reg >> 7) == 1);
     unsigned char carry_in = flag.C ? 0x1 : 0x0;
@@ -387,6 +391,14 @@ void CPU::DAA() {
     flag.Z = (A == 0x00);
     flag.H = false;
     flag.C = carry; 
+}
+
+void CPU::EI() {
+    d_memory[0xFFFF] = 0xFF;
+}
+
+void CPU::DI() {
+    d_memory[0xFFFF] = 0x00;
 }
 
 void CPU::print_state() {
@@ -720,23 +732,30 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
         case 0x00: break;        
 
         /* 7. HALT */ 
-        //TODO: Implement this
         case 0x76: std::cout << "WARNING: Attempting to HALT!"
                              << std::endl;
+                   PC++;
+                   if (interruptsEnabled()) {
+                     return HALT_EXECUTION;                           // RETURN
+                   }
+        break;
         /* 8. STOP */
-        //TODO: Implement this
         case 0x10: std::cout << "WARNING: Attempting to STOP!"
                              << std::endl;
-
+                   PC += 2; // TODO: Work out if this is correct...
+                   if (interruptsEnabled()) {
+                     return STOP_EXECUTION;                           // RETURN
+                   }
+        break;
         /* 9. DI */
-        //TODO: Implement this 
-        case 0xF3: std::cout << "WARNING: Attempting to disable interrupts!"
+        case 0xF3: DI();
+                   std::cout << "WARNING: Attempting to disable interrupts!"
                              << std::endl;
         break;
 
         /* 10. EI */
-        //TODO: Implement this
-        case 0xFB: std::cout << "WARNING: Attempting to enable interrupts!"
+        case 0xFB: EI();
+                   std::cout << "WARNING: Attempting to enable interrupts!"
                              << std::endl;
         break;
 
@@ -762,7 +781,6 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
 
                 switch(x) {
                     case 00: 
-                        //TODO: Rotate
                         switch(ARG1) {
                             /* 5. RLC n */
                             case 0x07: RLC(A); break;
@@ -992,8 +1010,8 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
         case 0xD8: if (flag.C) PC = pop_addr(); else PC++; break;
 
         /* 3. RETI */ 
-        //TODO: case 0xD9
         case 0xD9: PC = pop_addr();
+                   EI();
                    std::cout << "WARNING: Attempting to enable interrupts"
                                 "(RETI)!"
                              << std::endl;
@@ -1036,7 +1054,7 @@ int CPU::execute (unsigned char OP_CODE, unsigned char& ARG1, unsigned char& ARG
     d_lastArg1 = ARG1;
     d_lastArg2 = ARG2;
 
-    return 0;
+    return CONTINUE_EXECUTION;                                       // RETURN
 }
 
 } // Close Namespace gbemu
