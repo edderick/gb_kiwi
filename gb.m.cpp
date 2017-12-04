@@ -4,14 +4,19 @@
 
 #include <iostream>
 
-int main() {
+int main(int argc, char *argv[]) {
     using namespace gbemu;
+
+    if (argc != 2) {
+        std::cout << "Usage: ./GB_Kiwi <path_to_rom>\n";
+        return 1;
+    }
 
     Graphics graphics;
     Cartridge cartridge;
     CPU cpu(&cartridge, &graphics);
 
-    cartridge.load_rom("../res/Tetris.gb");
+    cartridge.load_rom(argv[1]);
 
     int i = 0;
     while (true) {
