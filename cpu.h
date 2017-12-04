@@ -114,7 +114,8 @@ class CPU {
     public:
     // PUBLIC CREATOTS
     CPU(Cartridge *cartridge, IGraphics *graphics);
-
+    
+    public:
     // PUBLIC MANIPULATORS
     int fetch_and_execute();
 
@@ -123,6 +124,13 @@ class CPU {
     int execute(unsigned char  OP_CODE,
                 unsigned char& ARG1, 
                 unsigned char& ARG2);
+
+    // Interruptors
+    void verticalBlankInterrupt(); 
+    void lcdcStatusInterrupt(); 
+    void timerOverflowInterrupt(); 
+    void serialTransferInterrupt(); 
+    void hiToLoInterrupt(); 
 
     public:
     // PUBLIC ACCESSORS

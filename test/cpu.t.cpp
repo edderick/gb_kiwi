@@ -4768,50 +4768,77 @@ void testDAA(CPU &cpu,
     bool H_before,
     bool C_after)
 {
-    // Low-Low
-    doDAA(cpu,
-          lowLower, lowUpper, error,
-          C_before, H_before, C_after);
+    {
+        // Low-LOW
+        SCOPED_TRACE("");
+        doDAA(cpu,
+              lowLower, lowUpper, error,
+              C_before, H_before, C_after);
+    }
+    
+    {
+        // Low-Mid
+        SCOPED_TRACE("");
+        doDAA(cpu,
+              lowLower, midUpper, error,
+              C_before, H_before, C_after);
+    }
 
-    // Low-Mid
-    doDAA(cpu,
-          lowLower, midUpper, error,
-          C_before, H_before, C_after);
+    {
+        // Low-Hi
+        SCOPED_TRACE("");
+        doDAA(cpu,
+              lowLower, hiUpper, error,
+              C_before, H_before, C_after);
+    }
 
-    // Low-Hi
-    doDAA(cpu,
-          lowLower, hiUpper, error,
-          C_before, H_before, C_after);
+    {
+        // Mid-Low
+        SCOPED_TRACE("");
+        doDAA(cpu,
+              midLower, lowUpper, error,
+              C_before, H_before, C_after);
+    }
 
-    // Mid-Low
-    doDAA(cpu,
-          midLower, lowUpper, error,
-          C_before, H_before, C_after);
+    {
+        // Mid-Mid
+        SCOPED_TRACE("");
+        doDAA(cpu,
+              midLower, midUpper, error,
+              C_before, H_before, C_after);
+    }
 
-    // Mid-Mid
-    doDAA(cpu,
-          midLower, midUpper, error,
-          C_before, H_before, C_after);
+    {
+        // Mid-Hi
+        SCOPED_TRACE("");
+        doDAA(cpu,
+              midLower, hiUpper, error,
+              C_before, H_before, C_after);
+    }
 
-    // Mid-Hi
-    doDAA(cpu,
-          midLower, hiUpper, error,
-          C_before, H_before, C_after);
-
+    {
     // Hi-Low
+    SCOPED_TRACE("");
     doDAA(cpu,
           hiLower, lowUpper, error,
           C_before, H_before, C_after);
+    }
 
+    {
     // Hi-Mid
+    SCOPED_TRACE("");
     doDAA(cpu,
           hiLower, midUpper, error,
           C_before, H_before, C_after);
+    }
 
+    {
     // Hi-Hi
+    SCOPED_TRACE("");
     doDAA(cpu,
           hiLower, hiUpper, error,
           C_before, H_before, C_after);
+    }
 }
 
 // Page 95
@@ -4829,7 +4856,8 @@ TEST_F(TestCpu, DAA_Case_01) {
     bool C_before = false;
     bool H_before = false;
     bool C_after  = false;
-
+    
+    SCOPED_TRACE("");
     testDAA(cpu,
             lowLower, midLower, hiLower,
             lowUpper, midUpper, hiUpper,
@@ -4853,6 +4881,7 @@ TEST_F(TestCpu, DAA_Case_02) {
     bool H_before = false;
     bool C_after  = false;
 
+    SCOPED_TRACE("");
     testDAA(cpu,
             lowLower, midLower, hiLower,
             lowUpper, midUpper, hiUpper,
@@ -4876,6 +4905,7 @@ TEST_F(TestCpu, DAA_Case_03) {
     bool H_before = true;
     bool C_after  = false;
 
+    SCOPED_TRACE("");
     testDAA(cpu,
             lowLower, midLower, hiLower,
             lowUpper, midUpper, hiUpper,
@@ -4899,6 +4929,7 @@ TEST_F(TestCpu, DAA_Case_04) {
     bool H_before = false;
     bool C_after  = true;
 
+    SCOPED_TRACE("");
     testDAA(cpu,
             lowLower, midLower, hiLower,
             lowUpper, midUpper, hiUpper,
@@ -4922,6 +4953,7 @@ TEST_F(TestCpu, DAA_Case_05) {
     bool H_before = false;
     bool C_after  = true;
 
+    SCOPED_TRACE("");
     testDAA(cpu,
             lowLower, midLower, hiLower,
             lowUpper, midUpper, hiUpper,
@@ -4945,6 +4977,7 @@ TEST_F(TestCpu, DAA_Case_06) {
     bool H_before = true;
     bool C_after  = true;
 
+    SCOPED_TRACE("");
     testDAA(cpu,
             lowLower, midLower, hiLower,
             lowUpper, midUpper, hiUpper,
@@ -4968,6 +5001,7 @@ TEST_F(TestCpu, DAA_Case_07) {
     bool H_before = false;
     bool C_after  = true;
 
+    SCOPED_TRACE("");
     testDAA(cpu,
             lowLower, midLower, hiLower,
             lowUpper, midUpper, hiUpper,
@@ -4991,6 +5025,7 @@ TEST_F(TestCpu, DAA_Case_08) {
     bool H_before = false;
     bool C_after  = true;
 
+    SCOPED_TRACE("");
     testDAA(cpu,
             lowLower, midLower, hiLower,
             lowUpper, midUpper, hiUpper,
@@ -5014,6 +5049,7 @@ TEST_F(TestCpu, DAA_Case_09) {
     bool H_before = true;
     bool C_after  = true;
 
+    SCOPED_TRACE("");
     testDAA(cpu,
             lowLower, midLower, hiLower,
             lowUpper, midUpper, hiUpper,
@@ -5038,6 +5074,7 @@ TEST_F(TestCpu, DAA_Case_10) {
     bool H_before = false;
     bool C_after  = false;
 
+    SCOPED_TRACE("");
     testDAA(cpu,
             lowLower, midLower, hiLower,
             lowUpper, midUpper, hiUpper,
@@ -5062,6 +5099,7 @@ TEST_F(TestCpu, DAA_Case_11) {
     bool H_before = true;
     bool C_after  = false;
 
+    SCOPED_TRACE("");
     testDAA(cpu,
             lowLower, midLower, hiLower,
             lowUpper, midUpper, hiUpper,
@@ -5086,6 +5124,7 @@ TEST_F(TestCpu, DAA_Case_12) {
     bool H_before = false;
     bool C_after  = true;
 
+    SCOPED_TRACE("");
     testDAA(cpu,
             lowLower, midLower, hiLower,
             lowUpper, midUpper, hiUpper,
@@ -5110,6 +5149,7 @@ TEST_F(TestCpu, DAA_Case_13) {
     bool H_before = true;
     bool C_after  = true;
 
+    SCOPED_TRACE("");
     testDAA(cpu,
             lowLower, midLower, hiLower,
             lowUpper, midUpper, hiUpper,
