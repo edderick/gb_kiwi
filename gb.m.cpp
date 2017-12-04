@@ -1,5 +1,5 @@
-#include "graphics.h"
-#include "cart.h"
+#include "Graphics.h"
+#include "Cart.h"
 #include "cpu.h"
 
 #include <iostream>
