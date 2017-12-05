@@ -10,6 +10,7 @@ Memory::Memory(Cartridge *cartridge,
 : d_IO_Ports()
 , d_cartridge(cartridge)
 , d_graphics(graphics)
+, d_p1(0x0F)
 {
 }
 
@@ -115,7 +116,36 @@ unsigned char& Memory::handle_IO(unsigned int i) {
             return d_graphics->d_window_x;
     }
 
-    //Error?
+    // TODO: This logic is so bad.
+    if (i == 0xFF00) {
+        if (d_p1 & 0x20) {
+            col = 1; 
+        }
+
+        if (d_p1 & 0x10) {
+            col = 2; 
+        }
+
+        d_p1 = 0x0F; 
+        if (col == 1) {
+            // Col 1  
+            if (right) d_p1 &= 0x0E;
+            if (left) d_p1 &= 0x0D; 
+            if (up) d_p1 &= 0x0B;
+            if (down) d_p1 &= 0x07; 
+        } 
+        else if (col == 2) {
+            // Col 2
+            if (a) d_p1 &= 0x0E; 
+            if (b) d_p1 &= 0x0D; 
+            if (select) d_p1 &= 0x0B; 
+            if (start) d_p1 &= 0x07;
+        }
+
+       return d_p1;  
+    } 
+
+
     return d_IO_Ports[i - 0xFF00];
 }
 

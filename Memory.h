@@ -20,7 +20,7 @@ class Memory {
 
         Bootstrap d_bootstrap;
         Cartridge *d_cartridge;
-        IGraphics  *d_graphics;
+        IGraphics *d_graphics;
 
     private:
         // PRIVATE ACCESSORS
@@ -42,6 +42,21 @@ class Memory {
         const unsigned char& get(unsigned int) const;
         unsigned char& operator[](unsigned int);
         const unsigned char& operator[](unsigned int) const;
+
+        //TODO: extract class (Keypad?)
+        unsigned char d_p1; 
+
+        int col;
+
+        bool up;
+        bool down; 
+        bool left;
+        bool right;
+        bool start;
+        bool select; 
+        bool a; 
+        bool b;
+
 };
 
 } // Close Namespace gbemu

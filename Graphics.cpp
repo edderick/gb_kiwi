@@ -69,8 +69,7 @@ Graphics::Graphics()
 
     d_sdl_renderer = SDL_CreateRenderer(d_sdl_window,
                                         -1,
-                                        SDL_RENDERER_ACCELERATED |
-                                        SDL_RENDERER_PRESENTVSYNC);
+                                        SDL_RENDERER_ACCELERATED);
     if (d_sdl_renderer == nullptr) {
         std::cout << "SDL_CreateRenderer Error: "
                   << SDL_GetError()
